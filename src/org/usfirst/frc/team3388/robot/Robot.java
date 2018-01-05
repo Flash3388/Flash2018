@@ -4,11 +4,12 @@ package org.usfirst.frc.team3388.robot;
 import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.frc.IterativeFRCRobot;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 public class Robot extends IterativeFRCRobot {
 
-	
+	Talon a = new Talon(0);
 	Action auto;
 	SendableChooser<Action> autoChooser;
 	@Override
