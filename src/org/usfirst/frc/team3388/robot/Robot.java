@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 public class Robot extends IterativeFRCRobot {
-
+	//stse
 	Talon a = new Talon(0);
 	Action auto;
 	SendableChooser<Action> autoChooser;
