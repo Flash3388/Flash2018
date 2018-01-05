@@ -1,14 +1,31 @@
 
 package org.usfirst.frc.team3388.robot;
 
+import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.frc.IterativeFRCRobot;
+import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 public class Robot extends IterativeFRCRobot {
 
+	
+	Action auto;
+	SendableChooser<Action> autoChooser;
 	@Override
 	protected void initRobot() {
-		// TODO Auto-generated method stub
+		/*
+		 * camera server
+		 */
+		CameraServer.getInstance().startAutomaticCapture();	
 		
+		
+		/*
+		 * auto setup
+		 */
+		autoChooser = new SendableChooser<Action>();
+		autoChooser.addDefault("auto1", auto);
+		//...
+		//autoChooser.addDefault("auto2", auto2);
 	}
 
 	@Override
@@ -16,7 +33,7 @@ public class Robot extends IterativeFRCRobot {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
 	@Override
 	protected void disabledPeriodic() {
 		// TODO Auto-generated method stub
@@ -37,8 +54,8 @@ public class Robot extends IterativeFRCRobot {
 
 	@Override
 	protected void autonomousInit() {
-		// TODO Auto-generated method stub
-		
+		Action chosenAction = autoChooser.getSelected();
+		chosenAction.start();
 	}
 
 	@Override
