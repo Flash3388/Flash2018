@@ -4,8 +4,11 @@ package org.usfirst.frc.team3388.robot;
 import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.frc.IterativeFRCRobot;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.DriverStation;
+
 
 public class Robot extends IterativeFRCRobot {
 
@@ -55,6 +58,17 @@ public class Robot extends IterativeFRCRobot {
 
 	@Override
 	protected void autonomousInit() {
+		String gameData;
+		//DriverStation.getInstance().	
+		/*
+		//DriverStation.getInstance().	gameData = DriverStation.getInstance().;
+		if(gameData.charAt(0) == 'L')
+		{
+			//Put left auto code here
+		} else {
+			//Put right auto code here
+		}
+*/
 		Action chosenAction = autoChooser.getSelected();
 		chosenAction.start();
 	}
