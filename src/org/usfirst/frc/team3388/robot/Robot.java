@@ -61,6 +61,13 @@ public class Robot extends IterativeFRCRobot {
 		String gameData;
 		
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
+		// Example for gameData : LRL
+		//means that the closet LEFT switch is yours
+		//the right scale is yours
+		//and the far left switch is yours
+		//
+		//Other example is : RRL
+		
 		if(gameData.charAt(0) == 'L')
 		{
 			//Put left auto code here
