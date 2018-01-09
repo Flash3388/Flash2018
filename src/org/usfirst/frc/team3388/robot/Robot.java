@@ -59,16 +59,15 @@ public class Robot extends IterativeFRCRobot {
 	@Override
 	protected void autonomousInit() {
 		String gameData;
-		//DriverStation.getInstance().	
-		/*
-		//DriverStation.getInstance().	gameData = DriverStation.getInstance().;
+		
+		gameData = DriverStation.getInstance().getGameSpecificMessage();
 		if(gameData.charAt(0) == 'L')
 		{
 			//Put left auto code here
 		} else {
 			//Put right auto code here
 		}
-*/
+
 		Action chosenAction = autoChooser.getSelected();
 		chosenAction.start();
 	}
