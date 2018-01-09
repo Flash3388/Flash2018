@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 
 public class Robot extends IterativeFRCRobot {
-
+	//stse
 	Talon a = new Talon(0);
 	Action auto;
 	SendableChooser<Action> autoChooser;
