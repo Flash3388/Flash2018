@@ -6,13 +6,17 @@ import org.usfirst.frc.team3388.robot.TalonSpeed;
 
 import edu.flash3388.flashlib.robot.PIDController;
 import edu.flash3388.flashlib.robot.PIDSource;
+import edu.flash3388.flashlib.robot.devices.Gyro;
 import edu.flash3388.flashlib.robot.frc.FRCSpeedControllers;
 import edu.flash3388.flashlib.robot.systems.FlashDrive;
 import edu.flash3388.flashlib.util.beans.DoubleProperty;
 import edu.flash3388.flashlib.util.beans.PropertyHandler;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.SpeedController;
 
 public class Drive {
+	
+	ADXRS450_Gyro gyro;
 	public FlashDrive driveTrain;
 	public PIDController distancePID;
 	public PIDSource distanceSource;
@@ -30,7 +34,7 @@ public class Drive {
 		 */
 		distancePID = new PIDController(0.21, 0.0, 0.285, 0.0, pidSetPoint, distanceSource);
 		distancePID.setOutputLimit(-1, 1);
-		
+		gyro = new ADXRS450_Gyro();
 	}
 	private FlashDrive setupDriveTrain() {
 		SpeedController frontRight;
