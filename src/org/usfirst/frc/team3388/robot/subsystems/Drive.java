@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.SpeedController;
 
 public class Drive {
 	
-	ADXRS450_Gyro gyro;
+	private ADXRS450_Gyro gyro;
 	public FlashDrive driveTrain;
 	public PIDController distancePID;
 	public PIDSource distanceSource;

@@ -17,30 +17,22 @@ public class TalonSpeed implements SpeedController{
 	public void pidWrite(double output) {
 		set(output);
 	}
-
 	@Override
 	public void set(double speed) {
 		controller.set(ControlMode.PercentOutput, speed*side);
-		
 	}
-
 	@Override
 	public double get() {
-		
 		return controller.getMotorOutputPercent();
 	}
-
 	@Override
 	public void setInverted(boolean isInverted) {
 		side  = isInverted? -1: 1;
 	}
-
 	@Override
 	public boolean getInverted() {
-		
 		return side == -1;
 	}
-
 	@Override
 	public void disable() {
 		stopMotor();	

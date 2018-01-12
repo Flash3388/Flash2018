@@ -1,6 +1,8 @@
 
 package org.usfirst.frc.team3388.robot;
 
+import org.usfirst.frc.team3388.robot.subsystems.Drive;
+
 import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.frc.IterativeFRCRobot;
 import edu.wpi.first.wpilibj.CameraServer;
@@ -13,14 +15,20 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class Robot extends IterativeFRCRobot {
 	Action auto;
 	SendableChooser<Action> autoChooser;
+	CamerasHandler camHandler;
+	Drive drive;
 	@Override
 	protected void initRobot() {
 		/*
-		 * camera server
+		 * drive setup 
 		 */
-		CameraServer.getInstance().startAutomaticCapture();	
+		drive = new Drive();
 		
+		/*
+		 * cam handler
+		 */
 		
+		camHandler = new CamerasHandler();
 		/*
 		 * auto setup
 		 */
