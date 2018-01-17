@@ -1,41 +1,73 @@
 
 package org.usfirst.frc.team3388.robot;
 
+import org.usfirst.frc.team3388.robot.added.XboxController1;
 import org.usfirst.frc.team3388.robot.subsystems.Drive;
+import org.usfirst.frc.team3388.robot.subsystems.LaunchSystem;
+import org.usfirst.frc.team3388.robot.subsystems.PistonController;
 
 import edu.flash3388.flashlib.robot.Action;
+import edu.flash3388.flashlib.robot.InstantAction;
 import edu.flash3388.flashlib.robot.frc.IterativeFRCRobot;
-import edu.wpi.first.wpilibj.CameraServer;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Talon;
+import edu.flash3388.flashlib.robot.hid.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.DriverStation;
-
 
 public class Robot extends IterativeFRCRobot {
 	Action auto;
 	SendableChooser<Action> autoChooser;
 	CamerasHandler camHandler;
 	Drive drive;
+	
+	XboxController controller;
+	LaunchSystem shoot;
 	@Override
 	protected void initRobot() {
 		/*
 		 * drive setup 
 		 */
-		drive = new Drive();
+		
+		//drive = new Drive();
 		
 		/*
 		 * cam handler
 		 */
 		
-		camHandler = new CamerasHandler();
+		//camHandler = new CamerasHandler();
 		/*
 		 * auto setup
 		 */
-		autoChooser = new SendableChooser<Action>();
-		autoChooser.addDefault("auto1", auto);
+		controller = new XboxController(RobotMap.XBOX);
+		
+		shootSetup();
+		//autoChooser = new SendableChooser<Action>();
+		//autoChooser.addDefault("auto1", auto);
 		//...
 		//autoChooser.addDefault("auto2", auto2);
+		 
+		 
+		
+	}
+
+	private void shootSetup() {
+		shoot = new LaunchSystem(RobotMap.SOLA1,RobotMap.SOLA2,RobotMap.SOLB1,RobotMap.SOLB2);
+		//controller.getRawButton(1);
+		
+		controller.A.whenPressed(new InstantAction() {
+			@Override
+			protected void execute() {
+				if(shoot.isClosed())
+				{
+					shoot.open();
+					System.out.println("open");
+				}
+				else
+				{
+					shoot.close();
+					System.out.println("close");
+				}
+				
+			}
+		});
 	}
 
 	@Override
@@ -52,8 +84,8 @@ public class Robot extends IterativeFRCRobot {
 
 	@Override
 	protected void teleopInit() {
-		// TODO Auto-generated method stub
-		
+		//controller.getRawButton(1);
+		//DriverStation.getInstance().getStickButton(0, 1);
 	}
 
 	@Override
@@ -64,7 +96,7 @@ public class Robot extends IterativeFRCRobot {
 
 	@Override
 	protected void autonomousInit() {
-		String gameData;
+	/*	String gameData;
 		
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
 		// Example for gameData : LRL
@@ -83,6 +115,7 @@ public class Robot extends IterativeFRCRobot {
 
 		Action chosenAction = autoChooser.getSelected();
 		chosenAction.start();
+		*/
 	}
 
 	@Override

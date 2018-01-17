@@ -11,7 +11,7 @@ public class CamerasHandler {
 	private boolean whichCam = false;
 	public CamerasHandler() {
 		cam1 = CameraServer.getInstance().startAutomaticCapture(RobotMap.CAM_PORT1);	
-		cam2 = CameraServer.getInstance().startAutomaticCapture(RobotMap.CAM_PORT2);
+		//cam2 = CameraServer.getInstance().startAutomaticCapture(RobotMap.CAM_PORT2);
 		server = CameraServer.getInstance().getServer(); 	
 	}
 	public void switchCamera()
