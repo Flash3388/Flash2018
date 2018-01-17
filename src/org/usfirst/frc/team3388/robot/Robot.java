@@ -4,7 +4,7 @@ package org.usfirst.frc.team3388.robot;
 import org.usfirst.frc.team3388.robot.added.XboxController1;
 import org.usfirst.frc.team3388.robot.subsystems.Drive;
 import org.usfirst.frc.team3388.robot.subsystems.LaunchSystem;
-import org.usfirst.frc.team3388.robot.subsystems.Lift;
+import org.usfirst.frc.team3388.robot.subsystems.LiftSystem;
 import org.usfirst.frc.team3388.robot.subsystems.PistonController;
 
 import edu.flash3388.flashlib.robot.Action;
@@ -18,7 +18,7 @@ public class Robot extends IterativeFRCRobot {
 	SendableChooser<Action> autoChooser;
 	CamerasHandler camHandler;
 	Drive drive;
-	Lift liftSystem;
+	LiftSystem liftSystem;
 	
 	XboxController controller;
 	LaunchSystem shoot;
@@ -51,7 +51,7 @@ public class Robot extends IterativeFRCRobot {
 	}
 
 	private void liftSetup() {
-		liftSystem = new Lift();
+		liftSystem = new LiftSystem();
 		
 		liftSystem.setDefaultAction(new Action() {
 			@Override

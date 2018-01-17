@@ -6,10 +6,10 @@ import org.usfirst.frc.team3388.robot.TalonSpeed;
 import edu.flash3388.flashlib.robot.Subsystem;
 import edu.flash3388.flashlib.robot.systems.Rotatable;
 
-public class Lift extends Subsystem implements Rotatable {
+public class LiftSystem extends Subsystem implements Rotatable {
 
 	TalonSpeed controller;
-	public Lift() {
+	public LiftSystem() {
 		controller = new TalonSpeed(RobotMap.LIFT);
 	}
 	@Override
