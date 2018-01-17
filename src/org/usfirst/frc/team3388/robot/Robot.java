@@ -79,7 +79,6 @@ public class Robot extends IterativeFRCRobot {
 
 	private void shootSetup() {
 		shoot = new LaunchSystem(RobotMap.SOLA1,RobotMap.SOLA2,RobotMap.SOLB1,RobotMap.SOLB2);
-		//controller.getRawButton(1);
 		
 		controller.A.whenPressed(new InstantAction() {
 			@Override
