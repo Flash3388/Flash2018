@@ -7,6 +7,7 @@ import org.usfirst.frc.team3388.robot.subsystems.LaunchSystem;
 import org.usfirst.frc.team3388.robot.subsystems.LiftSystem;
 import org.usfirst.frc.team3388.robot.subsystems.PistonController;
 
+import edu.flash3388.flashlib.math.Mathf;
 import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.InstantAction;
 import edu.flash3388.flashlib.robot.frc.IterativeFRCRobot;
@@ -54,9 +55,20 @@ public class Robot extends IterativeFRCRobot {
 		liftSystem = new LiftSystem();
 		
 		liftSystem.setDefaultAction(new Action() {
+			final double MIN = -0.2;
+			final double MAX = 0.2;
+			
 			@Override
 			protected void execute() {
-				liftSystem.rotate(controller.LeftStick.getYAxis().get());	
+				/*	to scale the value use this function:
+					Mathf.constrain(value, min, max)
+					like so:
+					va
+					liftSystem.rotate(controller.LeftStick.getYAxis().get());
+				 */
+				double val = controller.LeftStick.getYAxis().get();
+				val = Mathf.constrain(val, MIN, MAX);
+				liftSystem.rotate(val);	
 			}
 			@Override
 			protected void end() {

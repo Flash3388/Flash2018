@@ -1,7 +1,6 @@
 package org.usfirst.frc.team3388.robot.subsystems;
 
 import edu.flash3388.flashlib.robot.Subsystem;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public class LaunchSystem extends Subsystem{
 	private PistonController piston1;
