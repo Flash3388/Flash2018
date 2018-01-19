@@ -14,11 +14,11 @@ public class LaunchSystem extends Subsystem{
 		piston2.use(side);
 	}
 	public void close() {
-		use(false);
+		use(true);
 		
 	}
 	public void open() {
-		use(true);
+		use(false);
 		
 	}
 	public boolean isClosed() {

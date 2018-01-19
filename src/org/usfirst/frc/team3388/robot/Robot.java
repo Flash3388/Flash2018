@@ -1,18 +1,18 @@
 
 package org.usfirst.frc.team3388.robot;
 
-import org.usfirst.frc.team3388.robot.added.XboxController1;
 import org.usfirst.frc.team3388.robot.subsystems.Drive;
 import org.usfirst.frc.team3388.robot.subsystems.LaunchSystem;
 import org.usfirst.frc.team3388.robot.subsystems.LiftSystem;
-import org.usfirst.frc.team3388.robot.subsystems.PistonController;
 
 import edu.flash3388.flashlib.math.Mathf;
 import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.InstantAction;
 import edu.flash3388.flashlib.robot.frc.IterativeFRCRobot;
 import edu.flash3388.flashlib.robot.hid.XboxController;
+import edu.flash3388.flashlib.util.FlashUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeFRCRobot {
 	Action auto;
@@ -23,6 +23,8 @@ public class Robot extends IterativeFRCRobot {
 	
 	XboxController controller;
 	LaunchSystem shoot;
+	
+	double startTime;
 	@Override
 	protected void initRobot() {
 		/*
@@ -35,7 +37,7 @@ public class Robot extends IterativeFRCRobot {
 		 * cam handler
 		 */
 		
-		//camHandler = new CamerasHandler();
+		camHandler = new CamerasHandler();
 		/*
 		 * auto setup
 		 */
@@ -67,7 +69,7 @@ public class Robot extends IterativeFRCRobot {
 					liftSystem.rotate(controller.LeftStick.getYAxis().get());
 				 */
 				double val = controller.LeftStick.getYAxis().get();
-				val = Mathf.constrain(val, MIN, MAX);
+				//val = Mathf.constrain(val, MIN, MAX);
 				liftSystem.rotate(val);	
 			}
 			@Override
@@ -79,7 +81,6 @@ public class Robot extends IterativeFRCRobot {
 
 	private void shootSetup() {
 		shoot = new LaunchSystem(RobotMap.SOLA1,RobotMap.SOLA2,RobotMap.SOLB1,RobotMap.SOLB2);
-		
 		controller.A.whenPressed(new InstantAction() {
 			@Override
 			protected void execute() {
@@ -98,9 +99,10 @@ public class Robot extends IterativeFRCRobot {
 		});
 	}
 
-	@Override
 	protected void disabledInit() {
-		// TODO Auto-generated method stub
+		SmartDashboard.putBoolean(DashNames.enabled, false);
+		SmartDashboard.putNumber(DashNames.timeLeft, 0.0);
+		SmartDashboard.putNumber(DashNames.time, 0.0);
 		
 	}
 	
@@ -114,12 +116,21 @@ public class Robot extends IterativeFRCRobot {
 	protected void teleopInit() {
 		//controller.getRawButton(1);
 		//DriverStation.getInstance().getStickButton(0, 1);
+		SmartDashboard.putBoolean(DashNames.enabled, true);
+		SmartDashboard.putNumber(DashNames.time, 0.0);
+		startTime = FlashUtil.secs();
 	}
 
 	@Override
 	protected void teleopPeriodic() {
-		// TODO Auto-generated method stub
-		
+		updateTime();
+	}
+	
+	void updateTime()
+	{
+		double time = (FlashUtil.secs() - startTime);
+		SmartDashboard.putNumber(DashNames.time, Mathf.scale(time, 0.0, 100.0));
+		SmartDashboard.putNumber(DashNames.timeLeft, 135.0-time);
 	}
 
 	@Override

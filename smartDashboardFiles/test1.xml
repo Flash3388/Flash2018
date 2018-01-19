@@ -1,0 +1,27 @@
+<xml version="1.0">
+<dashboard>
+	<widget field="time left" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
+		<location x="70" y="379"/>
+		<width>163</width>
+		<height>25</height>
+	</widget>
+	<widget field="..." type="Number" class="edu.wpi.first.smartdashboard.gui.elements.SimpleDial">
+		<location x="15" y="417"/>
+		<width>301</width>
+		<height>191</height>
+	</widget>
+	<widget field="Enabled" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
+		<location x="61" y="58"/>
+		<width>160</width>
+		<height>36</height>
+	</widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
+		<location x="447" y="124"/>
+		<width>492</width>
+		<height>364</height>
+		<property name="Camera Choice" value=""/>
+	</static-widget>
+</dashboard>
+<live-window>
+</live-window>
+</xml>

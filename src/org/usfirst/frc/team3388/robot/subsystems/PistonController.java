@@ -16,22 +16,22 @@ public class PistonController  {
 		controller.set(Value.kOff);
 	}	
 	public void use(boolean side) {
-		if(side == true)
+		if(side)
 		{
 			controller.set(Value.kForward );
 			isClosed = true;
 		}
-		if(side == true)
+		if(!side)
 		{
-			controller.set(Value.kOff);
+			controller.set(Value.kReverse);
 			isClosed = false;
 		}
 	}
 	public void close() {
-		use(false);
+		use(true);
 	}
 	public void open() {
-		use(true);
+		use(false);
 	}
 	public boolean isClosed() {
 		return isClosed;
