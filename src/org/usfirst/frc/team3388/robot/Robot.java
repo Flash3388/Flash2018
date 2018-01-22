@@ -5,6 +5,7 @@ import org.usfirst.frc.team3388.robot.subsystems.Drive;
 import org.usfirst.frc.team3388.robot.subsystems.LaunchSystem;
 import org.usfirst.frc.team3388.robot.subsystems.LiftSystem;
 
+import edu.flash3388.flashlib.dashboard.controls.ChooserControl;
 import edu.flash3388.flashlib.math.Mathf;
 import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.InstantAction;
@@ -25,7 +26,7 @@ public class Robot extends IterativeFRCRobot {
 	CamerasHandler camHandler;
 	Drive drive;
 	LiftSystem liftSystem;
-	
+	SendableChooser<Action> controllerChooser;
 	
 	Joystick rightController;
 	Joystick leftController;
@@ -49,50 +50,64 @@ public class Robot extends IterativeFRCRobot {
 		/*
 		 * auto setup
 		 */
-		p = new AnalogPotentiometer(0);
-		/******************************
+		 /******************************
 		 * Optional code for joysticks*
 		 * ***************************/
 		Joystick rightController = new Joystick(RobotMap.RIGHT_CONTROLLER);
 		Joystick leftController = new Joystick(RobotMap.LEFT_CONTROLLER);
 		
-		SystemAction(new Action("Joysticks") {
+		Action setJoysticks = new InstantAction() {
 			
 			@Override
 			protected void execute() {
-				drive.driveTrain.tankDrive(rightController.getY(), leftController.getY());
+				drive.driveTrain.setDefaultAction(new SystemAction(new Action() {
+					@Override
+					protected void execute() {
+						drive.driveTrain.tankDrive(rightController.getY(),leftController.getY());
+					}
+					
+					@Override
+					protected void end() {
+						drive.driveTrain.tankDrive(0,0);
+					}
+				}, drive.driveTrain));
 			}
-			
-			@Override
-			protected void end() {
-				
-			}
-		});
-		/*
+		};
 		controller = new XboxController(RobotMap.XBOX);
-		drive.driveTrain.setDefaultAction(new SystemAction(new Action() {
-			@Override
-			protected void execute() {
-				drive.driveTrain.tankDrive(controller.RightStick.AxisY, controller.LeftStick.AxisY);
-			}
+		Action setXbox = new InstantAction() {
 			
 			@Override
-			protected void end() {
-				drive.driveTrain.tankDrive(0,0);
+			protected void execute() {
+				drive.driveTrain.setDefaultAction(new SystemAction(new Action() {
+					@Override
+					protected void execute() {
+						drive.driveTrain.tankDrive(controller.RightStick.AxisY, controller.LeftStick.AxisY);
+					}
+					
+					@Override
+					protected void end() {
+						drive.driveTrain.tankDrive(0,0);
+					}
+				}, drive.driveTrain));
 			}
-		}, drive.driveTrain));
+		};
+		//Controller chooser
+		controllerChooser = new SendableChooser<Action>();
+		controllerChooser.addDefault("None", null);
+		controllerChooser.addObject("XBOX",setXbox );
+		controllerChooser.addDefault("2 joysticks", setJoysticks);
+		SmartDashboard.putData("Controller chooser", controllerChooser);
+
+		p = new AnalogPotentiometer(0);
+
+
+
 		//liftSetup();
 		//shootSetup();
 		//autoChooser = new SendableChooser<Action>();
 		//autoChooser.addDefault("auto1", auto);
 		//...
 		//autoChooser.addDefault("auto2", auto2);
-	*/
-	}
-
-	private void SystemAction(Action action) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	private void liftSetup() {
