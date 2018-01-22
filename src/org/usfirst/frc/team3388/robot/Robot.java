@@ -13,6 +13,7 @@ import edu.flash3388.flashlib.robot.frc.IterativeFRCRobot;
 import edu.flash3388.flashlib.robot.hid.XboxController;
 import edu.flash3388.flashlib.util.FlashUtil;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,6 +26,9 @@ public class Robot extends IterativeFRCRobot {
 	Drive drive;
 	LiftSystem liftSystem;
 	
+	
+	Joystick rightController;
+	Joystick leftController;
 	XboxController controller;
 	LaunchSystem shoot;
 	Potentiometer p; 
@@ -46,6 +50,24 @@ public class Robot extends IterativeFRCRobot {
 		 * auto setup
 		 */
 		p = new AnalogPotentiometer(0);
+		/******************************
+		 * Optional code for joysticks*
+		 * ***************************/
+		Joystick rightController = new Joystick(RobotMap.RIGHT_CONTROLLER);
+		Joystick leftController = new Joystick(RobotMap.LEFT_CONTROLLER);
+		
+		SystemAction(new Action("Joysticks") {
+			
+			@Override
+			protected void execute() {
+				drive.driveTrain.tankDrive(rightController.getY(), leftController.getY());
+			}
+			
+			@Override
+			protected void end() {
+				
+			}
+		});
 		/*
 		controller = new XboxController(RobotMap.XBOX);
 		drive.driveTrain.setDefaultAction(new SystemAction(new Action() {
@@ -66,6 +88,11 @@ public class Robot extends IterativeFRCRobot {
 		//...
 		//autoChooser.addDefault("auto2", auto2);
 	*/
+	}
+
+	private void SystemAction(Action action) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	private void liftSetup() {
