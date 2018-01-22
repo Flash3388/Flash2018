@@ -1,6 +1,8 @@
 
 package org.usfirst.frc.team3388.robot;
 
+import java.sql.Time;
+
 import org.usfirst.frc.team3388.robot.subsystems.Drive;
 import org.usfirst.frc.team3388.robot.subsystems.LaunchSystem;
 import org.usfirst.frc.team3388.robot.subsystems.LiftSystem;
@@ -10,6 +12,7 @@ import edu.flash3388.flashlib.math.Mathf;
 import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.InstantAction;
 import edu.flash3388.flashlib.robot.SystemAction;
+import edu.flash3388.flashlib.robot.TimedAction;
 import edu.flash3388.flashlib.robot.frc.IterativeFRCRobot;
 import edu.flash3388.flashlib.robot.hid.XboxController;
 import edu.flash3388.flashlib.util.FlashUtil;
@@ -22,20 +25,29 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeFRCRobot {
 	
 	Action auto;
-	SendableChooser<Action> autoChooser;
+	Action toDrive;
+	
+	TimedAction move;
+	
 	CamerasHandler camHandler;
 	Drive drive;
-	LiftSystem liftSystem;
+	
+	SendableChooser<Action> autoChooser;
 	SendableChooser<Action> controllerChooser;
 	
 	Joystick rightController;
 	Joystick leftController;
 	XboxController controller;
+	
 	LaunchSystem shoot;
+	LiftSystem liftSystem;
+
 	Potentiometer p; 
 	static double startTime;
 	@Override
 	protected void initRobot() {
+		final double speed = 0;
+		final double seconds = 0;
 		/*
 		 * drive setup 
 		 */
@@ -50,11 +62,26 @@ public class Robot extends IterativeFRCRobot {
 		/*
 		 * auto setup
 		 */
-		 /******************************
-		 * Optional code for joysticks*
+		toDrive = new Action() {
+			
+			@Override
+			protected void execute() {
+				drive.driveTrain.forward(speed);
+			}
+			
+			@Override
+			protected void end() {
+				// TODO Auto-generated method stub
+				
+			}
+		};
+		move = new TimedAction(toDrive, seconds);
+		
+		 /*****************************
+		 *      code for controllers  *
 		 * ***************************/
-		Joystick rightController = new Joystick(RobotMap.RIGHT_CONTROLLER);
-		Joystick leftController = new Joystick(RobotMap.LEFT_CONTROLLER);
+		rightController = new Joystick(RobotMap.RIGHT_CONTROLLER);
+		leftController = new Joystick(RobotMap.LEFT_CONTROLLER);
 		
 		Action setJoysticks = new InstantAction() {
 			
