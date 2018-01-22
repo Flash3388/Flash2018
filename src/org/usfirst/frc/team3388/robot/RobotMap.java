@@ -2,10 +2,10 @@ package org.usfirst.frc.team3388.robot;
 
 public class RobotMap {
 
-	public static final int DRIVE_FRONTRIGHT = 2;
-	public static final int DRIVE_FRONTLEFT = 1;
-	public static final int DRIVE_BACKLEFT = 3;
-	public static final int DRIVE_BACKRIGHT = 4;
+	public static final int DRIVE_FRONTRIGHT = 4;
+	public static final int DRIVE_FRONTLEFT = 7;
+	public static final int DRIVE_BACKLEFT = 2;
+	public static final int DRIVE_BACKRIGHT = 5;
 	public static final int ROLLER_GRIPPER = 0;
 	public static final int XBOX = 0;
 	public static final int ADXRS450= 0;	

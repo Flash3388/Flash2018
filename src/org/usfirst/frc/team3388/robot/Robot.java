@@ -8,13 +8,17 @@ import org.usfirst.frc.team3388.robot.subsystems.LiftSystem;
 import edu.flash3388.flashlib.math.Mathf;
 import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.InstantAction;
+import edu.flash3388.flashlib.robot.SystemAction;
 import edu.flash3388.flashlib.robot.frc.IterativeFRCRobot;
 import edu.flash3388.flashlib.robot.hid.XboxController;
 import edu.flash3388.flashlib.util.FlashUtil;
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
+import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeFRCRobot {
+	
 	Action auto;
 	SendableChooser<Action> autoChooser;
 	CamerasHandler camHandler;
@@ -23,8 +27,8 @@ public class Robot extends IterativeFRCRobot {
 	
 	XboxController controller;
 	LaunchSystem shoot;
-	
-	double startTime;
+	Potentiometer p; 
+	static double startTime;
 	@Override
 	protected void initRobot() {
 		/*
@@ -37,25 +41,35 @@ public class Robot extends IterativeFRCRobot {
 		 * cam handler
 		 */
 		
-		camHandler = new CamerasHandler();
+		//camHandler = new CamerasHandler();
 		/*
 		 * auto setup
 		 */
+		p = new AnalogPotentiometer(0);
+		/*
 		controller = new XboxController(RobotMap.XBOX);
-		liftSetup();
-		shootSetup();
+		drive.driveTrain.setDefaultAction(new SystemAction(new Action() {
+			@Override
+			protected void execute() {
+				drive.driveTrain.tankDrive(controller.RightStick.AxisY, controller.LeftStick.AxisY);
+			}
+			
+			@Override
+			protected void end() {
+				drive.driveTrain.tankDrive(0,0);
+			}
+		}, drive.driveTrain));
+		//liftSetup();
+		//shootSetup();
 		//autoChooser = new SendableChooser<Action>();
 		//autoChooser.addDefault("auto1", auto);
 		//...
 		//autoChooser.addDefault("auto2", auto2);
-		 
-		 
-		
+	*/
 	}
 
 	private void liftSetup() {
 		liftSystem = new LiftSystem();
-		
 		liftSystem.setDefaultAction(new Action() {
 			final double MIN = -0.2;
 			final double MAX = 0.2;
@@ -100,39 +114,27 @@ public class Robot extends IterativeFRCRobot {
 	}
 
 	protected void disabledInit() {
-		SmartDashboard.putBoolean(DashNames.enabled, false);
-		SmartDashboard.putNumber(DashNames.timeLeft, 0.0);
-		SmartDashboard.putNumber(DashNames.time, 0.0);
-		
+		DashHandle.disInit();
 	}
 	
 	@Override
 	protected void disabledPeriodic() {
-		// TODO Auto-generated method stub
-		
+		System.out.println(String.format("%.2f", p.get()));
 	}
 
 	@Override
 	protected void teleopInit() {
 		//controller.getRawButton(1);
 		//DriverStation.getInstance().getStickButton(0, 1);
-		SmartDashboard.putBoolean(DashNames.enabled, true);
-		SmartDashboard.putNumber(DashNames.time, 0.0);
 		startTime = FlashUtil.secs();
+		DashHandle.teleInit();
 	}
 
 	@Override
 	protected void teleopPeriodic() {
-		updateTime();
+		DashHandle.telePeriodic();
 	}
 	
-	void updateTime()
-	{
-		double time = (FlashUtil.secs() - startTime);
-		SmartDashboard.putNumber(DashNames.time, Mathf.scale(time, 0.0, 100.0));
-		SmartDashboard.putNumber(DashNames.timeLeft, 135.0-time);
-	}
-
 	@Override
 	protected void autonomousInit() {
 	/*	String gameData;
@@ -159,7 +161,6 @@ public class Robot extends IterativeFRCRobot {
 
 	@Override
 	protected void autonomousPeriodic() {
-		// TODO Auto-generated method stub
 		
 	}
 
