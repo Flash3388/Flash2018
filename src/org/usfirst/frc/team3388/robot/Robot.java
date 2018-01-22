@@ -71,8 +71,7 @@ public class Robot extends IterativeFRCRobot {
 			
 			@Override
 			protected void end() {
-				// TODO Auto-generated method stub
-				
+				drive.driveTrain.forward(0);
 			}
 		};
 		move = new TimedAction(toDrive, seconds);
