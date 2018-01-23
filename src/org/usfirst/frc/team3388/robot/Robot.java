@@ -27,11 +27,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeFRCRobot {
 	
 	Action auto;
-	Action toDrive;
 	
 	Capture capture;
 	
-	TimedAction move;
+	TimedAction timedDriveAuto;
 	
 	CamerasHandler camHandler;
 	Drive drive;
@@ -51,8 +50,6 @@ public class Robot extends IterativeFRCRobot {
 	static double startTime;
 	@Override
 	protected void initRobot() {
-		final double speed = 0;
-		final double seconds = 0;
 		
 		rollerGripper = new RollerGripper();
 		capture = new Capture();
@@ -60,8 +57,7 @@ public class Robot extends IterativeFRCRobot {
 		 * drive setup 
 		 */
 		
-		//drive = new Drive();
-		
+		drive = new Drive();
 		/*
 		 * cam handler
 		 */
@@ -70,8 +66,41 @@ public class Robot extends IterativeFRCRobot {
 		/*
 		 * auto setup
 		 */
-		toDrive = new Action() {
+		autoHandlers();
+		
+		
+	//	controllersSetup();
+		controller = new XboxController(RobotMap.XBOX);
+
+		drive.driveTrain.setDefaultAction(new SystemAction(new Action() {
+			@Override
+			protected void execute() {
+				drive.driveTrain.tankDrive(controller.RightStick.getY(), controller.LeftStick.getY()*-1);
+			}
 			
+			@Override
+			protected void end() {
+				drive.driveTrain.tankDrive(0,0);
+			}
+		}, drive.driveTrain));
+
+		//controller.B.whenPressed(capture);//captures while pressed
+
+		p = new AnalogPotentiometer(0);
+
+		//liftSetup();
+		//shootSetup();
+		autoChooser = new SendableChooser<Action>();
+		autoChooser.addDefault("auto1", timedDriveAuto);
+		//...
+		//autoChooser.addDefault("auto2", auto2);
+		SmartDashboard.putData(autoChooser);
+	}
+
+	private void autoHandlers() {
+		final double seconds = 0;
+		Action toDrive = new Action() {
+			final double speed = 0;		
 			@Override
 			protected void execute() {
 				drive.driveTrain.forward(speed);
@@ -82,9 +111,12 @@ public class Robot extends IterativeFRCRobot {
 				drive.driveTrain.forward(0);
 			}
 		};
-		move = new TimedAction(toDrive, seconds);
-		
-		 /*****************************
+		timedDriveAuto = new TimedAction(toDrive, seconds);
+	}
+
+	private void controllersSetup() {
+		System.out.println("Runned");
+		/*****************************
 		 *      code for controllers  *
 		 * ***************************/
 		rightController = new Joystick(RobotMap.RIGHT_CONTROLLER);
@@ -124,26 +156,16 @@ public class Robot extends IterativeFRCRobot {
 					}
 				}, drive.driveTrain));
 			}
+
 		};
 		//Controller chooser
 		controllerChooser = new SendableChooser<Action>();
-		controllerChooser.addDefault("None", null);
+		controllerChooser.addDefault("None", setXbox);
 		controllerChooser.addObject("XBOX",setXbox );
 		controllerChooser.addDefault("2 joysticks", setJoysticks);
 		SmartDashboard.putData("Controller chooser", controllerChooser);
-		
-		controller.B.whenPressed(capture);//captures while pressed
-
-		p = new AnalogPotentiometer(0);
-
-
-
-		//liftSetup();
-		//shootSetup();
-		//autoChooser = new SendableChooser<Action>();
-		//autoChooser.addDefault("auto1", auto);
-		//...
-		//autoChooser.addDefault("auto2", auto2);
+		Action controllers = controllerChooser.getSelected();
+		controllers.start();
 	}
 
 	private void liftSetup() {
@@ -197,7 +219,7 @@ public class Robot extends IterativeFRCRobot {
 	
 	@Override
 	protected void disabledPeriodic() {
-		System.out.println(String.format("%.2f", p.get()));
+		//System.out.println(String.format("%.2f", p.get()));
 	}
 
 	@Override

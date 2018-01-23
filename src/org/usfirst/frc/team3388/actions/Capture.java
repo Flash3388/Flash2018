@@ -13,7 +13,7 @@ public class Capture extends Action{
 
 	double startTime=0;
 	double timeCaptured=0;
-	
+	static final double CAPTURING_TIME = 1.9;
 	public Capture() {
 		requires(Robot.rollerGripper);
 	}
@@ -27,22 +27,19 @@ public class Capture extends Action{
 		Robot.rollerGripper.rotate(Robot.rollerGripper.DEFAULT_SPEED);
 		if(Robot.rollerGripper.isCaptured())
 		{
-			startTime=FlashUtil.secs();
-			while(Robot.rollerGripper.isCaptured())
-			{
-				timeCaptured=FlashUtil.secs()-startTime;
-			}
+			if(startTime == 0)
+				startTime=FlashUtil.secs();
+			timeCaptured = FlashUtil.secs() - startTime;
 		}
 		else
 		{
-			timeCaptured=0;
 			startTime=0;
 		}
 	}
 	
 	@Override
 	protected boolean isFinished() {
-		return timeCaptured== 1;
+		return timeCaptured == CAPTURING_TIME;
 	}
 
 }
