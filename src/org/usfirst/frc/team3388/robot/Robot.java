@@ -3,9 +3,11 @@ package org.usfirst.frc.team3388.robot;
 
 import java.sql.Time;
 
+import org.usfirst.frc.team3388.actions.Capture;
 import org.usfirst.frc.team3388.robot.subsystems.Drive;
 import org.usfirst.frc.team3388.robot.subsystems.LaunchSystem;
 import org.usfirst.frc.team3388.robot.subsystems.LiftSystem;
+import org.usfirst.frc.team3388.robot.subsystems.RollerGripper;
 
 import edu.flash3388.flashlib.dashboard.controls.ChooserControl;
 import edu.flash3388.flashlib.math.Mathf;
@@ -27,6 +29,8 @@ public class Robot extends IterativeFRCRobot {
 	Action auto;
 	Action toDrive;
 	
+	Capture capture;
+	
 	TimedAction move;
 	
 	CamerasHandler camHandler;
@@ -41,13 +45,17 @@ public class Robot extends IterativeFRCRobot {
 	
 	LaunchSystem shoot;
 	LiftSystem liftSystem;
-
+	public static RollerGripper rollerGripper;
+	
 	Potentiometer p; 
 	static double startTime;
 	@Override
 	protected void initRobot() {
 		final double speed = 0;
 		final double seconds = 0;
+		
+		rollerGripper = new RollerGripper();
+		capture = new Capture();
 		/*
 		 * drive setup 
 		 */
@@ -123,6 +131,8 @@ public class Robot extends IterativeFRCRobot {
 		controllerChooser.addObject("XBOX",setXbox );
 		controllerChooser.addDefault("2 joysticks", setJoysticks);
 		SmartDashboard.putData("Controller chooser", controllerChooser);
+		
+		controller.B.whenPressed(capture);//captures while pressed
 
 		p = new AnalogPotentiometer(0);
 
