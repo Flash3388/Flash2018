@@ -7,6 +7,7 @@ import org.usfirst.frc.team3388.actions.Capture;
 import org.usfirst.frc.team3388.robot.subsystems.Drive;
 import org.usfirst.frc.team3388.robot.subsystems.LaunchSystem;
 import org.usfirst.frc.team3388.robot.subsystems.LiftSystem;
+import org.usfirst.frc.team3388.robot.subsystems.Pole;
 import org.usfirst.frc.team3388.robot.subsystems.RollerGripper;
 
 import edu.flash3388.flashlib.dashboard.controls.ChooserControl;
@@ -44,6 +45,7 @@ public class Robot extends IterativeFRCRobot {
 	
 	LaunchSystem shoot;
 	LiftSystem liftSystem;
+	public static Pole rollerGripperPole;
 	public static RollerGripper rollerGripper;
 	
 	Potentiometer p; 
@@ -51,6 +53,7 @@ public class Robot extends IterativeFRCRobot {
 	@Override
 	protected void initRobot() {
 		
+		rollerGripperPole = new Pole();
 		rollerGripper = new RollerGripper();
 		capture = new Capture();
 		/*

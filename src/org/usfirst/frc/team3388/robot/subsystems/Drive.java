@@ -26,7 +26,7 @@ public class Drive {
 	public PIDController distancePID;
 	public PIDSource distanceSource;
 	public static final String SETPOINT_NAME= "distanceSetPoint";
-	public DoubleProperty pidSetPoint = PropertyHandler.putNumber(SETPOINT_NAME, 135.0);
+	public DoubleProperty pidSetPoint = PropertyHandler.putNumber(SETPOINT_NAME,135.0);
 	
 	public Drive() {
 		
