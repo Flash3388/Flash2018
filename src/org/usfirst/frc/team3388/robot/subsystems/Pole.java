@@ -17,22 +17,24 @@ import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 public class Pole extends Subsystem implements Rotatable{
 	
 	private FlashSpeedController controller;
+	private final int RANGE=360;
+	private final int OFFSET=0;
 	public PIDController rotatePID;
 	public PIDSource rotateSource;
 	public static final String SETPOINT_NAME= "rotateSetPoint";
 	public DoubleProperty PIDSetPoint = PropertyHandler.putNumber(SETPOINT_NAME, 0.0);
-	public static AnalogPotentiometer potentiometer;
+	public static Potentiometer potentiometer;
 
 	public Pole()
 	{
-		potentiometer = new AnalogPotentiometer(RobotMap.POTENTIOMETER);
+		potentiometer = new AnalogPotentiometer(RobotMap.POTENTIOMETER,RANGE,OFFSET);
 		//potentiometer.setPIDSourceType(pidSource);
 		controller= new TalonSpeed(RobotMap.ROLLER_GRIPPER_POLE);
 		rotateSource = new PIDSource() {
 			
 			@Override
 			public double pidGet() {
-				return potentiometer.get();
+				return potentiometer.get();//degrees
 			}
 		};
 		rotatePID = new PIDController(0.0 , 0.0 , 0.0 , 0.0 , PIDSetPoint,rotateSource);
