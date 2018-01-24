@@ -119,6 +119,7 @@ public class Robot extends IterativeFRCRobot {
 		final double MAX_ANGLE=0.0;
 		final double MIN_ANGLE=0.0;
 		final double MID_ANGLE=0.0;
+		final double DOWN = 75.0;
 		final double SWITCH_ANGLE=0.0;
 		
 		rollerGripperPole = new Pole();
@@ -165,30 +166,36 @@ public class Robot extends IterativeFRCRobot {
 		InstantAction down = new InstantAction() {
 			@Override
 			protected void execute() {
-				poleAction.setSetpoint(0.0);
+				poleAction.setSetpoint(DOWN);
 				poleAction.start();
 			}
 		};
 		
 		ActionGroup putMax = new ActionGroup();
 		putMax.addSequential(putMax)
-			  .addSequential(release);//wait time can be added
+			  .addSequential(release)
+			  .addSequential(down);
 		ActionGroup putMid = new ActionGroup();
 		putMid.addSequential(putMid)
-			  .addSequential(release);
+			  .addSequential(release)
+			  .addSequential(down);
 		ActionGroup putMin = new ActionGroup();
 		putMin.addSequential(putMin)
-			  .addSequential(release);
+			  .addSequential(release)
+			  .addSequential(down);
 		ActionGroup putSwitch = new ActionGroup();
 		putSwitch.addSequential(putSwitch)
-				 .addSequential(release);
-		
+				 .addSequential(release)
+				 .addSequential(down);
+		//Null pointer exception
+		/*
 		controller.A.whenPressed(putSwitch);
 		controller.B.whenPressed(putMin);
 		controller.X.whenPressed(putMid);
 		controller.Y.whenPressed(putMax);
 		controller.RB.whileHeld(capture);
 		controller.LB.whenPressed(release);
+		*/
 		
 	}
 	
