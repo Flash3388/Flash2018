@@ -4,6 +4,8 @@ package org.usfirst.frc.team3388.robot;
 import java.sql.Time;
 
 import org.usfirst.frc.team3388.actions.Capture;
+import org.usfirst.frc.team3388.actions.PoleAction;
+import org.usfirst.frc.team3388.actions.PoleAction;
 import org.usfirst.frc.team3388.robot.subsystems.Drive;
 import org.usfirst.frc.team3388.robot.subsystems.LaunchSystem;
 import org.usfirst.frc.team3388.robot.subsystems.LiftSystem;
@@ -13,6 +15,7 @@ import org.usfirst.frc.team3388.robot.subsystems.RollerGripper;
 import edu.flash3388.flashlib.dashboard.controls.ChooserControl;
 import edu.flash3388.flashlib.math.Mathf;
 import edu.flash3388.flashlib.robot.Action;
+import edu.flash3388.flashlib.robot.ActionGroup;
 import edu.flash3388.flashlib.robot.InstantAction;
 import edu.flash3388.flashlib.robot.SystemAction;
 import edu.flash3388.flashlib.robot.TimedAction;
@@ -28,9 +31,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeFRCRobot {
 	
 	Action auto;
-	
-	Capture capture;
-	
+		
 	TimedAction timedDriveAuto;
 	
 	CamerasHandler camHandler;
@@ -52,9 +53,6 @@ public class Robot extends IterativeFRCRobot {
 	@Override
 	protected void initRobot() {
 		
-		rollerGripperPole = new Pole();
-		rollerGripper = new RollerGripper();
-		capture = new Capture();
 		/*
 		 * drive setup 
 		 */
@@ -70,7 +68,7 @@ public class Robot extends IterativeFRCRobot {
 		 */
 		autoHandlers();
 		
-		
+		rollerGripperSystemSetup();
 	//	controllersSetup();
 		controller = new XboxController(RobotMap.XBOX);
 
@@ -114,6 +112,86 @@ public class Robot extends IterativeFRCRobot {
 		timedDriveAuto = new TimedAction(toDrive, seconds);
 	}
 
+	private void rollerGripperSystemSetup()
+	{
+		final double RELEASE_SPEED = -1.0;
+		final double seconds=1.0;/*  */
+		final double MAX_ANGLE=0.0;
+		final double MIN_ANGLE=0.0;
+		final double MID_ANGLE=0.0;
+		final double SWITCH_ANGLE=0.0;
+		
+		rollerGripperPole = new Pole();
+		rollerGripper = new RollerGripper();
+		
+		Capture capture = new Capture();
+		PoleAction poleAction = new PoleAction();
+		
+		InstantAction minLift = new InstantAction() {
+			@Override
+			protected void execute() {
+				poleAction.setSetpoint(MIN_ANGLE);
+				poleAction.start();
+			}
+		};
+		TimedAction release = new TimedAction(new InstantAction() {
+			
+			@Override
+			protected void execute() {
+				rollerGripper.rotate(RELEASE_SPEED);
+			}
+		}, seconds);
+		InstantAction midLift = new InstantAction() {
+			@Override
+			protected void execute() {
+				poleAction.setSetpoint(MID_ANGLE);
+				poleAction.start();
+			}
+		};
+		InstantAction maxLift = new InstantAction() {
+			@Override
+			protected void execute() {
+				poleAction.setSetpoint(MAX_ANGLE);
+				poleAction.start();
+			}
+		};
+		InstantAction switchLift = new InstantAction() {
+			@Override
+			protected void execute() {
+				poleAction.setSetpoint(SWITCH_ANGLE);
+				poleAction.start();
+			}
+		};
+		InstantAction down = new InstantAction() {
+			@Override
+			protected void execute() {
+				poleAction.setSetpoint(0.0);
+				poleAction.start();
+			}
+		};
+		
+		ActionGroup putMax = new ActionGroup();
+		putMax.addSequential(putMax)
+			  .addSequential(release);//wait time can be added
+		ActionGroup putMid = new ActionGroup();
+		putMid.addSequential(putMid)
+			  .addSequential(release);
+		ActionGroup putMin = new ActionGroup();
+		putMin.addSequential(putMin)
+			  .addSequential(release);
+		ActionGroup putSwitch = new ActionGroup();
+		putSwitch.addSequential(putSwitch)
+				 .addSequential(release);
+		
+		controller.A.whenPressed(putSwitch);
+		controller.B.whenPressed(putMin);
+		controller.X.whenPressed(putMid);
+		controller.Y.whenPressed(putMax);
+		controller.RB.whileHeld(capture);
+		controller.LB.whenPressed(release);
+		
+	}
+	
 	private void controllersSetup() {
 		System.out.println("Runned");
 		/*****************************

@@ -4,11 +4,14 @@ import org.usfirst.frc.team3388.robot.Robot;
 
 import edu.flash3388.flashlib.robot.Action;
 
-public class poleAction extends Action{
+public class PoleAction extends Action{
 	
 	private double setPoint;
+	public final double SCOPE=0.5;
+	private double max;
+	private double min;
 	
-	public poleAction() {
+	public PoleAction() {
 		requires(Robot.rollerGripperPole);
 	}
 
@@ -22,7 +25,14 @@ public class poleAction extends Action{
 		Robot.rollerGripperPole.setPoint(setPoint);
 		Robot.rollerGripperPole.rotate(Robot.rollerGripperPole.rotatePID.calculate());
 	}
-	public void setSetpoint(double setpoint) {
+	public void setSetpoint(double setPoint) {
 		this.setPoint = setPoint;
+		max = setPoint+SCOPE;
+		min = setPoint-SCOPE;
+	}
+	@Override
+	protected boolean isFinished() {
+		return Robot.rollerGripperPole.potentiometer.get()<max 
+				&& Robot.rollerGripperPole.potentiometer.get()>min;
 	}
 }
