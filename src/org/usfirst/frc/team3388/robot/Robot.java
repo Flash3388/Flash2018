@@ -48,7 +48,6 @@ public class Robot extends IterativeFRCRobot {
 	public static Pole rollerGripperPole;
 	public static RollerGripper rollerGripper;
 	
-	Potentiometer p; 
 	static double startTime;
 	@Override
 	protected void initRobot() {
@@ -88,8 +87,6 @@ public class Robot extends IterativeFRCRobot {
 		}, drive.driveTrain));
 
 		//controller.B.whenPressed(capture);//captures while pressed
-
-		p = new AnalogPotentiometer(0);
 
 		//liftSetup();
 		//shootSetup();
