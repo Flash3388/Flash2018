@@ -187,7 +187,7 @@ public class Robot extends IterativeFRCRobot {
 		putSwitch.addSequential(putSwitch)
 				 .addSequential(release)
 				 .addSequential(down);
-		//Null pointer exception
+		//NULL pointer exception
 		/*
 		controller.A.whenPressed(putSwitch);
 		controller.B.whenPressed(putMin);
