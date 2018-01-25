@@ -63,10 +63,11 @@ public class Robot extends IterativeFRCRobot {
 		/*
 		 * auto setup
 		 */
+		controllersSetup();
+
 		autoHandlers();
 		
 		rollerGripperSystemSetup();
-		controllersSetup();
 
 
 	}
@@ -181,15 +182,13 @@ public class Robot extends IterativeFRCRobot {
 		putSwitch.addSequential(putSwitch)
 				 .addSequential(release)
 				 .addSequential(down);//Action groups setup end
-		//NULL pointer exception
-		/*
+
 		controller.A.whenPressed(putSwitch);//controller binding start
 		controller.B.whenPressed(putMin);
 		controller.X.whenPressed(putMid);
 		controller.Y.whenPressed(putMax);
 		controller.RB.whileHeld(capture);
 		controller.LB.whenPressed(release);//controller binding end
-		*/
 		
 	}
 	/*Function will calculate the angle for the roller gripper
@@ -274,6 +273,4 @@ public class Robot extends IterativeFRCRobot {
 	protected void autonomousPeriodic() {
 		
 	}
-
-
 }
