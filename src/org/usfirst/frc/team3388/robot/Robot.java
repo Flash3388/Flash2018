@@ -6,10 +6,7 @@ import java.sql.Time;
 import org.usfirst.frc.team3388.actions.Capture;
 import org.usfirst.frc.team3388.actions.Lift;
 import org.usfirst.frc.team3388.actions.PoleAction;
-import org.usfirst.frc.team3388.actions.PoleAction;
 import org.usfirst.frc.team3388.robot.subsystems.Drive;
-import org.usfirst.frc.team3388.robot.subsystems.LaunchSystem;
-import org.usfirst.frc.team3388.robot.subsystems.LiftSystem;
 import org.usfirst.frc.team3388.robot.subsystems.Pole;
 import org.usfirst.frc.team3388.robot.subsystems.RollerGripper;
 import org.usfirst.frc.team3388.robot.subsystems.RollerLiftingSystem;
@@ -31,23 +28,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeFRCRobot {
-	
-	Action auto;
-		
+	/********************
+	 * Main Robot class *
+	 *******************/
 	TimedAction timedDriveAuto;
 	
 	CamerasHandler camHandler;
 	Drive drive;
 	
 	SendableChooser<Action> autoChooser;
-	SendableChooser<Action> controllerChooser;
 	
 	Joystick rightController;
 	Joystick leftController;
 	XboxController controller;
 	
-	LaunchSystem shoot;
-	LiftSystem liftSystem;
 	public static Pole rollerGripperPole;
 	public static RollerGripper rollerGripper;
 	public static RollerLiftingSystem rollerGripperLifter;
@@ -72,32 +66,14 @@ public class Robot extends IterativeFRCRobot {
 		autoHandlers();
 		
 		rollerGripperSystemSetup();
-	//	controllersSetup();
-		controller = new XboxController(RobotMap.XBOX);
+		controllersSetup();
 
-		drive.driveTrain.setDefaultAction(new SystemAction(new Action() {
-			@Override
-			protected void execute() {
-				drive.driveTrain.tankDrive(controller.RightStick.getY(), controller.LeftStick.getY()*-1);
-			}
-			
-			@Override
-			protected void end() {
-				drive.driveTrain.tankDrive(0,0);
-			}
-		}, drive.driveTrain));
 
-		//controller.B.whenPressed(capture);//captures while pressed
-
-		//liftSetup();
-		//shootSetup();
-		autoChooser = new SendableChooser<Action>();
-		autoChooser.addDefault("auto1", timedDriveAuto);
-		//...
-		//autoChooser.addDefault("auto2", auto2);
-		SmartDashboard.putData(autoChooser);
 	}
-
+	/*Function will setup all of the autonomy programs and the auto chooser
+	 * input: None 
+	 * output: None
+	 */
 	private void autoHandlers() {
 		final double seconds = 0;
 		Action toDrive = new Action() {
@@ -113,8 +89,16 @@ public class Robot extends IterativeFRCRobot {
 			}
 		};
 		timedDriveAuto = new TimedAction(toDrive, seconds);
+		autoChooser = new SendableChooser<Action>();
+		autoChooser.addDefault("auto1", timedDriveAuto);
+		//...
+		//autoChooser.addDefault("auto2", auto2);
+		SmartDashboard.putData(autoChooser);
 	}
-
+	/*Function will setup all the roller gripper system(pole+lift+roller)
+	 * input: None
+	 * output: None
+	 */
 	private void rollerGripperSystemSetup()
 	{
 		final double RELEASE_SPEED = -1.0;
@@ -127,15 +111,23 @@ public class Robot extends IterativeFRCRobot {
 		
 		int rollerAngle=0;
 		
-		rollerGripperPole = new Pole();
-		rollerGripper = new RollerGripper();
-		rollerGripperLifter = new RollerLiftingSystem();
+		rollerGripperPole = new Pole();//pole setup start
+		rollerGripper = new RollerGripper();//roller setup start
+		rollerGripperLifter = new RollerLiftingSystem();//lift setup start
 		
 		Lift lift = new Lift();
 		Capture capture = new Capture();
 		PoleAction poleAction = new PoleAction();
 		
-		rollerGripperLifter.setDefaultAction(lift);
+		rollerGripperLifter.setDefaultAction(lift);//lift setup end
+		
+		TimedAction release = new TimedAction(new InstantAction() {
+			
+			@Override
+			protected void execute() {
+				rollerGripper.rotate(RELEASE_SPEED);
+			}
+		}, seconds);//roller setup end
 		
 		InstantAction minLift = new InstantAction() {
 			@Override
@@ -144,13 +136,6 @@ public class Robot extends IterativeFRCRobot {
 				poleAction.start();
 			}
 		};
-		TimedAction release = new TimedAction(new InstantAction() {
-			
-			@Override
-			protected void execute() {
-				rollerGripper.rotate(RELEASE_SPEED);
-			}
-		}, seconds);
 		InstantAction midLift = new InstantAction() {
 			@Override
 			protected void execute() {
@@ -178,9 +163,9 @@ public class Robot extends IterativeFRCRobot {
 				poleAction.setSetpoint(DOWN);
 				poleAction.start();
 			}
-		};
+		};//pole setup end
 		
-		ActionGroup putMax = new ActionGroup();
+		ActionGroup putMax = new ActionGroup();//Action groups start
 		putMax.addSequential(putMax)
 			  .addSequential(release)
 			  .addSequential(down);
@@ -195,37 +180,38 @@ public class Robot extends IterativeFRCRobot {
 		ActionGroup putSwitch = new ActionGroup();
 		putSwitch.addSequential(putSwitch)
 				 .addSequential(release)
-				 .addSequential(down);
+				 .addSequential(down);//Action groups setup end
 		//NULL pointer exception
 		/*
-		controller.A.whenPressed(putSwitch);
+		controller.A.whenPressed(putSwitch);//controller binding start
 		controller.B.whenPressed(putMin);
 		controller.X.whenPressed(putMid);
 		controller.Y.whenPressed(putMax);
 		controller.RB.whileHeld(capture);
-		controller.LB.whenPressed(release);
+		controller.LB.whenPressed(release);//controller binding end
 		*/
 		
 	}
-
+	/*Function will calculate the angle for the roller gripper
+	 * input: current angle of the roller , current angle of the pole
+	 * output: angle that the roller has to have 
+	 */
 	public static double calcAngle(double rollerAngle , double poleAngle)
 	{
 		final double RATIO = 90.0;//the angle where the roller is vertical to the ground
 		return Math.cos(poleAngle)*RATIO;
 	}
-	
+	/*Function will setup the controllers
+	 * input: None
+	 * output: None
+	 */
 	private void controllersSetup() {
-		System.out.println("Runned");
-		/*****************************
-		 *      code for controllers  *
-		 * ***************************/
+		
+		controller = new XboxController(RobotMap.XBOX);
+		
 		rightController = new Joystick(RobotMap.RIGHT_CONTROLLER);
 		leftController = new Joystick(RobotMap.LEFT_CONTROLLER);
-		
-		Action setJoysticks = new InstantAction() {
-			
-			@Override
-			protected void execute() {
+
 				drive.driveTrain.setDefaultAction(new SystemAction(new Action() {
 					@Override
 					protected void execute() {
@@ -236,81 +222,7 @@ public class Robot extends IterativeFRCRobot {
 					protected void end() {
 						drive.driveTrain.tankDrive(0,0);
 					}
-				}, drive.driveTrain));
-			}
-		};
-		controller = new XboxController(RobotMap.XBOX);
-		Action setXbox = new InstantAction() {
-			
-			@Override
-			protected void execute() {
-				drive.driveTrain.setDefaultAction(new SystemAction(new Action() {
-					@Override
-					protected void execute() {
-						drive.driveTrain.tankDrive(controller.RightStick.AxisY, controller.LeftStick.AxisY);
-					}
-					
-					@Override
-					protected void end() {
-						drive.driveTrain.tankDrive(0,0);
-					}
-				}, drive.driveTrain));
-			}
-
-		};
-		//Controller chooser
-		controllerChooser = new SendableChooser<Action>();
-		controllerChooser.addDefault("None", setXbox);
-		controllerChooser.addObject("XBOX",setXbox );
-		controllerChooser.addDefault("2 joysticks", setJoysticks);
-		SmartDashboard.putData("Controller chooser", controllerChooser);
-		Action controllers = controllerChooser.getSelected();
-		controllers.start();
-	}
-
-	private void liftSetup() {
-		liftSystem = new LiftSystem();
-		liftSystem.setDefaultAction(new Action() {
-			final double MIN = -0.2;
-			final double MAX = 0.2;
-			
-			@Override
-			protected void execute() {
-				/*	to scale the value use this function:
-					Mathf.constrain(value, min, max)
-					like so:
-					va
-					liftSystem.rotate(controller.LeftStick.getYAxis().get());
-				 */
-				double val = controller.LeftStick.getYAxis().get();
-				//val = Mathf.constrain(val, MIN, MAX);
-				liftSystem.rotate(val);	
-			}
-			@Override
-			protected void end() {
-				liftSystem.stop();
-			}
-		});
-	}
-
-	private void shootSetup() {
-		shoot = new LaunchSystem(RobotMap.SOLA1,RobotMap.SOLA2,RobotMap.SOLB1,RobotMap.SOLB2);
-		controller.A.whenPressed(new InstantAction() {
-			@Override
-			protected void execute() {
-				if(shoot.isClosed())
-				{
-					shoot.open();
-					System.out.println("open");
-				}
-				else
-				{
-					shoot.close();
-					System.out.println("close");
-				}
-				
-			}
-		});
+				}, drive.driveTrain));		
 	}
 
 	protected void disabledInit() {
@@ -319,7 +231,6 @@ public class Robot extends IterativeFRCRobot {
 	
 	@Override
 	protected void disabledPeriodic() {
-		//System.out.println(String.format("%.2f", p.get()));
 	}
 
 	@Override

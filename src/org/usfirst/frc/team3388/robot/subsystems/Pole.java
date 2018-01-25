@@ -24,7 +24,9 @@ public class Pole extends Subsystem implements Rotatable{
 	public static final String SETPOINT_NAME= "rotateSetPoint";
 	public DoubleProperty PIDSetPoint = PropertyHandler.putNumber(SETPOINT_NAME, 0.0);
 	public static Potentiometer potentiometer;
-
+	/********************
+	 * Pole SubSystem   *
+	 *******************/
 	public Pole()
 	{
 		potentiometer = new AnalogPotentiometer(RobotMap.POTENTIOMETER,RANGE,OFFSET);
@@ -48,10 +50,18 @@ public class Pole extends Subsystem implements Rotatable{
 	public void stop() {
 		controller.set(0);
 	}
+	/*Function will set the point for the PID
+	 * input: point to set
+	 * output: None
+	 */
 	public void setPoint(double point)
 	{
 		PIDSetPoint = PropertyHandler.putNumber(SETPOINT_NAME, point);
 	}
+	/*Function will return the potentiometer value
+	 * input: None
+	 * output: potentiometer value
+	 */
 	public double get()
 	{
 		return potentiometer.get();

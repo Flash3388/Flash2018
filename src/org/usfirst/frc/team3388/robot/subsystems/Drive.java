@@ -29,7 +29,9 @@ public class Drive {
 	public DoubleProperty pidSetPoint = PropertyHandler.putNumber(SETPOINT_NAME,135.0);
 	
 	public Drive() {
-		
+		/*******************
+		 * Drive SubSystem *
+		 ******************/
 		driveTrain = setupDriveTrain();
 		/*
 		 * NEED A JOYSTICK SETUP
@@ -42,6 +44,10 @@ public class Drive {
 		distancePID.setOutputLimit(-1, 1);
 		//gyro = new ADXRS450_Gyro();
 	}
+	/*Function will setup the Flash drive
+	 * input: None
+	 * output: Flash drive(multi controllers)
+	 */
 	private FlashDrive setupDriveTrain() {
 		FlashSpeedController frontRight;
 		FlashSpeedController frontLeft;

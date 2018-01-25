@@ -10,7 +10,9 @@ import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.util.FlashUtil;
 
 public class Capture extends Action{
-
+	/******************
+	 * Capture Action *
+	 *****************/
 	double startTime=0;
 	double timeCaptured=0;
 	static final double CAPTURING_TIME = 1.9;
@@ -22,7 +24,10 @@ public class Capture extends Action{
 	protected void end() {
 		Robot.rollerGripper.stop();
 	}
-
+/*Function will rotate the roller motors until isFinished returns true
+ * input: None
+ * output: None
+ */
 	@Override
 	protected void execute() {
 		Robot.rollerGripper.rotate();
@@ -37,7 +42,10 @@ public class Capture extends Action{
 			startTime=0;
 		}
 	}
-	
+	/*Function will return true when the power cube is in a certain distance from the cube
+	 * input: None
+	 * output: isFinished
+	 */
 	@Override
 	protected boolean isFinished() {
 		return timeCaptured == CAPTURING_TIME;
