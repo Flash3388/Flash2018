@@ -7,8 +7,8 @@ import edu.flash3388.flashlib.robot.Subsystem;
 import edu.flash3388.flashlib.robot.devices.FlashSpeedController;
 import edu.flash3388.flashlib.robot.devices.Ultrasonic;
 import edu.flash3388.flashlib.robot.systems.Rotatable;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+
 
 public class RollerGripper extends Subsystem implements Rotatable{
 	FlashSpeedController rCaptureController;
@@ -17,9 +17,11 @@ public class RollerGripper extends Subsystem implements Rotatable{
 	FlashSpeedController lLiftController;
 
 	Ultrasonic sonic;
+	ADXRS450_Gyro gyro;
 	public static final double DEFAULT_SPEED = 0.5;
 	public RollerGripper() {
 		sonic = new Ultrasonic(RobotMap.PING, RobotMap.ECHO);
+		gyro = new ADXRS450_Gyro();//fill
 		rCaptureController = new TalonSpeed(RobotMap.ROLLER_GRIPPER_R_CAPTURE_CONTROLLER);
 		lCaptureController = new TalonSpeed(RobotMap.ROLLER_GRIPPER_L_CAPTURE_CONTROLLER);
 		rLiftController = new TalonSpeed(RobotMap.ROLLER_GRIPPER_L_LIFT_CONTROLLER);
@@ -46,7 +48,7 @@ public class RollerGripper extends Subsystem implements Rotatable{
 		rLiftController.stop();
 		lLiftController.stop();
 	}
-	public double get()
+	public double getDist()
 	{
 		return sonic.get();
 	}
@@ -56,6 +58,10 @@ public class RollerGripper extends Subsystem implements Rotatable{
 		lCaptureController.stop();
 		rLiftController.stop();
 		lLiftController.stop();
+	}
+	public double getAngle()
+	{
+		return gyro.getAngle();
 	}
 
 }

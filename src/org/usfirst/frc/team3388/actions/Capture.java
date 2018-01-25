@@ -26,7 +26,7 @@ public class Capture extends Action{
 	@Override
 	protected void execute() {
 		Robot.rollerGripper.rotate();
-		if(Robot.rollerGripper.get()<CAPTURING_DISTANCE)
+		if(Robot.rollerGripper.getDist()<CAPTURING_DISTANCE)
 		{
 			if(startTime == 0)
 				startTime=FlashUtil.secs();

@@ -4,6 +4,7 @@ package org.usfirst.frc.team3388.robot;
 import java.sql.Time;
 
 import org.usfirst.frc.team3388.actions.Capture;
+import org.usfirst.frc.team3388.actions.Lift;
 import org.usfirst.frc.team3388.actions.PoleAction;
 import org.usfirst.frc.team3388.actions.PoleAction;
 import org.usfirst.frc.team3388.robot.subsystems.Drive;
@@ -122,11 +123,23 @@ public class Robot extends IterativeFRCRobot {
 		final double DOWN = 75.0;
 		final double SWITCH_ANGLE=0.0;
 		
+		int rollerAngle=0;
+		
 		rollerGripperPole = new Pole();
 		rollerGripper = new RollerGripper();
 		
+		Lift lift = new Lift();
 		Capture capture = new Capture();
 		PoleAction poleAction = new PoleAction();
+		
+		InstantAction moveRoller = new InstantAction() {
+			
+			@Override
+			protected void execute() {
+				lift.setAngle(rollerAngle);
+				lift.start();
+			}
+		};
 		
 		InstantAction minLift = new InstantAction() {
 			@Override
