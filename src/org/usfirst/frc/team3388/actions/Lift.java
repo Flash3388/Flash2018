@@ -7,7 +7,7 @@ import edu.flash3388.flashlib.robot.Action;
 public class Lift extends Action{
 	
 	final double SCOPE=0.5;
-	double desAngle=0;
+	double desAngle=Robot.calcAngle(Robot.rollerGripper.getAngle(), Robot.rollerGripperPole.get());
 	public static final double DEFAULT_LIFT_SPEED=0.3;
 	
 	public Lift()

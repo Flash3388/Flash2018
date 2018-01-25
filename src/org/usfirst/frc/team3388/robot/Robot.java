@@ -135,14 +135,7 @@ public class Robot extends IterativeFRCRobot {
 		Capture capture = new Capture();
 		PoleAction poleAction = new PoleAction();
 		
-		InstantAction setRoller = new InstantAction() {
-			
-			@Override
-			protected void execute() {
-				lift.setAngle(calc(rollerGripper.getAngle(), rollerGripperPole.get()));
-				lift.start();
-			}
-		};
+		rollerGripperLifter.setDefaultAction(lift);
 		
 		InstantAction minLift = new InstantAction() {
 			@Override
@@ -215,7 +208,7 @@ public class Robot extends IterativeFRCRobot {
 		
 	}
 
-	private double calc(double rollerAngle , double poleAngle)
+	public static double calcAngle(double rollerAngle , double poleAngle)
 	{
 		final double RATIO = 90.0;//the angle where the roller is vertical to the ground
 		return Math.cos(poleAngle)*RATIO;
