@@ -9,7 +9,7 @@ public class Lift extends Action{
 	 * Lift Action *
 	 **************/
 	final double SCOPE=0.5;
-	double desAngle=Robot.calcAngle(Robot.rollerGripper.getAngle(), Robot.rollerGripperPole.get());
+	double desAngle=0;
 	public static final double DEFAULT_LIFT_SPEED=0.3;
 	
 	public Lift()

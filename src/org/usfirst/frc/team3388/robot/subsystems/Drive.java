@@ -59,6 +59,8 @@ public class Drive {
 		backRight = new TalonSpeed(RobotMap.DRIVE_BACKRIGHT);
 		backLeft = new TalonSpeed(RobotMap.DRIVE_BACKLEFT);
 		 
+		frontLeft.setInverted(true);
+		backLeft.setInverted(true);
 		
 		return new FlashDrive(
 					new MultiSpeedController(frontRight,backRight),

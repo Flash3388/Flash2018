@@ -39,7 +39,7 @@ public class Robot extends IterativeFRCRobot {
 	
 	Joystick rightController;
 	Joystick leftController;
-	XboxController controller;
+	Joystick systemController;
 	
 	public static Pole rollerGripperPole;
 	public static RollerGripper rollerGripper;
@@ -107,19 +107,30 @@ public class Robot extends IterativeFRCRobot {
 		final double MID_ANGLE=0.0;
 		final double DOWN = 75.0;
 		final double SWITCH_ANGLE=0.0;
-		
-		int rollerAngle=0;
-		
+				
 		rollerGripperPole = new Pole();//pole setup start
+		rollerGripperPole.setDefaultAction(new Action() {
+			final double MAX = 0.25;
+			final double MIN = -0.25;
+			
+			@Override
+			protected void execute() {
+				rollerGripperPole.rotate(Mathf.constrain(systemController.getY(), MIN, MAX));
+			}
+			
+			@Override
+			protected void end() {
+				//maybe rotate 0
+			}
+		} );
+		
 		rollerGripper = new RollerGripper();//roller setup start
 		rollerGripperLifter = new RollerLiftingSystem();//lift setup start
 		
 		Lift lift = new Lift();
 		Capture capture = new Capture();
 		PoleAction poleAction = new PoleAction();
-		
-		rollerGripperLifter.setDefaultAction(lift);//lift setup end
-		
+				
 		TimedAction release = new TimedAction(new InstantAction() {
 			
 			@Override
@@ -163,46 +174,26 @@ public class Robot extends IterativeFRCRobot {
 				poleAction.start();
 			}
 		};//pole setup end
-		
+		/*TODO:
+		 * add rollergripper rotation in parallel
+		 */
 		ActionGroup putMax = new ActionGroup();//Action groups start
-		putMax.addSequential(putMax)
-			  .addSequential(release)
-			  .addSequential(down);
+		putMax.addSequential(putMax);
 		ActionGroup putMid = new ActionGroup();
-		putMid.addSequential(putMid)
-			  .addSequential(release)
-			  .addSequential(down);
+		putMid.addSequential(putMid);
 		ActionGroup putMin = new ActionGroup();
-		putMin.addSequential(putMin)
-			  .addSequential(release)
-			  .addSequential(down);
+		putMin.addSequential(putMin);
 		ActionGroup putSwitch = new ActionGroup();
-		putSwitch.addSequential(putSwitch)
-				 .addSequential(release)
-				 .addSequential(down);//Action groups setup end
-
-		controller.A.whenPressed(putSwitch);//controller binding start
-		controller.B.whenPressed(putMin);
-		controller.X.whenPressed(putMid);
-		controller.Y.whenPressed(putMax);
-		controller.RB.whileHeld(capture);
-		controller.LB.whenPressed(release);//controller binding end
+		putSwitch.addSequential(putSwitch);
 		
+
 	}
-	/*Function will calculate the angle for the roller gripper
-	 * input: current angle of the roller , current angle of the pole
-	 * output: angle that the roller has to have 
-	 */
-	public static double calcAngle(double rollerAngle , double poleAngle)
-	{
-		final double RATIO = 90.0;//the angle where the roller is vertical to the ground
-		return Math.cos(poleAngle)*RATIO;
-	}
+
 	/*Function will setup the controllers
 	 */
 	private void controllersSetup() {
 		
-		controller = new XboxController(RobotMap.XBOX);
+		systemController = new Joystick(RobotMap.SYSTEM_CONTROLLER);
 		
 		rightController = new Joystick(RobotMap.RIGHT_CONTROLLER);
 		leftController = new Joystick(RobotMap.LEFT_CONTROLLER);
@@ -218,6 +209,11 @@ public class Robot extends IterativeFRCRobot {
 						drive.driveTrain.tankDrive(0,0);
 					}
 				}, drive.driveTrain));		
+				/*TODO:
+				 * bind actions on system controller
+				 */
+				
+				
 	}
 
 	protected void disabledInit() {
