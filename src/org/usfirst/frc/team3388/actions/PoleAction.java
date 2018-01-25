@@ -30,8 +30,8 @@ public class PoleAction extends Action{
 		Robot.rollerGripperPole.setPoint(setPoint);
 		Robot.rollerGripperPole.rotate(Robot.rollerGripperPole.rotatePID.calculate());
 	}
-	/*Function will change the setpoint , which later be used as the PID set point
-	 * input: setpoint
+	/*Function will change the setPoint , which later be used as the PID set point
+	 * input: setPoint
 	 * output: None
 	 */
 	public void setSetpoint(double setPoint) {
@@ -39,7 +39,7 @@ public class PoleAction extends Action{
 		max = setPoint+SCOPE;
 		min = setPoint-SCOPE;
 	}
-	/*Function will return true when the pole will reach the setpoint
+	/*Function will return true when the pole will reach the setPoint
 	 * input: None
 	 * output: isFinished
 	 */
