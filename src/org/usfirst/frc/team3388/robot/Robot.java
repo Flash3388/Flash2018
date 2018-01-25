@@ -11,7 +11,6 @@ import org.usfirst.frc.team3388.robot.subsystems.Pole;
 import org.usfirst.frc.team3388.robot.subsystems.RollerGripper;
 import org.usfirst.frc.team3388.robot.subsystems.RollerLiftingSystem;
 
-import edu.flash3388.flashlib.dashboard.controls.ChooserControl;
 import edu.flash3388.flashlib.math.Mathf;
 import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.ActionGroup;
@@ -95,9 +94,8 @@ public class Robot extends IterativeFRCRobot {
 		//autoChooser.addDefault("auto2", auto2);
 		SmartDashboard.putData(autoChooser);
 	}
+
 	/*Function will setup all the roller gripper system(pole+lift+roller)
-	 * input: None
-	 * output: None
 	 */
 	private void rollerGripperSystemSetup()
 	{
@@ -202,8 +200,6 @@ public class Robot extends IterativeFRCRobot {
 		return Math.cos(poleAngle)*RATIO;
 	}
 	/*Function will setup the controllers
-	 * input: None
-	 * output: None
 	 */
 	private void controllersSetup() {
 		
