@@ -46,6 +46,8 @@ public class Robot extends IterativeFRCRobot {
 	public static RollerLiftingSystem rollerGripperLifter;
 	
 	static double startTime;
+	
+	boolean drivingTrain = true;
 	@Override
 	protected void initRobot() {
 		
@@ -58,16 +60,16 @@ public class Robot extends IterativeFRCRobot {
 		 * cam handler
 		 */
 		
-		//camHandler = new CamerasHandler();
+		camHandler = new CamerasHandler();
 		/*
 		 * auto setup
 		 */
 		controllersSetup();
-
-		autoHandlers();
-		
-		rollerGripperSystemSetup();
-
+		if(!drivingTrain)
+		{
+			autoHandlers();
+			rollerGripperSystemSetup();	
+		}
 
 	}
 	/*Function will setup all of the autonomy programs and the auto chooser
@@ -193,7 +195,8 @@ public class Robot extends IterativeFRCRobot {
 	 */
 	private void controllersSetup() {
 		
-		systemController = new Joystick(RobotMap.SYSTEM_CONTROLLER);
+		if(!drivingTrain)
+			systemController = new Joystick(RobotMap.SYSTEM_CONTROLLER);
 		
 		rightController = new Joystick(RobotMap.RIGHT_CONTROLLER);
 		leftController = new Joystick(RobotMap.LEFT_CONTROLLER);
