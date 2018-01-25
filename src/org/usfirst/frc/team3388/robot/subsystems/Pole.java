@@ -52,4 +52,8 @@ public class Pole extends Subsystem implements Rotatable{
 	{
 		PIDSetPoint = PropertyHandler.putNumber(SETPOINT_NAME, point);
 	}
+	public double get()
+	{
+		return potentiometer.get();
+	}
 }

@@ -12,6 +12,7 @@ import org.usfirst.frc.team3388.robot.subsystems.LaunchSystem;
 import org.usfirst.frc.team3388.robot.subsystems.LiftSystem;
 import org.usfirst.frc.team3388.robot.subsystems.Pole;
 import org.usfirst.frc.team3388.robot.subsystems.RollerGripper;
+import org.usfirst.frc.team3388.robot.subsystems.RollerLiftingSystem;
 
 import edu.flash3388.flashlib.dashboard.controls.ChooserControl;
 import edu.flash3388.flashlib.math.Mathf;
@@ -49,6 +50,7 @@ public class Robot extends IterativeFRCRobot {
 	LiftSystem liftSystem;
 	public static Pole rollerGripperPole;
 	public static RollerGripper rollerGripper;
+	public static RollerLiftingSystem rollerGripperLifter;
 	
 	static double startTime;
 	@Override
@@ -127,16 +129,17 @@ public class Robot extends IterativeFRCRobot {
 		
 		rollerGripperPole = new Pole();
 		rollerGripper = new RollerGripper();
+		rollerGripperLifter = new RollerLiftingSystem();
 		
 		Lift lift = new Lift();
 		Capture capture = new Capture();
 		PoleAction poleAction = new PoleAction();
 		
-		InstantAction moveRoller = new InstantAction() {
+		InstantAction setRoller = new InstantAction() {
 			
 			@Override
 			protected void execute() {
-				lift.setAngle(rollerAngle);
+				lift.setAngle(calc(rollerGripper.getAngle(), rollerGripperPole.get()));
 				lift.start();
 			}
 		};
@@ -210,6 +213,12 @@ public class Robot extends IterativeFRCRobot {
 		controller.LB.whenPressed(release);
 		*/
 		
+	}
+
+	private double calc(double rollerAngle , double poleAngle)
+	{
+		final double RATIO = 90.0;//the angle where the roller is vertical to the ground
+		return Math.cos(poleAngle)*RATIO;
 	}
 	
 	private void controllersSetup() {

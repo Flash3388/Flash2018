@@ -32,7 +32,7 @@ public class PoleAction extends Action{
 	}
 	@Override
 	protected boolean isFinished() {
-		return Robot.rollerGripperPole.potentiometer.get()<max 
-				&& Robot.rollerGripperPole.potentiometer.get()>min;
+		return Robot.rollerGripperPole.potentiometer.get()<=max 
+				&& Robot.rollerGripperPole.potentiometer.get()>=min;
 	}
 }

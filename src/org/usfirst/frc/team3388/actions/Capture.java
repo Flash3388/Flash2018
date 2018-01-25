@@ -20,7 +20,7 @@ public class Capture extends Action{
 	}
 	@Override
 	protected void end() {
-		Robot.rollerGripper.stopCapture();
+		Robot.rollerGripper.stop();
 	}
 
 	@Override

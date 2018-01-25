@@ -12,21 +12,21 @@ public class Lift extends Action{
 	
 	public Lift()
 	{
-		requires(Robot.rollerGripper);
+		requires(Robot.rollerGripperLifter);
 	}
 
 	@Override
 	protected void end() {
-		Robot.rollerGripper.stopLift();
+		Robot.rollerGripper.stop();
 	}
 
 	@Override
 	protected void execute() {
-		Robot.rollerGripper.lift(DEFAULT_LIFT_SPEED);
+		Robot.rollerGripper.rotate();
 	}
 	@Override
 	protected boolean isFinished() {
-		return Robot.rollerGripper.getAngle()==desAngle+SCOPE || Robot.rollerGripper.getAngle()==desAngle-SCOPE;
+		return Robot.rollerGripper.getAngle()<=desAngle+SCOPE || Robot.rollerGripper.getAngle()>=desAngle-SCOPE;
 	}
 	public void setAngle(double desAngle)
 	{
