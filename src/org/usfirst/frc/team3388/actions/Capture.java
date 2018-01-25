@@ -14,18 +14,19 @@ public class Capture extends Action{
 	double startTime=0;
 	double timeCaptured=0;
 	static final double CAPTURING_TIME = 1.9;
+	final double CAPTURING_DISTANCE = 10;
 	public Capture() {
 		requires(Robot.rollerGripper);
 	}
 	@Override
 	protected void end() {
-		Robot.rollerGripper.rotate(0);
+		Robot.rollerGripper.stopCapture();
 	}
 
 	@Override
 	protected void execute() {
-		Robot.rollerGripper.rotate(Robot.rollerGripper.DEFAULT_SPEED);
-		if(Robot.rollerGripper.isCaptured())
+		Robot.rollerGripper.rotate();
+		if(Robot.rollerGripper.get()<CAPTURING_DISTANCE)
 		{
 			if(startTime == 0)
 				startTime=FlashUtil.secs();

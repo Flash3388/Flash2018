@@ -5,31 +5,57 @@ import org.usfirst.frc.team3388.robot.TalonSpeed;
 
 import edu.flash3388.flashlib.robot.Subsystem;
 import edu.flash3388.flashlib.robot.devices.FlashSpeedController;
+import edu.flash3388.flashlib.robot.devices.Ultrasonic;
 import edu.flash3388.flashlib.robot.systems.Rotatable;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.SpeedController;
 
 public class RollerGripper extends Subsystem implements Rotatable{
-	FlashSpeedController controller;
-	DigitalInput rollerGripperSwitch;
+	FlashSpeedController rCaptureController;
+	FlashSpeedController lCaptureController;
+	FlashSpeedController rLiftController;
+	FlashSpeedController lLiftController;
+
+	Ultrasonic sonic;
 	public static final double DEFAULT_SPEED = 0.5;
 	public RollerGripper() {
-		rollerGripperSwitch = new DigitalInput(RobotMap.ROLLER_GRIPPER_SWITCH);
-		controller = new TalonSpeed(RobotMap.ROLLER_GRIPPER);
+		sonic = new Ultrasonic(RobotMap.PING, RobotMap.ECHO);
+		rCaptureController = new TalonSpeed(RobotMap.ROLLER_GRIPPER_R_CAPTURE_CONTROLLER);
+		lCaptureController = new TalonSpeed(RobotMap.ROLLER_GRIPPER_L_CAPTURE_CONTROLLER);
+		rLiftController = new TalonSpeed(RobotMap.ROLLER_GRIPPER_L_LIFT_CONTROLLER);
+		lLiftController = new TalonSpeed(RobotMap.ROLLER_GRIPPER_R_LIFT_CONTROLLER);
 	}
 	public void rotate(double speed) {
-		controller.set(speed);
+		rCaptureController.set(speed);
+		lCaptureController.set(speed);
 	}
 	public void rotate() {
 		rotate(DEFAULT_SPEED);
 	}
+	public void lift(double speed)
+	{
+		rLiftController.set(speed);
+		lLiftController.set(-speed);
+	}
+	public void stopCapture() {
+		rCaptureController.stop();
+		lCaptureController.stop();
+	}
+	public void stopLift()
+	{
+		rLiftController.stop();
+		lLiftController.stop();
+	}
+	public double get()
+	{
+		return sonic.get();
+	}
 	@Override
 	public void stop() {
-		controller.stop();
-	}
-	public boolean isCaptured()
-	{
-		return rollerGripperSwitch.get();
+		rCaptureController.stop();
+		lCaptureController.stop();
+		rLiftController.stop();
+		lLiftController.stop();
 	}
 
 }
