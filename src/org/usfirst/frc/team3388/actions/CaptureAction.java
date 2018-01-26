@@ -9,7 +9,7 @@ import edu.flash3388.flashlib.flashboard.Flashboard;
 import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.util.FlashUtil;
 
-public class Capture extends Action{
+public class CaptureAction extends Action{
 	/******************
 	 * Capture Action *
 	 *****************/
@@ -17,7 +17,7 @@ public class Capture extends Action{
 	double timeCaptured=0;
 	static final double CAPTURING_TIME = 1.9;
 	final double CAPTURING_DISTANCE = 10;
-	public Capture() {
+	public CaptureAction() {
 		requires(Robot.rollerGripper);
 	}
 	@Override

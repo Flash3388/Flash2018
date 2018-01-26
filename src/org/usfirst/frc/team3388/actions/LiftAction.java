@@ -4,7 +4,7 @@ import org.usfirst.frc.team3388.robot.Robot;
 
 import edu.flash3388.flashlib.robot.Action;
 
-public class Lift extends Action{
+public class LiftAction extends Action{
 	/***************
 	 * Lift Action *
 	 **************/
@@ -12,7 +12,7 @@ public class Lift extends Action{
 	double desAngle=0;
 	public static final double DEFAULT_LIFT_SPEED=0.3;
 	
-	public Lift()
+	public LiftAction()
 	{
 		requires(Robot.rollerGripperLifter);
 	}

@@ -3,8 +3,8 @@ package org.usfirst.frc.team3388.robot;
 
 import java.sql.Time;
 
-import org.usfirst.frc.team3388.actions.Capture;
-import org.usfirst.frc.team3388.actions.Lift;
+import org.usfirst.frc.team3388.actions.CaptureAction;
+import org.usfirst.frc.team3388.actions.LiftAction;
 import org.usfirst.frc.team3388.actions.PoleAction;
 import org.usfirst.frc.team3388.actions.PoleLiftingAction;
 import org.usfirst.frc.team3388.robot.subsystems.Drive;
@@ -131,8 +131,8 @@ public class Robot extends IterativeFRCRobot {
 		rollerGripper = new RollerGripper();//roller setup start
 		rollerGripperLifter = new RollerLiftingSystem();//lift setup start
 		
-		Lift lift = new Lift();
-		Capture capture = new Capture();
+		LiftAction lift = new LiftAction();
+		CaptureAction capture = new CaptureAction();
 		PoleAction poleAction = new PoleAction();
 				
 		TimedAction release = new TimedAction(new InstantAction() {	
