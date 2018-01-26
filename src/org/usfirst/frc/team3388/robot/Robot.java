@@ -6,6 +6,7 @@ import java.sql.Time;
 import org.usfirst.frc.team3388.actions.Capture;
 import org.usfirst.frc.team3388.actions.Lift;
 import org.usfirst.frc.team3388.actions.PoleAction;
+import org.usfirst.frc.team3388.actions.PoleLiftingAction;
 import org.usfirst.frc.team3388.robot.subsystems.Drive;
 import org.usfirst.frc.team3388.robot.subsystems.Pole;
 import org.usfirst.frc.team3388.robot.subsystems.RollerGripper;
@@ -18,10 +19,11 @@ import edu.flash3388.flashlib.robot.InstantAction;
 import edu.flash3388.flashlib.robot.SystemAction;
 import edu.flash3388.flashlib.robot.TimedAction;
 import edu.flash3388.flashlib.robot.frc.IterativeFRCRobot;
+import edu.flash3388.flashlib.robot.hid.Joystick;
 import edu.flash3388.flashlib.robot.hid.XboxController;
 import edu.flash3388.flashlib.util.FlashUtil;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
-import edu.wpi.first.wpilibj.Joystick;
+
 import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -133,75 +135,45 @@ public class Robot extends IterativeFRCRobot {
 		Capture capture = new Capture();
 		PoleAction poleAction = new PoleAction();
 				
-		TimedAction release = new TimedAction(new InstantAction() {
-			
+		TimedAction release = new TimedAction(new InstantAction() {	
 			@Override
 			protected void execute() {
 				rollerGripper.rotate(RELEASE_SPEED);
 			}
 		}, seconds);//roller setup end
 		
-		InstantAction minLift = new InstantAction() {
-			@Override
-			protected void execute() {
-				poleAction.setSetpoint(MIN_ANGLE);
-				poleAction.start();
-			}
-		};
-		InstantAction midLift = new InstantAction() {
-			@Override
-			protected void execute() {
-				poleAction.setSetpoint(MID_ANGLE);
-				poleAction.start();
-			}
-		};
-		InstantAction maxLift = new InstantAction() {
-			@Override
-			protected void execute() {
-				poleAction.setSetpoint(MAX_ANGLE);
-				poleAction.start();
-			}
-		};
-		InstantAction switchLift = new InstantAction() {
-			@Override
-			protected void execute() {
-				poleAction.setSetpoint(SWITCH_ANGLE);
-				poleAction.start();
-			}
-		};
-		InstantAction down = new InstantAction() {
-			@Override
-			protected void execute() {
-				poleAction.setSetpoint(DOWN);
-				poleAction.start();
-			}
-		};//pole setup end
+		
+		InstantAction scaleMinLift = new PoleLiftingAction(MIN_ANGLE);
+		InstantAction scaleMidLift = new PoleLiftingAction(MID_ANGLE);
+		InstantAction scaleMaxLift = new PoleLiftingAction(MAX_ANGLE);
+		InstantAction switchLift = new PoleLiftingAction(SWITCH_ANGLE);
+		InstantAction downLift = new PoleLiftingAction(DOWN);//pole setup end
 		/*TODO:
 		 * add rollergripper rotation in parallel
 		 */
-		ActionGroup putMax = new ActionGroup();//Action groups start
-		putMax.addSequential(putMax);
-		ActionGroup putMid = new ActionGroup();
-		putMid.addSequential(putMid);
-		ActionGroup putMin = new ActionGroup();
-		putMin.addSequential(putMin);
-		ActionGroup putSwitch = new ActionGroup();
-		putSwitch.addSequential(putSwitch);
 		
-
+		ActionGroup scalePutMax = new ActionGroup()
+			.addSequential(scaleMaxLift);
+		ActionGroup scalePutMid = new ActionGroup()
+			.addSequential(scaleMidLift);
+		ActionGroup scalePutMin = new ActionGroup()
+			.addSequential(scaleMinLift);
+		ActionGroup scalePutSwitch = new ActionGroup()
+			.addSequential(switchLift);
+		
 	}
 
 	/*Function will setup the controllers
 	 */
 	private void controllersSetup() {
-		
+		final int BUTTON_COUNT = 4;
 		if(!drivingTrain)
-			systemController = new Joystick(RobotMap.SYSTEM_CONTROLLER);
+			systemController = new Joystick(RobotMap.SYSTEM_CONTROLLER, BUTTON_COUNT);
 		
-		rightController = new Joystick(RobotMap.RIGHT_CONTROLLER);
-		leftController = new Joystick(RobotMap.LEFT_CONTROLLER);
+		rightController = new Joystick(RobotMap.RIGHT_CONTROLLER,BUTTON_COUNT);
+		leftController = new Joystick(RobotMap.LEFT_CONTROLLER,BUTTON_COUNT);
 
-				drive.driveTrain.setDefaultAction(new SystemAction(new Action() {
+		drive.driveTrain.setDefaultAction(new SystemAction(new Action() {
 					@Override
 					protected void execute() {
 						drive.driveTrain.tankDrive(rightController.getY(),leftController.getY());
@@ -212,11 +184,6 @@ public class Robot extends IterativeFRCRobot {
 						drive.driveTrain.tankDrive(0,0);
 					}
 				}, drive.driveTrain));		
-				/*TODO:
-				 * bind actions on system controller
-				 */
-				
-				
 	}
 
 	protected void disabledInit() {
