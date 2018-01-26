@@ -13,6 +13,7 @@ import edu.flash3388.flashlib.robot.devices.Gyro;
 import edu.flash3388.flashlib.robot.devices.MultiSpeedController;
 import edu.flash3388.flashlib.robot.frc.FRCSpeedControllers;
 import edu.flash3388.flashlib.robot.systems.FlashDrive;
+import edu.flash3388.flashlib.robot.systems.FlashDrive.MotorSide;
 import edu.flash3388.flashlib.util.beans.DoubleProperty;
 import edu.flash3388.flashlib.util.beans.PropertyHandler;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
@@ -33,6 +34,7 @@ public class Drive {
 		 * Drive SubSystem *
 		 ******************/
 		driveTrain = setupDriveTrain();
+		driveTrain.setInverted(MotorSide.Right, true);
 		/*
 		 * NEED A JOYSTICK SETUP
 		 */
@@ -49,18 +51,15 @@ public class Drive {
 	 * output: Flash drive(multi controllers)
 	 */
 	private FlashDrive setupDriveTrain() {
-		FlashSpeedController frontRight;
-		FlashSpeedController frontLeft;
-		FlashSpeedController backRight;
-		FlashSpeedController backLeft;
+		TalonSpeed frontRight;
+		TalonSpeed frontLeft;
+		TalonSpeed backRight;
+		TalonSpeed backLeft;
 		
 		frontRight = new TalonSpeed(RobotMap.DRIVE_FRONTRIGHT);
 		frontLeft = new TalonSpeed(RobotMap.DRIVE_FRONTLEFT);
 		backRight = new TalonSpeed(RobotMap.DRIVE_BACKRIGHT);
 		backLeft = new TalonSpeed(RobotMap.DRIVE_BACKLEFT);
-		 
-		frontLeft.setInverted(true);
-		backLeft.setInverted(true);
 		
 		return new FlashDrive(
 					new MultiSpeedController(frontRight,backRight),

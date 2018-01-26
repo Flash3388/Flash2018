@@ -6,11 +6,11 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.flash3388.flashlib.robot.devices.FlashSpeedController;
 
 public class TalonSpeed implements FlashSpeedController{
-	TalonSRX controller;
-	WPI_TalonSRX c;
-	boolean isInverted= false;
+	WPI_TalonSRX controller;
+	
+	boolean currInverted= false;
 	public TalonSpeed(int devNum) {
-		controller = new TalonSRX(devNum);
+		controller = new WPI_TalonSRX(devNum);
 	}
 	@Override
 	public void set(double speed) {
@@ -22,13 +22,14 @@ public class TalonSpeed implements FlashSpeedController{
 	}
 	@Override
 	public void setInverted(boolean isInverted) {
+		System.out.println("invert");
 		controller.setInverted(isInverted);
-		this.isInverted = isInverted;
+		this.currInverted = isInverted;
 	}
 	@Override
 	public boolean isInverted() {
 		// TODO Auto-generated method stub
-		return this.isInverted;
+		return this.currInverted;
 	}
 
 }

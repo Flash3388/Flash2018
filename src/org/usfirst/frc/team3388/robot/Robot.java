@@ -23,7 +23,7 @@ import edu.flash3388.flashlib.robot.hid.Joystick;
 import edu.flash3388.flashlib.robot.hid.XboxController;
 import edu.flash3388.flashlib.util.FlashUtil;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
-
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -32,7 +32,8 @@ public class Robot extends IterativeFRCRobot {
 	/********************
 	 * Main Robot class *
 	 *******************/
-	TimedAction timedDriveAuto;
+	TimedAction switchTimedDrive;
+	ActionGroup sideSwitchAuto;
 	
 	CamerasHandler camHandler;
 	Drive drive;
@@ -50,6 +51,7 @@ public class Robot extends IterativeFRCRobot {
 	static double startTime;
 	
 	boolean drivingTrain = true;
+	boolean rightStart = true;//has to be editable in SmartDashboard
 	@Override
 	protected void initRobot() {
 		
@@ -69,8 +71,8 @@ public class Robot extends IterativeFRCRobot {
 		controllersSetup();
 		if(!drivingTrain)
 		{
-			autoHandlers();
 			rollerGripperSystemSetup();	
+			autoHandlers();
 		}
 
 	}
@@ -79,9 +81,9 @@ public class Robot extends IterativeFRCRobot {
 	 * output: None
 	 */
 	private void autoHandlers() {
-		final double seconds = 0;
+		final double seconds = 5;
 		Action toDrive = new Action() {
-			final double speed = 0;		
+			final double speed = 0.5;		
 			@Override
 			protected void execute() {
 				drive.driveTrain.forward(speed);
@@ -92,11 +94,10 @@ public class Robot extends IterativeFRCRobot {
 				drive.driveTrain.forward(0);
 			}
 		};
-		timedDriveAuto = new TimedAction(toDrive, seconds);
+		switchTimedDrive = new TimedAction(toDrive, seconds);
 		autoChooser = new SendableChooser<Action>();
-		autoChooser.addDefault("auto1", timedDriveAuto);
-		//...
-		//autoChooser.addDefault("auto2", auto2);
+		autoChooser.addDefault("drive to switch (cross)", switchTimedDrive);
+		autoChooser.addObject("switch front auto",sideSwitchAuto);
 		SmartDashboard.putData(autoChooser);
 	}
 
@@ -158,8 +159,12 @@ public class Robot extends IterativeFRCRobot {
 			.addSequential(scaleMidLift);
 		ActionGroup scalePutMin = new ActionGroup()
 			.addSequential(scaleMinLift);
-		ActionGroup scalePutSwitch = new ActionGroup()
+		ActionGroup PutSwitch = new ActionGroup()
 			.addSequential(switchLift);
+		ActionGroup sideSwitchAuto = new ActionGroup()
+			.addParallel(PutSwitch)
+			.addParallel(switchTimedDrive)
+			.addSequential(release);
 		
 	}
 
@@ -209,7 +214,7 @@ public class Robot extends IterativeFRCRobot {
 	
 	@Override
 	protected void autonomousInit() {
-	/*	String gameData;
+		String gameData;
 		
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
 		// Example for gameData : LRL
@@ -218,17 +223,23 @@ public class Robot extends IterativeFRCRobot {
 		//and the far left switch is yours
 		//
 		//Other example is : RRL
-		
-		if(gameData.charAt(0) == 'L')
-		{
-			//Put left auto code here
-		} else {
-			//Put right auto code here
-		}
+
 
 		Action chosenAction = autoChooser.getSelected();
+		
+		if((gameData.charAt(0) == 'L' && autoChooser.getSelected().getName().charAt(0)=='s'
+				&& rightStart) || (gameData.charAt(0) == 'R' && autoChooser.getSelected().getName().charAt(0)=='s'
+				&& !rightStart))
+		{
+			chosenAction=switchTimedDrive;
+		}
+		else if((gameData.charAt(1) == 'L' && autoChooser.getSelected().getName().charAt(0)=='S'
+				&& rightStart)||(gameData.charAt(1) == 'R' && autoChooser.getSelected().getName().charAt(0)=='S'
+				&& !rightStart))
+		{
+			chosenAction=switchTimedDrive;
+		}
 		chosenAction.start();
-		*/
 	}
 
 	@Override
