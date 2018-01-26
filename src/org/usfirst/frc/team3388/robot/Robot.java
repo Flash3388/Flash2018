@@ -4,6 +4,7 @@ package org.usfirst.frc.team3388.robot;
 import java.sql.Time;
 
 import org.usfirst.frc.team3388.actions.CaptureAction;
+import org.usfirst.frc.team3388.actions.DrivePIDAction;
 import org.usfirst.frc.team3388.actions.LiftAction;
 import org.usfirst.frc.team3388.actions.PoleAction;
 import org.usfirst.frc.team3388.actions.PoleLiftingAction;
@@ -32,11 +33,11 @@ public class Robot extends IterativeFRCRobot {
 	/********************
 	 * Main Robot class *
 	 *******************/
-	TimedAction switchTimedDrive;
 	ActionGroup sideSwitchAuto;
+	DrivePIDAction switchPIDDrive;
 	
 	CamerasHandler camHandler;
-	Drive drive;
+	public static Drive drive;
 	
 	SendableChooser<Action> autoChooser;
 	
@@ -51,7 +52,11 @@ public class Robot extends IterativeFRCRobot {
 	static double startTime;
 	
 	boolean drivingTrain = true;
-	boolean rightStart = true;//has to be editable in SmartDashboard
+	
+	public enum Side {LEFT,MIDDLE,RIGHT};
+	
+	Side side;
+	
 	@Override
 	protected void initRobot() {
 		
@@ -76,6 +81,23 @@ public class Robot extends IterativeFRCRobot {
 		}
 
 	}
+	private void getRobotSide()
+	{
+		int getSide = 0;
+		SmartDashboard.getNumber("Robot position", getSide);
+		switch (getSide)
+		{
+		case 0:
+			side=Side.LEFT;
+			break;
+		case 1:
+			side=Side.MIDDLE;
+			break;
+		case 2:
+			side=Side.RIGHT;
+			break;
+		}
+	}
 	/*Function will setup all of the autonomy programs and the auto chooser
 	 * input: None 
 	 * output: None
@@ -94,10 +116,9 @@ public class Robot extends IterativeFRCRobot {
 				drive.driveTrain.forward(0);
 			}
 		};
-		switchTimedDrive = new TimedAction(toDrive, seconds);
 		autoChooser = new SendableChooser<Action>();
-		autoChooser.addDefault("drive to switch (cross)", switchTimedDrive);
-		autoChooser.addObject("switch front auto",sideSwitchAuto);
+		autoChooser.addDefault("drive to switch (cross)", switchPIDDrive);
+		autoChooser.addObject("Switch front auto",sideSwitchAuto);
 		SmartDashboard.putData(autoChooser);
 	}
 
@@ -105,6 +126,7 @@ public class Robot extends IterativeFRCRobot {
 	 */
 	private void rollerGripperSystemSetup()
 	{
+		final double DST_TO_SWITCH = 306;
 		final double RELEASE_SPEED = -1.0;
 		final double seconds=1.0;/*  */
 		final double MAX_ANGLE=0.0;
@@ -161,11 +183,11 @@ public class Robot extends IterativeFRCRobot {
 			.addSequential(scaleMinLift);
 		ActionGroup PutSwitch = new ActionGroup()
 			.addSequential(switchLift);
-		ActionGroup sideSwitchAuto = new ActionGroup()
-			.addParallel(PutSwitch)
-			.addParallel(switchTimedDrive)
-			.addSequential(release);
 		
+		ActionGroup frontSwitchAuto = new ActionGroup()
+			.addSequential(switchPIDDrive = new DrivePIDAction(DST_TO_SWITCH))
+			.addParallel(switchLift)
+			.addSequential(release);
 	}
 
 	/*Function will setup the controllers
@@ -193,6 +215,7 @@ public class Robot extends IterativeFRCRobot {
 
 	protected void disabledInit() {
 		DashHandle.disInit();
+		getRobotSide();
 	}
 	
 	@Override
@@ -227,17 +250,18 @@ public class Robot extends IterativeFRCRobot {
 
 		Action chosenAction = autoChooser.getSelected();
 		
-		if((gameData.charAt(0) == 'L' && autoChooser.getSelected().getName().charAt(0)=='s'
-				&& rightStart) || (gameData.charAt(0) == 'R' && autoChooser.getSelected().getName().charAt(0)=='s'
-				&& !rightStart))
+		if((gameData.charAt(0) == 'L' && autoChooser.getSelected().getName().charAt(1)=='w'
+				&& side==Side.RIGHT) 
+				|| (gameData.charAt(0) == 'R' && autoChooser.getSelected().getName().charAt(1)=='w'
+				&& side==Side.LEFT))
 		{
-			chosenAction=switchTimedDrive;
+			chosenAction=switchPIDDrive;
 		}
-		else if((gameData.charAt(1) == 'L' && autoChooser.getSelected().getName().charAt(0)=='S'
-				&& rightStart)||(gameData.charAt(1) == 'R' && autoChooser.getSelected().getName().charAt(0)=='S'
-				&& !rightStart))
+		else if((gameData.charAt(1) == 'L' && autoChooser.getSelected().getName().charAt(1)=='c'
+				&& side==Side.RIGHT)||(gameData.charAt(1) == 'R' && autoChooser.getSelected().getName().charAt(1)=='c'
+				&& side==Side.LEFT))
 		{
-			chosenAction=switchTimedDrive;
+			chosenAction=switchPIDDrive;
 		}
 		chosenAction.start();
 	}

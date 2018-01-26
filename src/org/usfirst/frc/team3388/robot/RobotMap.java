@@ -10,6 +10,7 @@ public class RobotMap {
 	public static final int DRIVE_FRONTLEFT = 7;
 	public static final int DRIVE_BACKLEFT = 2;
 	public static final int DRIVE_BACKRIGHT = 5;
+	public static final int DRIVE_ENCODER = 9;
 	
 	public static final int RIGHT_CONTROLLER = 1;
 	public static final int LEFT_CONTROLLER = 2;

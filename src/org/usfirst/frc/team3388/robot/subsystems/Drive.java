@@ -8,8 +8,10 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.flash3388.flashlib.robot.PIDController;
 import edu.flash3388.flashlib.robot.PIDSource;
+import edu.flash3388.flashlib.robot.Subsystem;
 import edu.flash3388.flashlib.robot.devices.FlashSpeedController;
 import edu.flash3388.flashlib.robot.devices.Gyro;
+import edu.flash3388.flashlib.robot.devices.IndexEncoder;
 import edu.flash3388.flashlib.robot.devices.MultiSpeedController;
 import edu.flash3388.flashlib.robot.frc.FRCSpeedControllers;
 import edu.flash3388.flashlib.robot.systems.FlashDrive;
@@ -20,31 +22,36 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SpeedController;
 
-public class Drive {
+public class Drive extends Subsystem {
 	
-	private ADXRS450_Gyro gyro;
+	public static final double RADIUS=10.16;
+	public IndexEncoder encoder;
 	public FlashDrive driveTrain;
 	public PIDController distancePID;
 	public PIDSource distanceSource;
 	public static final String SETPOINT_NAME= "distanceSetPoint";
-	public DoubleProperty pidSetPoint = PropertyHandler.putNumber(SETPOINT_NAME,135.0);
+	public DoubleProperty pidSetPoint = PropertyHandler.putNumber(SETPOINT_NAME,0.0);
 	
 	public Drive() {
 		/*******************
 		 * Drive SubSystem *
 		 ******************/
+		encoder = new IndexEncoder(RobotMap.DRIVE_ENCODER);
 		driveTrain = setupDriveTrain();
 		driveTrain.setInverted(MotorSide.Right, true);
-		/*
-		 * NEED A JOYSTICK SETUP
-		 */
 		
-		/*
-		 * NEED A PIDSouce set up
-		 */
+		distanceSource = new PIDSource() {
+			
+			@Override
+			public double pidGet() {
+				return encoder.get()*RADIUS;
+			}
+		};
+
+
+		
 		distancePID = new PIDController(0.21, 0.0, 0.285, 0.0, pidSetPoint, distanceSource);
 		distancePID.setOutputLimit(-1, 1);
-		//gyro = new ADXRS450_Gyro();
 	}
 	/*Function will setup the Flash drive
 	 * input: None
