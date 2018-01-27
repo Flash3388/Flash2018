@@ -33,8 +33,8 @@ public class Robot extends IterativeFRCRobot {
 	/********************
 	 * Main Robot class *
 	 *******************/
-	ActionGroup sideSwitchAuto;
 	DrivePIDAction switchPIDDrive;
+	ActionGroup frontSwitchAuto;
 	
 	CamerasHandler camHandler;
 	public static Drive drive;
@@ -118,7 +118,7 @@ public class Robot extends IterativeFRCRobot {
 		};
 		autoChooser = new SendableChooser<Action>();
 		autoChooser.addDefault("drive to switch (cross)", switchPIDDrive);
-		autoChooser.addObject("Switch front auto",sideSwitchAuto);
+		autoChooser.addObject("Switch front auto",frontSwitchAuto);
 		SmartDashboard.putData(autoChooser);
 	}
 
@@ -126,7 +126,7 @@ public class Robot extends IterativeFRCRobot {
 	 */
 	private void rollerGripperSystemSetup()
 	{
-		final double DST_TO_SWITCH = 306;
+		final double DST_TO_SWITCH = 366.04;
 		final double RELEASE_SPEED = -1.0;
 		final double seconds=1.0;/*  */
 		final double MAX_ANGLE=0.0;
@@ -184,7 +184,7 @@ public class Robot extends IterativeFRCRobot {
 		ActionGroup PutSwitch = new ActionGroup()
 			.addSequential(switchLift);
 		
-		ActionGroup frontSwitchAuto = new ActionGroup()
+		frontSwitchAuto = new ActionGroup()
 			.addSequential(switchPIDDrive = new DrivePIDAction(DST_TO_SWITCH))
 			.addParallel(switchLift)
 			.addSequential(release);
