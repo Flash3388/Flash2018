@@ -1,6 +1,5 @@
 package org.usfirst.frc.team3388.actions;
 
-
 import org.usfirst.frc.team3388.robot.Robot;
 
 import edu.flash3388.flashlib.robot.Action;
