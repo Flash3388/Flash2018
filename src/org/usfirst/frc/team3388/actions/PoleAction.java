@@ -8,44 +8,27 @@ public class PoleAction extends Action{
 	/***************
 	 * Pole Action *
 	 **************/
-	private double setPoint;
+	private double setpoint;
 	public final double SCOPE=0.5;
-	private double max;
-	private double min;
+	private final double MARGIN=0.5;
 	
-	public PoleAction() {
+	public PoleAction(double setpoint) {
 		requires(Robot.rollerGripperPole);
+		this.setpoint=setpoint;
 	}
 
 	@Override
 	protected void end() {
 		Robot.rollerGripperPole.stop();
 	}
-/*Function will set the point for PID and rotate it until isFinished returns true
- * input: None
- * output: None
- */
 	@Override
 	protected void execute() {
-		Robot.rollerGripperPole.setPoint(setPoint);
-		Robot.rollerGripperPole.rotate(Robot.rollerGripperPole.rotatePID.calculate());
+		Robot.rollerGripperPole.rotate();
 	}
-	/*Function will change the setPoint , which later be used as the PID set point
-	 * input: setPoint
-	 * output: None
-	 */
-	public void setSetpoint(double setPoint) {
-		this.setPoint = setPoint;
-		max = setPoint+SCOPE;
-		min = setPoint-SCOPE;
-	}
-	/*Function will return true when the pole will reach the setPoint
-	 * input: None
-	 * output: isFinished
-	 */
+
 	@Override
 	protected boolean isFinished() {
-		return Robot.rollerGripperPole.potentiometer.get()<=max 
-				&& Robot.rollerGripperPole.potentiometer.get()>=min;
+		return Robot.rollerGripperPole.potentiometer.get()>=
+				Robot.rollerGripperPole.potentiometer.get();
 	}
 }

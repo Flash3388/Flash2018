@@ -5,7 +5,6 @@ import org.usfirst.frc.team3388.actions.CaptureAction;
 import org.usfirst.frc.team3388.actions.DrivePIDAction;
 import org.usfirst.frc.team3388.actions.LiftAction;
 import org.usfirst.frc.team3388.actions.PoleAction;
-import org.usfirst.frc.team3388.actions.PoleLiftingAction;
 import org.usfirst.frc.team3388.robot.subsystems.Drive;
 import org.usfirst.frc.team3388.robot.subsystems.Pole;
 import org.usfirst.frc.team3388.robot.subsystems.RollerGripper;
@@ -154,7 +153,12 @@ public class Robot extends IterativeFRCRobot {
 		
 		LiftAction lift = new LiftAction();
 		CaptureAction capture = new CaptureAction();
-		PoleAction poleAction = new PoleAction();
+		PoleAction scaleMinLift = new PoleAction(MIN_ANGLE);
+		PoleAction scaleMidLift = new PoleAction(MID_ANGLE);
+		PoleAction scaleMaxLift = new PoleAction(MAX_ANGLE);
+		PoleAction switchLift = new PoleAction(SWITCH_ANGLE);
+		PoleAction downLift = new PoleAction(DOWN);
+
 				
 		TimedAction release = new TimedAction(new InstantAction() {	
 			@Override
@@ -162,13 +166,6 @@ public class Robot extends IterativeFRCRobot {
 				rollerGripper.rotate(RELEASE_SPEED);
 			}
 		}, seconds);//roller setup end
-		
-		
-		InstantAction scaleMinLift = new PoleLiftingAction(MIN_ANGLE);
-		InstantAction scaleMidLift = new PoleLiftingAction(MID_ANGLE);
-		InstantAction scaleMaxLift = new PoleLiftingAction(MAX_ANGLE);
-		InstantAction switchLift = new PoleLiftingAction(SWITCH_ANGLE);
-		InstantAction downLift = new PoleLiftingAction(DOWN);//pole setup end
 		/*TODO:
 		 * add rollergripper rotation in parallel
 		 */
