@@ -22,7 +22,7 @@ public class CaptureAction extends Action{
 	@Override
 	protected void execute() {
 		Robot.rollerGripper.rotate();
-		if(Robot.rollerGripper.getDist()<CAPTURING_DISTANCE)
+		if(Robot.rollerGripper.getDist()<=CAPTURING_DISTANCE)
 		{
 			if(startTime == 0)
 				startTime=FlashUtil.secs();
@@ -36,7 +36,7 @@ public class CaptureAction extends Action{
 
 	@Override
 	protected boolean isFinished() {
-		return timeCaptured == CAPTURING_TIME;
+		return timeCaptured >= CAPTURING_TIME;
 	}
 
 }
