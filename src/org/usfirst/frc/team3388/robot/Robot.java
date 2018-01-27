@@ -1,8 +1,6 @@
 
 package org.usfirst.frc.team3388.robot;
 
-import java.sql.Time;
-
 import org.usfirst.frc.team3388.actions.CaptureAction;
 import org.usfirst.frc.team3388.actions.DrivePIDAction;
 import org.usfirst.frc.team3388.actions.LiftAction;
