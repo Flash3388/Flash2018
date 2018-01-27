@@ -71,12 +71,12 @@ public class Drive extends Subsystem {
 	{
 		driveTrain.tankDrive(speed,speed);
 	}
-	public void turnRight(double speed)
+	public void turn(double speed ,boolean right)
 	{
-		driveTrain.tankDrive(-speed, speed);
+		if(right)
+			driveTrain.tankDrive(-speed, speed);
+		else
+			driveTrain.tankDrive(speed, -speed);
 	}
-	private void turnLeft(double speed)
-	{
-		driveTrain.tankDrive(speed, -speed);
-	}
+
 }
