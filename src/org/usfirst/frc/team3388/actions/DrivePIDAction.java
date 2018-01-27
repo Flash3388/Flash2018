@@ -33,7 +33,8 @@ public class DrivePIDAction extends Action {
 		if(Robot.drive.distanceSource.pidGet()<=setpoint+MARGIN &&
 				Robot.drive.distanceSource.pidGet()>setpoint-MARGIN)
 		{
-			thresholdStartTime=FlashUtil.secs();
+			if(thresholdStartTime!=0)
+				thresholdStartTime=FlashUtil.secs();
 			Robot.drive.drive(Robot.drive.distancePID.calculate());
 		}
 		else
