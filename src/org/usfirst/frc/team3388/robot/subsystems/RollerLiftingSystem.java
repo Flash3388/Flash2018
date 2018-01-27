@@ -8,9 +8,7 @@ import edu.flash3388.flashlib.robot.devices.FlashSpeedController;
 import edu.flash3388.flashlib.robot.systems.Rotatable;
 
 public class RollerLiftingSystem extends Subsystem implements Rotatable {
-	/*********************
-	 * Lifting SubSystem *
-	 ********************/
+
 	public final double DEFAULT_SPEED=0.3;
 	
 	FlashSpeedController rController;

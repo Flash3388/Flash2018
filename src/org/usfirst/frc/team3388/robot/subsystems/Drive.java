@@ -33,9 +33,7 @@ public class Drive extends Subsystem {
 	public DoubleProperty pidSetPoint = PropertyHandler.putNumber(SETPOINT_NAME,0.0);
 	
 	public Drive() {
-		/*******************
-		 * Drive SubSystem *
-		 ******************/
+
 		encoder = new IndexEncoder(RobotMap.DRIVE_ENCODER);
 		driveTrain = setupDriveTrain();
 		driveTrain.setInverted(MotorSide.Right, true);
@@ -53,10 +51,7 @@ public class Drive extends Subsystem {
 		distancePID = new PIDController(0.21, 0.0, 0.285, 0.0, pidSetPoint, distanceSource);
 		distancePID.setOutputLimit(-1, 1);
 	}
-	/*Function will setup the Flash drive
-	 * input: None
-	 * output: Flash drive(multi controllers)
-	 */
+
 	private FlashDrive setupDriveTrain() {
 		TalonSpeed frontRight;
 		TalonSpeed frontLeft;

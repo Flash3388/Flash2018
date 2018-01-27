@@ -28,7 +28,6 @@ public class TalonSpeed implements FlashSpeedController{
 	}
 	@Override
 	public boolean isInverted() {
-		// TODO Auto-generated method stub
 		return this.currInverted;
 	}
 

@@ -27,9 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeFRCRobot {
-	/********************
-	 * Main Robot class *
-	 *******************/
+
 	DrivePIDAction switchPIDDrive;
 	ActionGroup frontSwitchAuto;
 	
@@ -57,19 +55,10 @@ public class Robot extends IterativeFRCRobot {
 	@Override
 	protected void initRobot() {
 		
-		/*
-		 * drive setup 
-		 */
-		
 		drive = new Drive();
-		/*
-		 * cam handler
-		 */
 		
 		camHandler = new CamerasHandler();
-		/*
-		 * auto setup
-		 */
+
 		controllersSetup();
 		if(!drivingTrain)
 		{
@@ -95,10 +84,6 @@ public class Robot extends IterativeFRCRobot {
 			break;
 		}
 	}
-	/*Function will setup all of the autonomy programs and the auto chooser
-	 * input: None 
-	 * output: None
-	 */
 	private void autoHandlers() {
 		final double seconds = 5;
 		Action toDrive = new Action() {
@@ -118,11 +103,11 @@ public class Robot extends IterativeFRCRobot {
 		autoChooser.addObject("Switch front auto",frontSwitchAuto);
 		SmartDashboard.putData(autoChooser);
 	}
-
-	/*Function will setup all the roller gripper system(pole+lift+roller)
-	 */
 	private void rollerGripperSystemSetup()
 	{
+		/*TODO:
+		 * find all constants
+		 */
 		final double DST_TO_SWITCH = 366.04;
 		final double RELEASE_SPEED = -1.0;
 		final double seconds=1.0;/*  */
@@ -184,9 +169,6 @@ public class Robot extends IterativeFRCRobot {
 			.addParallel(switchLift)
 			.addSequential(release);
 	}
-
-	/*Function will setup the controllers
-	 */
 	private void controllersSetup() {
 		final int BUTTON_COUNT = 4;
 		if(!drivingTrain)

@@ -11,9 +11,7 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 
 
 public class RollerGripper extends Subsystem implements Rotatable{
-	/***************************
-	 * RollerGripper SubSystem *
-	 **************************/
+
 	FlashSpeedController rController;
 	FlashSpeedController lController;
 
@@ -33,10 +31,7 @@ public class RollerGripper extends Subsystem implements Rotatable{
 	public void rotate() {
 		rotate(DEFAULT_SPEED);
 	}
-	/*Function will return the value from the ultrasonic
-	 * input: None
-	 * output: value from the ultrasonic
-	 */
+
 	public double getDist()
 	{
 		return sonic.get();
@@ -46,10 +41,7 @@ public class RollerGripper extends Subsystem implements Rotatable{
 		rController.stop();
 		lController.stop();
 	}
-	/*Function will return the angle of the roller gripper
-	 * input: None
-	 * output: Angle
-	 */
+	
 	public double getAngle()
 	{
 		return gyro.getAngle();

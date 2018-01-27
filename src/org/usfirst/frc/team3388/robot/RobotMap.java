@@ -3,9 +3,9 @@ package org.usfirst.frc.team3388.robot;
 import edu.wpi.first.wpilibj.SPI.Port;
 
 public class RobotMap {
-	/*******************************
-	 * class of constant variables * 
-	 ******************************/
+	/*TODO:
+	 * 	find all ports
+	 */
 	public static final int DRIVE_FRONTRIGHT = 4;
 	public static final int DRIVE_FRONTLEFT = 7;
 	public static final int DRIVE_BACKLEFT = 2;

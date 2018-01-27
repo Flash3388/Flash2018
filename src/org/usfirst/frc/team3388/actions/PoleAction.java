@@ -5,9 +5,7 @@ import org.usfirst.frc.team3388.robot.Robot;
 import edu.flash3388.flashlib.robot.Action;
 
 public class PoleAction extends Action{
-	/***************
-	 * Pole Action *
-	 **************/
+
 	private double setpoint;
 	public final double SCOPE=0.5;
 	private final double MARGIN=0.5;

@@ -15,9 +15,7 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 
 public class Pole extends Subsystem implements Rotatable{
-	/********************
-	 * Pole SubSystem   *
-	 *******************/
+
 	public static final double DEFAULT_SPEED=0.5;
 	private FlashSpeedController controller;
 	private final int RANGE=360;
@@ -27,7 +25,6 @@ public class Pole extends Subsystem implements Rotatable{
 	public Pole()
 	{
 		potentiometer = new AnalogPotentiometer(RobotMap.POLE_POTENTIOMETER,RANGE,OFFSET);
-		//potentiometer.setPIDSourceType(pidSource);
 		controller= new TalonSpeed(RobotMap.ROLLER_GRIPPER_POLE);
 	}
 	@Override

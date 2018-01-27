@@ -38,8 +38,7 @@ public class DrivePIDAction extends Action {
 		}
 		else
 		{
-			Robot.drive.driveTrain.tankDrive(Robot.drive.distancePID.calculate()
-					,Robot.drive.distancePID.calculate());
+			Robot.drive.drive(Robot.drive.distancePID.calculate());
 			thresholdStartTime=0;
 		}
 		
