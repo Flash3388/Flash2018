@@ -72,4 +72,16 @@ public class Drive extends Subsystem {
 					new MultiSpeedController(frontRight,backRight),
 					new MultiSpeedController(frontLeft,backLeft));
 	}
+	public void drive(double speed)
+	{
+		driveTrain.tankDrive(speed,speed);
+	}
+	public void turnRight(double speed)
+	{
+		driveTrain.tankDrive(-speed, speed);
+	}
+	private void turnLeft(double speed)
+	{
+		driveTrain.tankDrive(speed, -speed);
+	}
 }

@@ -28,7 +28,6 @@ public class PoleAction extends Action{
 
 	@Override
 	protected boolean isFinished() {
-		return Robot.rollerGripperPole.potentiometer.get()>=
-				Robot.rollerGripperPole.potentiometer.get();
+		return Robot.rollerGripperPole.potentiometer.get()>=setpoint+MARGIN;
 	}
 }

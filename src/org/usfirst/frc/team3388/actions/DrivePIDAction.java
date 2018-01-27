@@ -34,8 +34,7 @@ public class DrivePIDAction extends Action {
 				Robot.drive.distanceSource.pidGet()>setpoint-MARGIN)
 		{
 			thresholdStartTime=FlashUtil.secs();
-			Robot.drive.driveTrain.tankDrive(Robot.drive.distancePID.calculate()
-				,Robot.drive.distancePID.calculate());
+			Robot.drive.drive(Robot.drive.distancePID.calculate());
 		}
 		else
 		{
@@ -48,6 +47,6 @@ public class DrivePIDAction extends Action {
 	
 	@Override
 	protected boolean isFinished() {
-		return FlashUtil.secs()-thresholdStartTime>=TIME_IN_THRESHOLD && thresholdStartTime!=0;
+		return FlashUtil.secs()-thresholdStartTime>=TIME_IN_THRESHOLD && thresholdStartTime!=0		;
 	}
 }
