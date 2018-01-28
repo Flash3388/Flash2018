@@ -180,7 +180,11 @@ public class Robot extends IterativeFRCRobot {
 			.addSequential(switchPIDDrive = new DrivePIDAction(DST_TO_SWITCH))
 			.addParallel(PutSwitch)
 			.addSequential(release);
+		
+		systemController.getButton(1).whileHeld(hide);
+		systemController.getButton(1).whenReleased(use);
 	}
+	
 	private void controllersSetup() {
 		final int BUTTON_COUNT = 4;
 		if(!drivingTrain)
