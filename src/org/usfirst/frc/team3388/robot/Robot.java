@@ -239,14 +239,15 @@ public class Robot extends IterativeFRCRobot {
 		Action chosenAction = autoChooser.getSelected();
 		
 		if((gameData.charAt(0) == 'L' && autoChooser.getSelected().getName().charAt(1)=='w'
-				&& side==Side.RIGHT) 
-				|| (gameData.charAt(0) == 'R' && autoChooser.getSelected().getName().charAt(1)=='w'
+				&& side==Side.RIGHT) || (gameData.charAt(0) == 'R' 
+				&& autoChooser.getSelected().getName().charAt(1)=='w'
 				&& side==Side.LEFT))
 		{
 			chosenAction=switchPIDDrive;
 		}
 		else if((gameData.charAt(1) == 'L' && autoChooser.getSelected().getName().charAt(1)=='c'
-				&& side==Side.RIGHT)||(gameData.charAt(1) == 'R' && autoChooser.getSelected().getName().charAt(1)=='c'
+				&& side==Side.RIGHT)||(gameData.charAt(1) == 'R' 
+				&& autoChooser.getSelected().getName().charAt(1)=='c'
 				&& side==Side.LEFT))
 		{
 			chosenAction=switchPIDDrive;
