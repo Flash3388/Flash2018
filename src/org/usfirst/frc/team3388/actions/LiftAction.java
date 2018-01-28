@@ -6,13 +6,14 @@ import edu.flash3388.flashlib.robot.Action;
 
 public class LiftAction extends Action{
 
-	final double SCOPE=0.5;
-	double desAngle=0;
+	final double MARGIN=0.5;
+	double setpoint=0.0;
 	public static final double DEFAULT_LIFT_SPEED=0.3;
 	
-	public LiftAction()
+	public LiftAction(double setpoint)
 	{
 		requires(Robot.rollerGripperLifter);
+		this.setpoint=setpoint;
 	}
 
 	@Override
@@ -22,16 +23,15 @@ public class LiftAction extends Action{
 
 	@Override
 	protected void execute() {
-		Robot.rollerGripper.rotate();
+		if(setpoint>Robot.rollerGripper.getAngle())
+			Robot.rollerGripper.rotate();
+		else if(setpoint<Robot.rollerGripper.getAngle())
+			Robot.rollerGripper.rotate(-Robot.rollerGripper.DEFAULT_SPEED);
 	}
 
 	@Override
 	protected boolean isFinished() {
-		return Robot.rollerGripper.getAngle()<=desAngle+SCOPE || Robot.rollerGripper.getAngle()>=desAngle-SCOPE;
-	}
-	public void setAngle(double desAngle)
-	{
-		this.desAngle=desAngle;
+		return Robot.rollerGripper.getAngle()>=setpoint+MARGIN;
 	}
 
 }

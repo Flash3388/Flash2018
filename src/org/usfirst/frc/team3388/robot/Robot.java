@@ -116,6 +116,8 @@ public class Robot extends IterativeFRCRobot {
 		final double MID_ANGLE=0.0;
 		final double DOWN = 75.0;
 		final double SWITCH_ANGLE=0.0;
+		final double HIDE_ANGLE=270.0;
+		final double USE_ANGLE=90.0;
 				
 		rollerGripperPole = new Pole();//pole setup start
 		rollerGripperPole.setDefaultAction(new Action() {
@@ -136,7 +138,8 @@ public class Robot extends IterativeFRCRobot {
 		rollerGripper = new RollerGripper();//roller setup start
 		rollerGripperLifter = new RollerLiftingSystem();//lift setup start
 		
-		LiftAction lift = new LiftAction();
+		LiftAction hide = new LiftAction(HIDE_ANGLE);
+		LiftAction use = new LiftAction(USE_ANGLE);
 		CaptureAction capture = new CaptureAction();
 		PoleAction scaleMinLift = new PoleAction(MIN_ANGLE);
 		PoleAction scaleMidLift = new PoleAction(MID_ANGLE);
@@ -156,17 +159,25 @@ public class Robot extends IterativeFRCRobot {
 		 */
 		
 		ActionGroup scalePutMax = new ActionGroup()
-			.addSequential(scaleMaxLift);
+			.addSequential(scaleMaxLift)
+			.addParallel(hide)
+			.addSequential(use);
 		ActionGroup scalePutMid = new ActionGroup()
-			.addSequential(scaleMidLift);
+			.addSequential(scaleMidLift)
+			.addParallel(hide)
+			.addSequential(use);
 		ActionGroup scalePutMin = new ActionGroup()
-			.addSequential(scaleMinLift);
+			.addSequential(scaleMinLift)
+			.addParallel(hide)
+			.addSequential(use);
 		ActionGroup PutSwitch = new ActionGroup()
-			.addSequential(switchLift);
+			.addSequential(switchLift)
+			.addParallel(hide)
+			.addSequential(use);
 		
 		frontSwitchAuto = new ActionGroup()
 			.addSequential(switchPIDDrive = new DrivePIDAction(DST_TO_SWITCH))
-			.addParallel(switchLift)
+			.addParallel(PutSwitch)
 			.addSequential(release);
 	}
 	private void controllersSetup() {

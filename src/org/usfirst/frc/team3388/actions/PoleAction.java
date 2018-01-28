@@ -7,7 +7,6 @@ import edu.flash3388.flashlib.robot.Action;
 public class PoleAction extends Action{
 
 	private double setpoint;
-	public final double SCOPE=0.5;
 	private final double MARGIN=0.5;
 	
 	public PoleAction(double setpoint) {
