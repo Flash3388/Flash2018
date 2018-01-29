@@ -22,8 +22,6 @@ public class RollerGripper extends Subsystem implements Rotatable{
 	public static DoubleSource angle;
 	public static final double DEFAULT_SPEED = 0.5;
 	public RollerGripper() {
-		IndexEncoder e = new IndexEncoder(0);
-		
 		sonic = new Ultrasonic(RobotMap.PING, RobotMap.ECHO);
 		gyro = new ADXRS450_Gyro();//fill
 		angle = new DoubleSource() {
