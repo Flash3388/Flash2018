@@ -6,7 +6,6 @@ import edu.flash3388.flashlib.robot.Action;
 
 public class LiftAction extends Action{
 
-	final double MARGIN=0.5;
 	double setpoint=0.0;
 	public static final double DEFAULT_LIFT_SPEED=0.3;
 	
@@ -31,7 +30,7 @@ public class LiftAction extends Action{
 
 	@Override
 	protected boolean isFinished() {
-		return Robot.rollerGripper.getAngle()>=setpoint+MARGIN;
+		return Robot.rollerGripper.getAngle()>=setpoint;
 	}
 
 }
