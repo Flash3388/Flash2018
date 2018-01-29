@@ -7,7 +7,6 @@ import edu.flash3388.flashlib.robot.Action;
 public class PoleAction extends Action{
 
 	private double setpoint;
-	private final double MARGIN=0.5;
 	
 	public PoleAction(double setpoint) {
 		requires(Robot.rollerGripperPole);
@@ -20,11 +19,15 @@ public class PoleAction extends Action{
 	}
 	@Override
 	protected void execute() {
-		Robot.rollerGripperPole.rotate();
+		if(setpoint>Robot.rollerGripperPole.angle.get())
+			Robot.rollerGripperPole.rotate();
+		else
+			Robot.rollerGripperPole.rotate(-Robot.rollerGripperPole.DEFAULT_SPEED);
 	}
 
 	@Override
 	protected boolean isFinished() {
-		return Robot.rollerGripperPole.angle.get()>=setpoint+MARGIN;
+
+		return Robot.rollerGripperPole.angle.get()>=setpoint;
 	}
 }
