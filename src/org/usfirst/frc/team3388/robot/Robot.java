@@ -55,7 +55,7 @@ public class Robot extends IterativeFRCRobot {
 	@Override
 	protected void initRobot() {
 		
-		drive = new Drive();
+		/*drive = new Drive();
 		
 		camHandler = new CamerasHandler();
 
@@ -65,6 +65,7 @@ public class Robot extends IterativeFRCRobot {
 			rollerGripperSystemSetup();	
 			autoHandlers();
 		}
+		*/
 
 	}
 	private void getRobotSide()
@@ -219,6 +220,7 @@ public class Robot extends IterativeFRCRobot {
 	protected void teleopInit() {
 		//controller.getRawButton(1);
 		//DriverStation.getInstance().getStickButton(0, 1);
+		
 		startTime = FlashUtil.secs();
 		DashHandle.teleInit();
 	}
