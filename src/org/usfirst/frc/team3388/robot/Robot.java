@@ -6,8 +6,8 @@ import org.usfirst.frc.team3388.actions.DrivePIDAction;
 import org.usfirst.frc.team3388.actions.LiftAction;
 import org.usfirst.frc.team3388.actions.PoleAction;
 import org.usfirst.frc.team3388.robot.subsystems.DriveSystem;
-import org.usfirst.frc.team3388.robot.subsystems.PoleSystem;
-import org.usfirst.frc.team3388.robot.subsystems.RollerGripperSystem;
+import org.usfirst.frc.team3388.robot.subsystems.Pole;
+import org.usfirst.frc.team3388.robot.subsystems.RollerGripper;
 import org.usfirst.frc.team3388.robot.subsystems.RollerLiftingSystem;
 
 import edu.flash3388.flashlib.math.Mathf;
@@ -40,8 +40,8 @@ public class Robot extends IterativeFRCRobot {
 	Joystick leftController;
 	Joystick systemController;
 	
-	public static PoleSystem rollerGripperPole;
-	public static RollerGripperSystem rollerGripper;
+	public static Pole rollerGripperPole;
+	public static RollerGripper rollerGripper;
 	public static RollerLiftingSystem rollerGripperLifter;
 	
 	static double startTime;
@@ -55,8 +55,10 @@ public class Robot extends IterativeFRCRobot {
 	@Override
 	protected void initRobot() {
 		
+/*
+
 		drive = new DriveSystem();
-		
+
 		camHandler = new CamerasHandler();
 
 		controllersSetup();
@@ -65,6 +67,7 @@ public class Robot extends IterativeFRCRobot {
 			rollerGripperSystemSetup();	
 			autoHandlers();
 		}
+		*/
 
 	}
 	private void getRobotSide()
@@ -120,7 +123,7 @@ public class Robot extends IterativeFRCRobot {
 		final double HIDE_ANGLE=270.0;
 		final double USE_ANGLE=90.0;
 				
-		rollerGripperPole = new PoleSystem();//pole setup start
+		rollerGripperPole = new Pole();//pole setup start
 		rollerGripperPole.setDefaultAction(new Action() {
 			final double MAX = 0.25;
 			final double MIN = -0.25;
@@ -136,7 +139,7 @@ public class Robot extends IterativeFRCRobot {
 			}
 		} );
 		
-		rollerGripper = new RollerGripperSystem();//roller setup start
+		rollerGripper = new RollerGripper();//roller setup start
 		rollerGripperLifter = new RollerLiftingSystem();//lift setup start
 		
 		LiftAction hide = new LiftAction(HIDE_ANGLE);
@@ -219,6 +222,7 @@ public class Robot extends IterativeFRCRobot {
 	protected void teleopInit() {
 		//controller.getRawButton(1);
 		//DriverStation.getInstance().getStickButton(0, 1);
+		
 		startTime = FlashUtil.secs();
 		DashHandle.teleInit();
 	}
