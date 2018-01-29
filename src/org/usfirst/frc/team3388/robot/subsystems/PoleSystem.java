@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 
-public class Pole extends Subsystem implements Rotatable{
+public class PoleSystem extends Subsystem implements Rotatable{
 
 	public static final double DEFAULT_SPEED=0.5;
 	private FlashSpeedController controller;
@@ -22,7 +22,7 @@ public class Pole extends Subsystem implements Rotatable{
 	private final int OFFSET=0;
 	public static Potentiometer potentiometer;
 
-	public Pole()
+	public PoleSystem()
 	{
 		potentiometer = new AnalogPotentiometer(RobotMap.POLE_POTENTIOMETER,RANGE,OFFSET);
 		controller= new TalonSpeed(RobotMap.ROLLER_GRIPPER_POLE);
