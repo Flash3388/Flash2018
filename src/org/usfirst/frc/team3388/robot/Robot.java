@@ -6,8 +6,8 @@ import org.usfirst.frc.team3388.actions.DrivePIDAction;
 import org.usfirst.frc.team3388.actions.LiftAction;
 import org.usfirst.frc.team3388.actions.PoleAction;
 import org.usfirst.frc.team3388.robot.subsystems.DriveSystem;
-import org.usfirst.frc.team3388.robot.subsystems.Pole;
-import org.usfirst.frc.team3388.robot.subsystems.RollerGripper;
+import org.usfirst.frc.team3388.robot.subsystems.PoleSystem;
+import org.usfirst.frc.team3388.robot.subsystems.RollerGripperSystem;
 import org.usfirst.frc.team3388.robot.subsystems.RollerLiftingSystem;
 
 import edu.flash3388.flashlib.math.Mathf;
@@ -40,8 +40,8 @@ public class Robot extends IterativeFRCRobot {
 	Joystick leftController;
 	Joystick systemController;
 	
-	public static Pole rollerGripperPole;
-	public static RollerGripper rollerGripper;
+	public static PoleSystem rollerGripperPole;
+	public static RollerGripperSystem rollerGripper;
 	public static RollerLiftingSystem rollerGripperLifter;
 	
 	static double startTime;
@@ -123,7 +123,7 @@ public class Robot extends IterativeFRCRobot {
 		final double HIDE_ANGLE=270.0;
 		final double USE_ANGLE=90.0;
 				
-		rollerGripperPole = new Pole();//pole setup start
+		rollerGripperPole = new PoleSystem();//pole setup start
 		rollerGripperPole.setDefaultAction(new Action() {
 			final double MAX = 0.25;
 			final double MIN = -0.25;
@@ -139,7 +139,7 @@ public class Robot extends IterativeFRCRobot {
 			}
 		} );
 		
-		rollerGripper = new RollerGripper();//roller setup start
+		rollerGripper = new RollerGripperSystem();//roller setup start
 		rollerGripperLifter = new RollerLiftingSystem();//lift setup start
 		
 		LiftAction hide = new LiftAction(HIDE_ANGLE);

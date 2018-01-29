@@ -11,7 +11,7 @@ import edu.flash3388.flashlib.util.beans.DoubleSource;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 
 
-public class RollerGripper extends Subsystem implements Rotatable{
+public class RollerGripperSystem extends Subsystem implements Rotatable{
 
 	FlashSpeedController rController;
 	FlashSpeedController lController;
@@ -20,7 +20,7 @@ public class RollerGripper extends Subsystem implements Rotatable{
 	ADXRS450_Gyro gyro;
 	public static DoubleSource angle;
 	public static final double DEFAULT_SPEED = 0.5;
-	public RollerGripper() {
+	public RollerGripperSystem() {
 		
 		sonic = new Ultrasonic(RobotMap.PING, RobotMap.ECHO);
 		gyro = new ADXRS450_Gyro();//fill
