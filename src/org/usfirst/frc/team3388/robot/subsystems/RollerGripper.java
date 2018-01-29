@@ -5,6 +5,7 @@ import org.usfirst.frc.team3388.robot.TalonSpeed;
 
 import edu.flash3388.flashlib.robot.Subsystem;
 import edu.flash3388.flashlib.robot.devices.FlashSpeedController;
+import edu.flash3388.flashlib.robot.devices.IndexEncoder;
 import edu.flash3388.flashlib.robot.devices.Ultrasonic;
 import edu.flash3388.flashlib.robot.systems.Rotatable;
 import edu.flash3388.flashlib.util.beans.DoubleSource;
@@ -21,6 +22,7 @@ public class RollerGripper extends Subsystem implements Rotatable{
 	public static DoubleSource angle;
 	public static final double DEFAULT_SPEED = 0.5;
 	public RollerGripper() {
+		IndexEncoder e = new IndexEncoder(0);
 		
 		sonic = new Ultrasonic(RobotMap.PING, RobotMap.ECHO);
 		gyro = new ADXRS450_Gyro();//fill
