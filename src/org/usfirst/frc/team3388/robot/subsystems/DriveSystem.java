@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SpeedController;
 
-public class Drive extends Subsystem {
+public class DriveSystem extends Subsystem {
 	
 	public static final double RADIUS=10.16;
 	public IndexEncoder encoder;
@@ -32,9 +32,9 @@ public class Drive extends Subsystem {
 	public static final String SETPOINT_NAME= "distanceSetPoint";
 	public DoubleProperty pidSetPoint = PropertyHandler.putNumber(SETPOINT_NAME,0.0);
 	
-	public Drive() {
+	public DriveSystem() {
 
-		encoder = new IndexEncoder(RobotMap.DRIVE_ENCODER);
+		encoder = new IndexEncoder(RobotMap.DRIVE_ENCODER,RADIUS*2*Math.PI);
 		driveTrain = setupDriveTrain();
 		driveTrain.setInverted(MotorSide.Right, true);
 		
@@ -42,7 +42,7 @@ public class Drive extends Subsystem {
 			
 			@Override
 			public double pidGet() {
-				return encoder.get()*RADIUS;
+				return encoder.getDistance();
 			}
 		};
 
