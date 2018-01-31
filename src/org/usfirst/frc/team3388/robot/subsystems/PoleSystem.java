@@ -22,6 +22,10 @@ public class PoleSystem extends Subsystem implements Rotatable{
 	private final int OFFSET=0;
 	private Potentiometer potentiometer;
 	public static DoubleSource angle;
+	private final double UP_SPEED=1.0;
+	private final double DOWN_SPEED=-0.1;
+	
+	
 	public PoleSystem()
 	{
 		potentiometer = new AnalogPotentiometer(RobotMap.POLE_POTENTIOMETER);
@@ -31,16 +35,20 @@ public class PoleSystem extends Subsystem implements Rotatable{
 				return Mathf.scale(potentiometer.get(), 0.0, 240.0);
 			}
 		};
-		//controller= new TalonSpeed(RobotMap.ROLLER_GRIPPER_POLE);
+		controller= new TalonSpeed(RobotMap.ROLLER_GRIPPER_POLE);
 	}
 	@Override
 	public void rotate(double speed) {
 		controller.set(speed);
 	}
-	public void rotate()
+	public void rotate(boolean dir)
 	{
-		rotate(DEFAULT_SPEED);
+		if(dir)
+			rotate(UP_SPEED);
+		else
+			rotate(DOWN_SPEED);
 	}
+	
 	@Override
 	public void stop() {
 		controller.set(0);

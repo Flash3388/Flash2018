@@ -21,9 +21,9 @@ public class PoleAction extends Action{
 	@Override
 	protected void execute() {
 		if(setpoint>Robot.rollerGripperPole.angle.get())
-			Robot.rollerGripperPole.rotate();
+			Robot.rollerGripperPole.rotate(true);
 		else
-			Robot.rollerGripperPole.rotate(Robot.rollerGripperPole.DEFAULT_SPEED,false);
+			Robot.rollerGripperPole.rotate(false);
 	}
 
 	@Override

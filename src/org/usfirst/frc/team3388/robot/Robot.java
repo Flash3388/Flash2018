@@ -16,12 +16,14 @@ import edu.flash3388.flashlib.robot.ActionGroup;
 import edu.flash3388.flashlib.robot.InstantAction;
 import edu.flash3388.flashlib.robot.SystemAction;
 import edu.flash3388.flashlib.robot.TimedAction;
+import edu.flash3388.flashlib.robot.devices.IndexEncoder;
 import edu.flash3388.flashlib.robot.frc.IterativeFRCRobot;
 import edu.flash3388.flashlib.robot.hid.Joystick;
 import edu.flash3388.flashlib.robot.hid.XboxController;
 import edu.flash3388.flashlib.util.FlashUtil;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -46,28 +48,49 @@ public class Robot extends IterativeFRCRobot {
 	
 	static double startTime;
 	
-	boolean drivingTrain = true;
+	boolean drivingTrain = false;
+	boolean sysTrain = true;
 	
 	public enum Side {LEFT,MIDDLE,RIGHT};
 	
 	Side side;
-	
+	Encoder enc;
 	@Override
 	protected void initRobot() {
-		
-/*
-
-		drive = new DriveSystem();
-
-		camHandler = new CamerasHandler();
-
 		controllersSetup();
-		if(!drivingTrain)
+		if(sysTrain)
 		{
-			rollerGripperSystemSetup();	
-			autoHandlers();
+			rollerGripperPole = new PoleSystem();
+			//rollerGripperSystemSetup();	
+			rollerGripperPole.setDefaultAction(new Action() {
+				@Override
+				protected void execute() {
+					rollerGripperPole.rotate(0.5*systemController.getY());
+					/*if(systemController.getY() < 0.0)
+						rollerGripperPole.rotate(true);
+					if(systemController.getY() > 0.0)
+						rollerGripperPole.rotate(false);
+						*/
+				}
+				
+				@Override
+				protected void end() {
+					rollerGripperPole.stop();
+				}
+			});
 		}
-		*/
+		if(drivingTrain)
+		{
+			drive = new DriveSystem();
+			camHandler = new CamerasHandler();
+	
+			
+				if(sysTrain)
+				{
+					
+					autoHandlers();
+				}
+		}
 
 	}
 	private void getRobotSide()
@@ -190,23 +213,27 @@ public class Robot extends IterativeFRCRobot {
 	
 	private void controllersSetup() {
 		final int BUTTON_COUNT = 4;
-		if(!drivingTrain)
+		if(sysTrain)
 			systemController = new Joystick(RobotMap.SYSTEM_CONTROLLER, BUTTON_COUNT);
 		
-		rightController = new Joystick(RobotMap.RIGHT_CONTROLLER,BUTTON_COUNT);
-		leftController = new Joystick(RobotMap.LEFT_CONTROLLER,BUTTON_COUNT);
-
-		drive.driveTrain.setDefaultAction(new SystemAction(new Action() {
-					@Override
-					protected void execute() {
-						drive.driveTrain.tankDrive(rightController.getY(),leftController.getY());
-					}
-					
-					@Override
-					protected void end() {
-						drive.driveTrain.tankDrive(0,0);
-					}
-				}, drive.driveTrain));		
+		if(drivingTrain)
+		{
+				
+			rightController = new Joystick(RobotMap.RIGHT_CONTROLLER,BUTTON_COUNT);
+			leftController = new Joystick(RobotMap.LEFT_CONTROLLER,BUTTON_COUNT);
+	
+			drive.driveTrain.setDefaultAction(new SystemAction(new Action() {
+						@Override
+						protected void execute() {
+							drive.driveTrain.tankDrive(rightController.getY(),leftController.getY());
+						}
+						
+						@Override
+						protected void end() {
+							drive.driveTrain.tankDrive(0,0);
+						}
+					}, drive.driveTrain));
+		}
 	}
 
 	protected void disabledInit() {
@@ -220,6 +247,7 @@ public class Robot extends IterativeFRCRobot {
 
 	@Override
 	protected void teleopInit() {
+		
 		//controller.getRawButton(1);
 		//DriverStation.getInstance().getStickButton(0, 1);
 		
@@ -229,6 +257,7 @@ public class Robot extends IterativeFRCRobot {
 
 	@Override
 	protected void teleopPeriodic() {
+		//System.out.println(enc.get());
 		DashHandle.telePeriodic();
 	}
 	

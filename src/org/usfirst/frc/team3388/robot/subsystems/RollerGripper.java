@@ -4,6 +4,7 @@ import org.usfirst.frc.team3388.robot.RobotMap;
 import org.usfirst.frc.team3388.robot.TalonSpeed;
 
 import edu.flash3388.flashlib.robot.Subsystem;
+import edu.flash3388.flashlib.robot.devices.Encoder;
 import edu.flash3388.flashlib.robot.devices.FlashSpeedController;
 import edu.flash3388.flashlib.robot.devices.IndexEncoder;
 import edu.flash3388.flashlib.robot.devices.Ultrasonic;
