@@ -18,8 +18,10 @@ import edu.flash3388.flashlib.robot.SystemAction;
 import edu.flash3388.flashlib.robot.TimedAction;
 import edu.flash3388.flashlib.robot.devices.IndexEncoder;
 import edu.flash3388.flashlib.robot.frc.IterativeFRCRobot;
+import edu.flash3388.flashlib.robot.frc.PDP;
 import edu.flash3388.flashlib.robot.hid.Joystick;
 import edu.flash3388.flashlib.robot.hid.XboxController;
+import edu.flash3388.flashlib.robot.frc.FlashFRCUtil;
 import edu.flash3388.flashlib.util.FlashUtil;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -57,6 +59,10 @@ public class Robot extends IterativeFRCRobot {
 	Encoder enc;
 	@Override
 	protected void initRobot() {
+		SmartDashboard.putNumber("upspeed", 0.5);
+		SmartDashboard.putNumber("downspeed", 0.32);
+		
+		
 		controllersSetup();
 		if(sysTrain)
 		{
@@ -65,12 +71,22 @@ public class Robot extends IterativeFRCRobot {
 			rollerGripperPole.setDefaultAction(new Action() {
 				@Override
 				protected void execute() {
-					rollerGripperPole.rotate(0.5*systemController.getY());
-					/*if(systemController.getY() < 0.0)
-						rollerGripperPole.rotate(true);
-					if(systemController.getY() > 0.0)
-						rollerGripperPole.rotate(false);
-						*/
+					//rollerGripperPole.rotate(0.5*systemController.getY());
+			
+					/*PDP pdp = FlashFRCUtil.getPDP();
+					final int ROLLER_GRIPPER_PORT = 15;
+					double portCurrent = pdp.getCurrent(ROLLER_GRIPPER_PORT);
+					double totalCurrent = pdp.getTotalCurrent();
+					System.out.println("total Current " + totalCurrent + ", Current for PORT " +  ROLLER_GRIPPER_PORT + " " + portCurrent);
+					*/
+					double val = SmartDashboard.getNumber("speed", 0.0);
+					System.out.println("dash" + val);
+					if(systemController.getY() <-0.2)
+						rollerGripperPole.rotate(SmartDashboard.getNumber("upspeed", 0.0));
+					else if(systemController.getY() > 0.2)
+						rollerGripperPole.rotate(-SmartDashboard.getNumber("downspeed", 0.0));
+					else
+						rollerGripperPole.stop();
 				}
 				
 				@Override
@@ -78,18 +94,30 @@ public class Robot extends IterativeFRCRobot {
 					rollerGripperPole.stop();
 				}
 			});
+			
+			
 		}
 		if(drivingTrain)
 		{
 			drive = new DriveSystem();
 			camHandler = new CamerasHandler();
+
+			drive.driveTrain.setDefaultAction(new SystemAction(new Action() {
+						@Override
+						protected void execute() {
+							drive.driveTrain.tankDrive(rightController.getY(),leftController.getY());
+						}
+						
+						@Override
+						protected void end() {
+							drive.driveTrain.tankDrive(0,0);
+						}
+					}, drive.driveTrain));
 	
-			
-				if(sysTrain)
-				{
-					
-					autoHandlers();
-				}
+			if(sysTrain)
+			{
+				autoHandlers();
+			}
 		}
 
 	}
@@ -110,7 +138,7 @@ public class Robot extends IterativeFRCRobot {
 			break;
 		}
 	}
-
+	
 	private void autoHandlers() {
 		final double seconds = 5;
 		Action toDrive = new Action() {
@@ -221,18 +249,6 @@ public class Robot extends IterativeFRCRobot {
 				
 			rightController = new Joystick(RobotMap.RIGHT_CONTROLLER,BUTTON_COUNT);
 			leftController = new Joystick(RobotMap.LEFT_CONTROLLER,BUTTON_COUNT);
-	
-			drive.driveTrain.setDefaultAction(new SystemAction(new Action() {
-						@Override
-						protected void execute() {
-							drive.driveTrain.tankDrive(rightController.getY(),leftController.getY());
-						}
-						
-						@Override
-						protected void end() {
-							drive.driveTrain.tankDrive(0,0);
-						}
-					}, drive.driveTrain));
 		}
 	}
 

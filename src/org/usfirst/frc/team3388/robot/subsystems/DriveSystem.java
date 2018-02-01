@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.flash3388.flashlib.robot.PIDController;
 import edu.flash3388.flashlib.robot.PIDSource;
 import edu.flash3388.flashlib.robot.Subsystem;
+import edu.flash3388.flashlib.robot.devices.AnalogGyro;
 import edu.flash3388.flashlib.robot.devices.FlashSpeedController;
 import edu.flash3388.flashlib.robot.devices.Gyro;
 import edu.flash3388.flashlib.robot.devices.IndexEncoder;
@@ -32,11 +33,12 @@ public class DriveSystem extends Subsystem {
 	public static final String SETPOINT_NAME= "distanceSetPoint";
 	public DoubleProperty pidSetPoint = PropertyHandler.putNumber(SETPOINT_NAME,0.0);
 	
+	public Gyro rotation;
 	public DriveSystem() {
-
+		rotation = new AnalogGyro(RobotMap.DRIVE_GYRO);
 		encoder = new IndexEncoder(RobotMap.DRIVE_ENCODER,RADIUS*2*Math.PI);
 		driveTrain = setupDriveTrain();
-		driveTrain.setInverted(MotorSide.Right, true);
+		driveTrain.setInverted(MotorSide.Left, true);
 		
 		distanceSource = new PIDSource() {
 			

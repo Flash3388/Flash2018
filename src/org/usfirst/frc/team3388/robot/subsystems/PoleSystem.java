@@ -40,6 +40,7 @@ public class PoleSystem extends Subsystem implements Rotatable{
 	@Override
 	public void rotate(double speed) {
 		controller.set(speed);
+		System.out.println(speed);
 	}
 	public void rotate(boolean dir)
 	{

@@ -1,5 +1,8 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="0"/>
+	</widget>
 	<widget field="time left" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
 		<location x="70" y="379"/>
 		<width>163</width>
