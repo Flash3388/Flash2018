@@ -10,14 +10,23 @@ public class DashHandle {
 		SmartDashboard.putBoolean(DashNames.enabled, false);
 		SmartDashboard.putNumber(DashNames.timeLeft, 0.0);
 		SmartDashboard.putNumber(DashNames.time, 0.0);
+		SmartDashboard.putBoolean(DashNames.navxConnection, Robot.drive.navx.isConnected());
+		
+	}
+	public static void disPeriodic()
+	{
+		SmartDashboard.putNumber(DashNames.angle, Robot.drive.rotationSource.pidGet());
 	}
 	public static void teleInit()
 	{
 		SmartDashboard.putBoolean(DashNames.enabled, true);
 		SmartDashboard.putNumber(DashNames.time, 0.0);
+		SmartDashboard.putBoolean(DashNames.navxConnection, Robot.drive.navx.isConnected());
 	}
+	
 	public static void telePeriodic()
 	{
+		
 		updateTime();
 	}
 	public static void updateTime()

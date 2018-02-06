@@ -11,30 +11,24 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 
 	public final double DEFAULT_SPEED=0.3;
 	
-	FlashSpeedController rController;
-	FlashSpeedController lController;
+	FlashSpeedController controller;
 	
 	public RollerLiftingSystem() {
-		rController = new TalonSpeed(RobotMap.ROLLER_GRIPPER_L_LIFT_CONTROLLER);
-		lController = new TalonSpeed(RobotMap.ROLLER_GRIPPER_R_LIFT_CONTROLLER);
+		controller = new TalonSpeed(RobotMap.ROLLER_GRIPPER_L_LIFT_CONTROLLER);
 	}
 	@Override
 	public void rotate(double speed) {
-		rController.set(speed);
-		lController.set(speed);
+		controller.set(speed);
 
 	}
 	public void rotate()
 	{
-		rController.set(DEFAULT_SPEED);
-		lController.set(DEFAULT_SPEED);
-
+		controller.set(DEFAULT_SPEED);
 	}
 
 	@Override
 	public void stop() {
-		rController.set(0);
-		lController.set(0);
+		controller.stop();
 
 	}
 

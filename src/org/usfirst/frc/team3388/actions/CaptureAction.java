@@ -12,17 +12,17 @@ public class CaptureAction extends Action{
 	static final double CAPTURING_TIME = 1.9;
 	final double CAPTURING_DISTANCE = 10;
 	public CaptureAction() {
-		requires(Robot.rollerGripper);
+		requires(Robot.rollerGripperSystem);
 	}
 	@Override
 	protected void end() {
-		Robot.rollerGripper.stop();
+		Robot.rollerGripperSystem.stop();
 	}
 
 	@Override
 	protected void execute() {
-		Robot.rollerGripper.rotate();
-		if(Robot.rollerGripper.getDist()<=CAPTURING_DISTANCE)
+		Robot.rollerGripperSystem.rotate();
+		if(Robot.rollerGripperSystem.getDist()<=CAPTURING_DISTANCE)
 		{
 			if(startTime == 0)
 				startTime=FlashUtil.secs();

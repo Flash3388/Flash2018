@@ -13,26 +13,26 @@ public class LiftAction extends Action{
 	
 	public LiftAction(double setpoint)
 	{
-		requires(Robot.rollerGripperLifter);
+		requires(Robot.LiftSystem);
 		this.setpoint=setpoint;
 	}
 
 	@Override
 	protected void end() {
-		Robot.rollerGripper.stop();
+		Robot.rollerGripperSystem.stop();
 	}
 
 	@Override
 	protected void execute() {
-		if(setpoint>Robot.rollerGripper.angle.get())
-			Robot.rollerGripper.rotate();
-		else if(setpoint<Robot.rollerGripper.angle.get())
-			Robot.rollerGripper.rotate(Robot.rollerGripper.DEFAULT_SPEED,false);
+		if(setpoint>Robot.rollerGripperSystem.angle.get())
+			Robot.rollerGripperSystem.rotate();
+		else if(setpoint<Robot.rollerGripperSystem.angle.get())
+			Robot.rollerGripperSystem.rotate(Robot.rollerGripperSystem.DEFAULT_SPEED,false);
 	}
 
 	@Override
 	protected boolean isFinished() {
-		return Mathf.constrained(Robot.rollerGripper.angle.get(), setpoint, setpoint + ERROR);
+		return Mathf.constrained(Robot.rollerGripperSystem.angle.get(), setpoint, setpoint + ERROR);
 	}
 
 }

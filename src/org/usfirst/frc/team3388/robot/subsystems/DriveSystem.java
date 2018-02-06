@@ -5,23 +5,19 @@ import org.usfirst.frc.team3388.robot.RobotMap;
 import org.usfirst.frc.team3388.robot.TalonSpeed;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.kauailabs.navx.frc.AHRS;
+import com.kauailabs.navx.frc.AHRS.SerialDataType;
 
 import edu.flash3388.flashlib.robot.PIDController;
 import edu.flash3388.flashlib.robot.PIDSource;
 import edu.flash3388.flashlib.robot.Subsystem;
-import edu.flash3388.flashlib.robot.devices.AnalogGyro;
-import edu.flash3388.flashlib.robot.devices.FlashSpeedController;
-import edu.flash3388.flashlib.robot.devices.Gyro;
 import edu.flash3388.flashlib.robot.devices.IndexEncoder;
 import edu.flash3388.flashlib.robot.devices.MultiSpeedController;
-import edu.flash3388.flashlib.robot.frc.FRCSpeedControllers;
 import edu.flash3388.flashlib.robot.systems.FlashDrive;
 import edu.flash3388.flashlib.robot.systems.FlashDrive.MotorSide;
 import edu.flash3388.flashlib.util.beans.DoubleProperty;
 import edu.flash3388.flashlib.util.beans.PropertyHandler;
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.SerialPort.Port;
 
 public class DriveSystem extends Subsystem {
 	
@@ -29,29 +25,48 @@ public class DriveSystem extends Subsystem {
 	public IndexEncoder encoder;
 	public FlashDrive driveTrain;
 	public PIDController distancePID;
+	public PIDController rotatePID;
 	public PIDSource distanceSource;
-	public static final String SETPOINT_NAME= "distanceSetPoint";
-	public DoubleProperty pidSetPoint = PropertyHandler.putNumber(SETPOINT_NAME,0.0);
+	public PIDSource rotationSource;
 	
-	public Gyro rotation;
+	public static final String DIS_NAME= "distanceSetPoint";
+	public static final String ROT_NAME= "rotationSetPoint";
+	public DoubleProperty distanceSetPoint = PropertyHandler.putNumber(DIS_NAME,0.0);
+	public DoubleProperty rotationSetPoint = PropertyHandler.putNumber(ROT_NAME,0.0);
+	
+	public AHRS navx; 
+
 	public DriveSystem() {
-		rotation = new AnalogGyro(RobotMap.DRIVE_GYRO);
-		encoder = new IndexEncoder(RobotMap.DRIVE_ENCODER,RADIUS*2*Math.PI);
+		navxSetup();
+		//encoder = new IndexEncoder(RobotMap.DRIVE_ENCODER,RADIUS*2*Math.PI);
 		driveTrain = setupDriveTrain();
 		driveTrain.setInverted(MotorSide.Left, true);
 		
-		distanceSource = new PIDSource() {
+		/*distanceSource = new PIDSource() {
 			
 			@Override
 			public double pidGet() {
 				return encoder.getDistance();
 			}
 		};
-
-
+*/
 		
-		distancePID = new PIDController(0.21, 0.0, 0.285, 0.0, pidSetPoint, distanceSource);
+		distancePID = new PIDController(0.21, 0.0, 0.285, 0.0, distanceSetPoint, distanceSource);
 		distancePID.setOutputLimit(-1, 1);
+		rotatePID = new PIDController(0.21, 0.0, 0.285,0.0,rotationSetPoint,rotationSource);
+		rotatePID.setOutputLimit(-1, 1);
+	}
+
+	private void navxSetup() {
+		navx=new AHRS(Port.kUSB, SerialDataType.kProcessedData, (byte)255);
+		
+		rotationSource = new PIDSource() {
+			
+			@Override
+			public double pidGet() {
+				return navx.getYaw();
+			}
+		};
 	}
 
 	private FlashDrive setupDriveTrain() {
@@ -73,12 +88,9 @@ public class DriveSystem extends Subsystem {
 	{
 		driveTrain.tankDrive(speed,speed);
 	}
-	public void turn(double speed ,boolean right)
+	public void rotate(double speed)
 	{
-		if(right)
-			driveTrain.tankDrive(-speed, speed);
-		else
-			driveTrain.tankDrive(speed, -speed);
+		driveTrain.rotate(speed);
 	}
 
 }

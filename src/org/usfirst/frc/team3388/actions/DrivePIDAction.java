@@ -17,7 +17,7 @@ public class DrivePIDAction extends Action {
 	public DrivePIDAction(double setpoint) {
 		requires(Robot.drive);
 		this.setpoint=setpoint;
-		Robot.drive.pidSetPoint.set(setpoint);
+		Robot.drive.distanceSetPoint.set(setpoint);
 	}
 	@Override
 	protected void initialize() {

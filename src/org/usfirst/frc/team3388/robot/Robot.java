@@ -10,6 +10,9 @@ import org.usfirst.frc.team3388.robot.subsystems.PoleSystem;
 import org.usfirst.frc.team3388.robot.subsystems.RollerGripperSystem;
 import org.usfirst.frc.team3388.robot.subsystems.RollerLiftingSystem;
 
+import com.kauailabs.navx.frc.AHRS;
+import com.kauailabs.navx.frc.AHRS.SerialDataType;
+
 import edu.flash3388.flashlib.math.Mathf;
 import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.ActionGroup;
@@ -26,6 +29,7 @@ import edu.flash3388.flashlib.util.FlashUtil;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -44,58 +48,50 @@ public class Robot extends IterativeFRCRobot {
 	Joystick leftController;
 	Joystick systemController;
 	
-	public static PoleSystem rollerGripperPole;
-	public static RollerGripperSystem rollerGripper;
-	public static RollerLiftingSystem rollerGripperLifter;
+	public static PoleSystem PoleSystem;
+	public static RollerGripperSystem rollerGripperSystem;
+	public static RollerLiftingSystem LiftSystem;
 	
 	static double startTime;
 	
 	boolean drivingTrain = false;
-	boolean sysTrain = true;
+	boolean sysTrain = false;
 	
 	public enum Side {LEFT,MIDDLE,RIGHT};
 	
 	Side side;
-	Encoder enc;
+	AHRS navx;
 	@Override
 	protected void initRobot() {
-		SmartDashboard.putNumber("upspeed", 0.5);
+		SmartDashboard.putNumber("upspeed", 0.8);
 		SmartDashboard.putNumber("downspeed", 0.32);
-		
 		
 		controllersSetup();
 		if(sysTrain)
 		{
-			rollerGripperPole = new PoleSystem();
+			PoleSystem = new PoleSystem();
 			//rollerGripperSystemSetup();	
-			rollerGripperPole.setDefaultAction(new Action() {
+			PoleSystem.setDefaultAction(new Action() {
 				@Override
 				protected void execute() {
 					//rollerGripperPole.rotate(0.5*systemController.getY());
 			
-					/*PDP pdp = FlashFRCUtil.getPDP();
-					final int ROLLER_GRIPPER_PORT = 15;
-					double portCurrent = pdp.getCurrent(ROLLER_GRIPPER_PORT);
-					double totalCurrent = pdp.getTotalCurrent();
-					System.out.println("total Current " + totalCurrent + ", Current for PORT " +  ROLLER_GRIPPER_PORT + " " + portCurrent);
-					*/
 					double val = SmartDashboard.getNumber("speed", 0.0);
-					System.out.println("dash" + val);
+					//System.out.println("dash" + val);
 					if(systemController.getY() <-0.2)
-						rollerGripperPole.rotate(SmartDashboard.getNumber("upspeed", 0.0));
+						PoleSystem.rotate(SmartDashboard.getNumber("upspeed", 0.0));
 					else if(systemController.getY() > 0.2)
-						rollerGripperPole.rotate(-SmartDashboard.getNumber("downspeed", 0.0));
+						PoleSystem.rotate(-SmartDashboard.getNumber("downspeed", 0.0));
 					else
-						rollerGripperPole.stop();
+						PoleSystem.stop();
 				}
 				
 				@Override
 				protected void end() {
-					rollerGripperPole.stop();
+					PoleSystem.stop();
 				}
 			});
-			
-			
+
 		}
 		if(drivingTrain)
 		{
@@ -119,7 +115,6 @@ public class Robot extends IterativeFRCRobot {
 				autoHandlers();
 			}
 		}
-
 	}
 	private void getRobotSide()
 	{
@@ -174,14 +169,14 @@ public class Robot extends IterativeFRCRobot {
 		final double HIDE_ANGLE=270.0;
 		final double USE_ANGLE=90.0;
 				
-		rollerGripperPole = new PoleSystem();//pole setup start
-		rollerGripperPole.setDefaultAction(new Action() {
+		PoleSystem = new PoleSystem();//pole setup start
+		PoleSystem.setDefaultAction(new Action() {
 			final double MAX = 0.25;
 			final double MIN = -0.25;
 			
 			@Override
 			protected void execute() {
-				rollerGripperPole.rotate(Mathf.constrain(systemController.getY(), MIN, MAX));
+				PoleSystem.rotate(Mathf.constrain(systemController.getY(), MIN, MAX));
 			}
 			
 			@Override
@@ -190,8 +185,8 @@ public class Robot extends IterativeFRCRobot {
 			}
 		} );
 		
-		rollerGripper = new RollerGripperSystem();//roller setup start
-		rollerGripperLifter = new RollerLiftingSystem();//lift setup start
+		rollerGripperSystem = new RollerGripperSystem();//roller setup start
+		LiftSystem = new RollerLiftingSystem();//lift setup start
 		
 		LiftAction hide = new LiftAction(HIDE_ANGLE);
 		LiftAction use = new LiftAction(USE_ANGLE);
@@ -206,7 +201,7 @@ public class Robot extends IterativeFRCRobot {
 		TimedAction release = new TimedAction(new InstantAction() {	
 			@Override
 			protected void execute() {
-				rollerGripper.rotate(RELEASE_SPEED);
+				rollerGripperSystem.rotate(RELEASE_SPEED);
 			}
 		}, seconds);//roller setup end
 		/*TODO:
@@ -246,7 +241,6 @@ public class Robot extends IterativeFRCRobot {
 		
 		if(drivingTrain)
 		{
-				
 			rightController = new Joystick(RobotMap.RIGHT_CONTROLLER,BUTTON_COUNT);
 			leftController = new Joystick(RobotMap.LEFT_CONTROLLER,BUTTON_COUNT);
 		}
@@ -254,11 +248,11 @@ public class Robot extends IterativeFRCRobot {
 
 	protected void disabledInit() {
 		DashHandle.disInit();
-		getRobotSide();
 	}
 	
 	@Override
 	protected void disabledPeriodic() {
+		getRobotSide();
 	}
 
 	@Override
@@ -275,6 +269,8 @@ public class Robot extends IterativeFRCRobot {
 	protected void teleopPeriodic() {
 		//System.out.println(enc.get());
 		DashHandle.telePeriodic();
+		
+	
 	}
 	
 	@Override
