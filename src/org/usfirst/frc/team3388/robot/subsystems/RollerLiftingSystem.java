@@ -29,7 +29,6 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 	@Override
 	public void stop() {
 		controller.stop();
-
 	}
 
 }
