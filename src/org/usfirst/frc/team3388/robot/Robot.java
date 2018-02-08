@@ -54,8 +54,8 @@ public class Robot extends IterativeFRCRobot {
 	
 	static double startTime;
 	
-	boolean drivingTrain = false;
-	boolean sysTrain = false;
+	public static boolean drivingTrain = false;
+	public static boolean sysTrain = false;
 	
 	public enum Side {LEFT,MIDDLE,RIGHT};
 	
