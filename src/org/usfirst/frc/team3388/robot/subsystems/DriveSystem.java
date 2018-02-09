@@ -39,6 +39,7 @@ public class DriveSystem extends Subsystem {
 	public AHRS navx; 
 
 	public DriveSystem() {
+		
 		navxSetup();
 		//encoder = new IndexEncoder(RobotMap.DRIVE_ENCODER,RADIUS*2*Math.PI);
 		driveTrain = setupDriveTrain();
