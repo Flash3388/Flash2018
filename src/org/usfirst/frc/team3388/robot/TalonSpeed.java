@@ -22,7 +22,6 @@ public class TalonSpeed implements FlashSpeedController{
 	}
 	@Override
 	public void setInverted(boolean isInverted) {
-		System.out.println("invert");
 		controller.setInverted(isInverted);
 		this.currInverted = isInverted;
 	}

@@ -44,9 +44,9 @@ public class Robot extends IterativeFRCRobot {
 	
 	SendableChooser<Action> autoChooser;
 	
-	Joystick rightController;
-	Joystick leftController;
-	Joystick systemController;
+	public static Joystick rightController;
+	public static Joystick leftController;
+	public static Joystick systemController;
 	
 	public static PoleSystem PoleSystem;
 	public static RollerGripperSystem rollerGripperSystem;
@@ -55,7 +55,7 @@ public class Robot extends IterativeFRCRobot {
 	static double startTime;
 	
 	public static boolean drivingTrain = false;
-	public static boolean sysTrain = false;
+	public static boolean sysTrain = true;
 	
 	public enum Side {LEFT,MIDDLE,RIGHT};
 	
@@ -71,45 +71,15 @@ public class Robot extends IterativeFRCRobot {
 		{
 			PoleSystem = new PoleSystem();
 			//rollerGripperSystemSetup();	
-			PoleSystem.setDefaultAction(new Action() {
-				@Override
-				protected void execute() {
-					//rollerGripperPole.rotate(0.5*systemController.getY());
-			
-					double val = SmartDashboard.getNumber("speed", 0.0);
-					//System.out.println("dash" + val);
-					if(systemController.getY() <-0.2)
-						PoleSystem.rotate(SmartDashboard.getNumber("upspeed", 0.0));
-					else if(systemController.getY() > 0.2)
-						PoleSystem.rotate(-SmartDashboard.getNumber("downspeed", 0.0));
-					else
-						PoleSystem.stop();
-				}
-				
-				@Override
-				protected void end() {
-					PoleSystem.stop();
-				}
-			});
-
+			PoleSystem.setup();
 		}
 		if(drivingTrain)
 		{
 			drive = new DriveSystem();
+			drive.setup();
+			
 			camHandler = new CamerasHandler();
-
-			drive.driveTrain.setDefaultAction(new SystemAction(new Action() {
-						@Override
-						protected void execute() {
-							drive.driveTrain.tankDrive(rightController.getY(),leftController.getY());
-						}
-						
-						@Override
-						protected void end() {
-							drive.driveTrain.tankDrive(0,0);
-						}
-					}, drive.driveTrain));
-	
+			
 			if(sysTrain)
 			{
 				autoHandlers();
@@ -154,7 +124,7 @@ public class Robot extends IterativeFRCRobot {
 		SmartDashboard.putData(autoChooser);
 	}
 	private void rollerGripperSystemSetup()
-	{
+	{ 
 		/*TODO:
 		 * find all constants
 		 */
@@ -170,26 +140,17 @@ public class Robot extends IterativeFRCRobot {
 		final double USE_ANGLE=90.0;
 				
 		PoleSystem = new PoleSystem();//pole setup start
-		PoleSystem.setDefaultAction(new Action() {
-			final double MAX = 0.25;
-			final double MIN = -0.25;
-			
-			@Override
-			protected void execute() {
-				PoleSystem.rotate(Mathf.constrain(systemController.getY(), MIN, MAX));
-			}
-			
-			@Override
-			protected void end() {
-				//maybe rotate 0
-			}
-		} );
+		PoleSystem.setup();
 		
 		rollerGripperSystem = new RollerGripperSystem();//roller setup start
+		rollerGripperSystem.setup();
+		
 		LiftSystem = new RollerLiftingSystem();//lift setup start
+		LiftSystem.setup();
 		
 		LiftAction hide = new LiftAction(HIDE_ANGLE);
 		LiftAction use = new LiftAction(USE_ANGLE);
+		
 		CaptureAction capture = new CaptureAction();
 		PoleAction scaleMinLift = new PoleAction(MIN_ANGLE);
 		PoleAction scaleMidLift = new PoleAction(MID_ANGLE);
@@ -198,15 +159,6 @@ public class Robot extends IterativeFRCRobot {
 		PoleAction downLift = new PoleAction(DOWN);
 
 				
-		TimedAction release = new TimedAction(new InstantAction() {	
-			@Override
-			protected void execute() {
-				rollerGripperSystem.rotate(RELEASE_SPEED);
-			}
-		}, seconds);//roller setup end
-		/*TODO:
-		 * add rollergripper rotation in parallel
-		 */
 		
 		ActionGroup scalePutMax = new ActionGroup()
 			.addSequential(scaleMaxLift)
@@ -224,12 +176,12 @@ public class Robot extends IterativeFRCRobot {
 			.addSequential(switchLift)
 			.addParallel(hide)
 			.addSequential(use);
-		
+		/*
 		frontSwitchAuto = new ActionGroup()
 			.addSequential(switchPIDDrive = new DrivePIDAction(DST_TO_SWITCH))
 			.addParallel(PutSwitch)
-			.addSequential(release);
-		
+			.addSequential(rollerGripperSystem.release);
+		*/
 		systemController.getButton(1).whileHeld(hide);
 		systemController.getButton(1).whenReleased(use);
 	}

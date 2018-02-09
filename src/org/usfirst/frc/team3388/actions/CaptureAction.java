@@ -4,6 +4,7 @@ import org.usfirst.frc.team3388.robot.Robot;
 
 import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.util.FlashUtil;
+import edu.wpi.first.wpilibj.Spark;
 
 public class CaptureAction extends Action{
 
@@ -21,7 +22,7 @@ public class CaptureAction extends Action{
 
 	@Override
 	protected void execute() {
-		Robot.rollerGripperSystem.rotate();
+		Robot.rollerGripperSystem.rotate(true);
 		if(Robot.rollerGripperSystem.getDist()<=CAPTURING_DISTANCE)
 		{
 			if(startTime == 0)

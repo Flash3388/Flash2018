@@ -8,9 +8,11 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 import com.kauailabs.navx.frc.AHRS.SerialDataType;
 
+import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.PIDController;
 import edu.flash3388.flashlib.robot.PIDSource;
 import edu.flash3388.flashlib.robot.Subsystem;
+import edu.flash3388.flashlib.robot.SystemAction;
 import edu.flash3388.flashlib.robot.devices.IndexEncoder;
 import edu.flash3388.flashlib.robot.devices.MultiSpeedController;
 import edu.flash3388.flashlib.robot.systems.FlashDrive;
@@ -91,6 +93,21 @@ public class DriveSystem extends Subsystem {
 	public void rotate(double speed)
 	{
 		driveTrain.rotate(speed);
+	}
+	
+	public void setup()
+	{
+		this.setDefaultAction(new SystemAction(new Action() {
+			@Override
+			protected void execute() {
+				driveTrain.tankDrive(Robot.rightController.getY(),Robot.leftController.getY());
+			}
+				
+			@Override
+			protected void end() {
+				driveTrain.tankDrive(0,0);
+			}
+		}, driveTrain));
 	}
 
 }

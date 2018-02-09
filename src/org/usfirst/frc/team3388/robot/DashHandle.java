@@ -31,7 +31,8 @@ public class DashHandle {
 	{
 		SmartDashboard.putBoolean(DashNames.enabled, true);
 		SmartDashboard.putNumber(DashNames.time, 0.0);
-		SmartDashboard.putBoolean(DashNames.navxConnection, Robot.drive.navx.isConnected());
+		if(Robot.drivingTrain)
+			SmartDashboard.putBoolean(DashNames.navxConnection, Robot.drive.navx.isConnected());
 	}
 	
 	public static void telePeriodic()
