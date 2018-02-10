@@ -1,13 +1,18 @@
 package org.usfirst.frc.team3388.robot.subsystems;
 
+import java.math.RoundingMode;
+
 import org.usfirst.frc.team3388.robot.Robot;
 import org.usfirst.frc.team3388.robot.RobotMap;
 import org.usfirst.frc.team3388.robot.TalonSpeed;
 
+import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 import com.kauailabs.navx.frc.AHRS.SerialDataType;
 
+import edu.flash3388.flashlib.math.Mathf;
 import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.PIDController;
 import edu.flash3388.flashlib.robot.PIDSource;
@@ -20,10 +25,11 @@ import edu.flash3388.flashlib.robot.systems.FlashDrive.MotorSide;
 import edu.flash3388.flashlib.util.beans.DoubleProperty;
 import edu.flash3388.flashlib.util.beans.PropertyHandler;
 import edu.wpi.first.wpilibj.SerialPort.Port;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveSystem extends Subsystem {
 	
-	public static final double RADIUS=10.16;
+	public static final double WHEEL_RADIUS=10.16;
 	public IndexEncoder encoder;
 	public FlashDrive driveTrain;
 	public PIDController distancePID;
@@ -38,6 +44,7 @@ public class DriveSystem extends Subsystem {
 	
 	public AHRS navx; 
 
+	WPI_TalonSRX headController;
 	public DriveSystem() {
 		
 		navxSetup();
@@ -83,6 +90,9 @@ public class DriveSystem extends Subsystem {
 		backRight = new TalonSpeed(RobotMap.DRIVE_BACKRIGHT);
 		backLeft = new TalonSpeed(RobotMap.DRIVE_BACKLEFT);
 		
+		headController = frontRight.getSource();
+		headController.configRemoteFeedbackFilter(RobotMap.DRIVE_FRONTRIGHT,RemoteSensorSource.CANifier_Quadrature,0,100);
+
 		return new FlashDrive(
 					new MultiSpeedController(frontRight,backRight),
 					new MultiSpeedController(frontLeft,backLeft));
@@ -98,10 +108,31 @@ public class DriveSystem extends Subsystem {
 	
 	public void setup()
 	{
-		this.setDefaultAction(new SystemAction(new Action() {
+		
+		SmartDashboard.putNumber("rotate",0.0);
+		Robot.leftController.getButton(1).whileHeld(new Action() {
+			
 			@Override
 			protected void execute() {
-				driveTrain.tankDrive(Robot.rightController.getY(),Robot.leftController.getY());
+				driveTrain.rotate(SmartDashboard.getNumber("rotate",0.0));
+			}
+			
+			@Override
+			protected void end() {
+				driveTrain.rotate(0.0);
+			}
+		});
+		this.setDefaultAction(new SystemAction(new Action() {
+			final double bound = 0.15;
+			@Override
+			protected void execute() {
+				double leftVal = Robot.leftController.getY();
+				double rightVal = Robot.rightController.getY();
+				if(Mathf.constrained(leftVal, bound, -bound))
+					leftVal = 0;
+				if(Mathf.constrained(rightVal, bound, -bound))
+					rightVal = 0;
+				driveTrain.tankDrive(leftVal, rightVal);
 			}
 				
 			@Override
@@ -110,5 +141,12 @@ public class DriveSystem extends Subsystem {
 			}
 		}, driveTrain));
 	}
-
+	
+	public double getPosition()
+	{
+		final double PERCITION = 4096.0;
+		double val = headController.getActiveTrajectoryPosition()/PERCITION;
+	
+		return WHEEL_RADIUS*Math.PI*2.0*val;
+	}
 }

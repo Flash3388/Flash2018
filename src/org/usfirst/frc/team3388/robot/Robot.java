@@ -51,7 +51,7 @@ public class Robot extends IterativeFRCRobot {
 	public static PoleSystem PoleSystem;
 	public static RollerGripperSystem rollerGripperSystem;
 	public static RollerLiftingSystem LiftSystem;
-	
+	 
 	static double startTime;
 	
 	public static boolean drivingTrain = true;
@@ -82,7 +82,7 @@ public class Robot extends IterativeFRCRobot {
 			
 			if(sysTrain)
 			{
-				autoHandlers();
+			//	autoHandlers();
 			}
 		}
 	}
