@@ -54,8 +54,8 @@ public class Robot extends IterativeFRCRobot {
 	 
 	static double startTime;
 	
-	public static boolean drivingTrain = false;
-	public static boolean sysTrain = true;
+	public static boolean drivingTrain = true;
+	public static boolean sysTrain = false;
 	
 	public enum Side {LEFT,MIDDLE,RIGHT};
 	
@@ -221,7 +221,8 @@ public class Robot extends IterativeFRCRobot {
 	protected void teleopPeriodic() {
 		//System.out.println(enc.get());
 		DashHandle.telePeriodic();
-		
+		System.out.println("converted "+drive.navx.getDisplacementX());
+		System.out.println("raw gyro "+drive.navx.getRawGyroX());
 	
 	}
 	

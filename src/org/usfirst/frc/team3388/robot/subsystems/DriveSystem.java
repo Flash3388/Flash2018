@@ -46,6 +46,7 @@ public class DriveSystem extends Subsystem {
 
 	WPI_TalonSRX headController;
 	public DriveSystem() {
+		
 		navxSetup();
 		//encoder = new IndexEncoder(RobotMap.DRIVE_ENCODER,RADIUS*2*Math.PI);
 		driveTrain = setupDriveTrain();
