@@ -223,6 +223,7 @@ public class Robot extends IterativeFRCRobot {
 		DashHandle.telePeriodic();
 		System.out.println("converted "+drive.navx.getDisplacementX());
 		System.out.println("raw gyro "+drive.navx.getRawGyroX());
+		
 	
 	}
 	
