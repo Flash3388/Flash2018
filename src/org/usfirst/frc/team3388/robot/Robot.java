@@ -221,13 +221,14 @@ public class Robot extends IterativeFRCRobot {
 		}
 		startTime = FlashUtil.secs();
 		DashHandle.teleInit();
-		System.out.println(systemController.getPOV());
 	}
 
 	@Override
 	protected void teleopPeriodic() {
 		//System.out.println(enc.get());
 		DashHandle.telePeriodic();
+
+		//System.out.println(systemController.getPOV().get());
 
 		//System.out.println("encoder "+drive.leftEncoder.getDistance());		
 	
