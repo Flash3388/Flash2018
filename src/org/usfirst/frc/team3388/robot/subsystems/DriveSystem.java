@@ -47,11 +47,11 @@ public class DriveSystem extends Subsystem {
 	
 	WPI_TalonSRX headController;
 	public DriveSystem() {
-		final double PULSES=1440;
+		final double PPR=1440;
 		
 		navxSetup();
 		encoder= new edu.wpi.first.wpilibj.Encoder(RobotMap.ENCODER_A_SRC, RobotMap.ENCODER_B_SRC);
-		encoder.setDistancePerPulse((WHEEL_RADIUS*2.0*Math.PI)/PULSES);
+		encoder.setDistancePerPulse((WHEEL_RADIUS*2.0*Math.PI)/PPR);
 		
 		driveTrain = setupDriveTrain();
 		driveTrain.setInverted(MotorSide.Left, true);
