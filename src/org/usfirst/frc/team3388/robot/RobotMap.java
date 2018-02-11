@@ -6,12 +6,14 @@ public class RobotMap {
 	/*TODO:
 	 * 	find all ports
 	 */
-	public static final int DRIVE_FRONTRIGHT = 2;
-	public static final int DRIVE_FRONTLEFT = 6;
-	public static final int DRIVE_BACKLEFT = 7;
-	public static final int DRIVE_BACKRIGHT = 1;
-	public static final int ENCODER_A_SRC = 9;
-	public static final int ENCODER_B_SRC = 11;
+	public static final int DRIVE_FRONTRIGHT = 7;
+	public static final int DRIVE_FRONTLEFT = 2;
+	public static final int DRIVE_BACKLEFT = 1;
+	public static final int DRIVE_BACKRIGHT = 6;
+	public static final int RIGHT_ENCODER_A = 3;
+	public static final int RIGHT_ENCODER_B = 4;
+	public static final int LEFT_ENCODER_A = 1;
+	public static final int LEFT_ENCODER_B = 2;
 	
 	public static final int RIGHT_CONTROLLER = 1;
 	public static final int LEFT_CONTROLLER = 2;

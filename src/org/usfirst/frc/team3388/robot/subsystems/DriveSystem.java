@@ -19,20 +19,21 @@ import edu.flash3388.flashlib.robot.PIDController;
 import edu.flash3388.flashlib.robot.PIDSource;
 import edu.flash3388.flashlib.robot.Subsystem;
 import edu.flash3388.flashlib.robot.SystemAction;
-import edu.flash3388.flashlib.robot.devices.Encoder;
-import edu.flash3388.flashlib.robot.devices.IndexEncoder;
 import edu.flash3388.flashlib.robot.devices.MultiSpeedController;
 import edu.flash3388.flashlib.robot.systems.FlashDrive;
 import edu.flash3388.flashlib.robot.systems.FlashDrive.MotorSide;
 import edu.flash3388.flashlib.util.beans.DoubleProperty;
 import edu.flash3388.flashlib.util.beans.PropertyHandler;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveSystem extends Subsystem {
 	
 	public static final double WHEEL_RADIUS=10.16;
-	public edu.wpi.first.wpilibj.Encoder encoder;
+	public Encoder rightEncoder;
+	public Encoder leftEncoder;
+
 	public FlashDrive driveTrain;
 	public PIDController distancePID;
 	public PIDController rotatePID;
@@ -53,8 +54,10 @@ public class DriveSystem extends Subsystem {
 		final double PPR=1440;
 		
 		navxSetup();
-		encoder= new edu.wpi.first.wpilibj.Encoder(RobotMap.ENCODER_A_SRC, RobotMap.ENCODER_B_SRC);
-		encoder.setDistancePerPulse((WHEEL_RADIUS*2.0*Math.PI)/PPR);
+		rightEncoder= new Encoder(RobotMap.RIGHT_ENCODER_A, RobotMap.RIGHT_ENCODER_B);
+		rightEncoder.setDistancePerPulse((WHEEL_RADIUS*2.0*Math.PI)/PPR);
+		leftEncoder= new Encoder(RobotMap.LEFT_ENCODER_A, RobotMap.LEFT_ENCODER_B);
+		leftEncoder.setDistancePerPulse((WHEEL_RADIUS*2.0*Math.PI)/PPR);
 		
 		driveTrain = setupDriveTrain();
 		driveTrain.setInverted(MotorSide.Left, true);
@@ -123,9 +126,6 @@ public class DriveSystem extends Subsystem {
 		backRight = new TalonSpeed(RobotMap.DRIVE_BACKRIGHT);
 		backLeft = new TalonSpeed(RobotMap.DRIVE_BACKLEFT);
 		
-		headController = frontRight.getSource();
-		headController.configRemoteFeedbackFilter(RobotMap.DRIVE_FRONTRIGHT,RemoteSensorSource.CANifier_Quadrature,0,100);
-
 		return new FlashDrive(
 					new MultiSpeedController(frontRight,backRight),
 					new MultiSpeedController(frontLeft,backLeft));
@@ -174,11 +174,12 @@ public class DriveSystem extends Subsystem {
 		}, driveTrain));
 	}
 	
-	public double getPosition()
+	/*public double getPosition()
 	{
 		final double PERCITION = 4096.0;
 		double val = headController.getActiveTrajectoryPosition()/PERCITION;
 	
 		return WHEEL_RADIUS*Math.PI*2.0*val;
 	}
+	*/
 }

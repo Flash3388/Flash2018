@@ -212,7 +212,8 @@ public class Robot extends IterativeFRCRobot {
 		
 		//controller.getRawButton(1);
 		//DriverStation.getInstance().getStickButton(0, 1);
-		System.out.println("encoder "+drive.encoder.getDistance());
+
+
 		startTime = FlashUtil.secs();
 		DashHandle.teleInit();
 	}
@@ -221,9 +222,8 @@ public class Robot extends IterativeFRCRobot {
 	protected void teleopPeriodic() {
 		//System.out.println(enc.get());
 		DashHandle.telePeriodic();
-		System.out.println("converted "+drive.navx.getDisplacementX());
-		System.out.println("raw gyro "+drive.navx.getRawGyroX());
-		
+		System.out.println("encoder "+drive.rightEncoder.getDistance());
+		System.out.println("encoder "+drive.leftEncoder.getDistance());		
 	
 	}
 	
