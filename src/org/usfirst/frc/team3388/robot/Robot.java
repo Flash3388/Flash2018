@@ -51,7 +51,7 @@ public class Robot extends IterativeFRCRobot {
 	public static PoleSystem PoleSystem;
 	public static RollerGripperSystem rollerGripperSystem;
 	public static RollerLiftingSystem LiftSystem;
-	 
+	
 	static double startTime;
 	
 	public static boolean drivingTrain = true;
@@ -82,7 +82,7 @@ public class Robot extends IterativeFRCRobot {
 			
 			if(sysTrain)
 			{
-			//	autoHandlers();
+				autoHandlers();
 			}
 		}
 	}
@@ -212,7 +212,7 @@ public class Robot extends IterativeFRCRobot {
 		
 		//controller.getRawButton(1);
 		//DriverStation.getInstance().getStickButton(0, 1);
-		
+		System.out.println("encoder "+drive.encoder.getDistance());
 		startTime = FlashUtil.secs();
 		DashHandle.teleInit();
 	}

@@ -18,6 +18,7 @@ import edu.flash3388.flashlib.robot.PIDController;
 import edu.flash3388.flashlib.robot.PIDSource;
 import edu.flash3388.flashlib.robot.Subsystem;
 import edu.flash3388.flashlib.robot.SystemAction;
+import edu.flash3388.flashlib.robot.devices.Encoder;
 import edu.flash3388.flashlib.robot.devices.IndexEncoder;
 import edu.flash3388.flashlib.robot.devices.MultiSpeedController;
 import edu.flash3388.flashlib.robot.systems.FlashDrive;
@@ -30,7 +31,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DriveSystem extends Subsystem {
 	
 	public static final double WHEEL_RADIUS=10.16;
-	public IndexEncoder encoder;
+	public edu.wpi.first.wpilibj.Encoder encoder;
 	public FlashDrive driveTrain;
 	public PIDController distancePID;
 	public PIDController rotatePID;
@@ -43,12 +44,15 @@ public class DriveSystem extends Subsystem {
 	public DoubleProperty rotationSetPoint = PropertyHandler.putNumber(ROT_NAME,0.0);
 	
 	public AHRS navx; 
-
+	
 	WPI_TalonSRX headController;
 	public DriveSystem() {
+		final double PULSES=1440;
 		
 		navxSetup();
-		//encoder = new IndexEncoder(RobotMap.DRIVE_ENCODER,RADIUS*2*Math.PI);
+		encoder= new edu.wpi.first.wpilibj.Encoder(RobotMap.ENCODER_A_SRC, RobotMap.ENCODER_B_SRC);
+		encoder.setDistancePerPulse((WHEEL_RADIUS*2.0*Math.PI)/PULSES);
+		
 		driveTrain = setupDriveTrain();
 		driveTrain.setInverted(MotorSide.Left, true);
 		
