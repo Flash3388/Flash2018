@@ -2,6 +2,7 @@ package org.usfirst.frc.team3388.robot.subsystems;
 
 import java.math.RoundingMode;
 
+import org.usfirst.frc.team3388.actions.DrivePIDAction;
 import org.usfirst.frc.team3388.robot.DashNames;
 import org.usfirst.frc.team3388.robot.Robot;
 import org.usfirst.frc.team3388.robot.RobotMap;
@@ -29,6 +30,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+
 public class DriveSystem extends Subsystem {
 	
 	public static final double WHEEL_RADIUS=10.16;
@@ -41,6 +43,7 @@ public class DriveSystem extends Subsystem {
 	public PIDSource distanceSource;
 	public PIDSource rotationSource;
 	
+	public static final double STRAIGHT_DRIVE_KP = 0.3;
 	public static final String DIS_NAME= "distanceSetPoint";
 	public static final String ROT_NAME= "rotationSetPoint";
 	public DoubleProperty distanceSetPoint = PropertyHandler.putNumber(DIS_NAME,0.0);
@@ -51,6 +54,8 @@ public class DriveSystem extends Subsystem {
 	WPI_TalonSRX headController;
 	
 	Action straightDrive;
+	
+	final boolean tuning = false;
 	public DriveSystem() {
 		final double PPR=360;
 		
@@ -67,8 +72,11 @@ public class DriveSystem extends Subsystem {
 		stightDriveHandle();
 		pidsHandler();
 		
-		drivePIDTunner();
-		rotationPIDTunner();
+		if(tuning)
+		{	
+			drivePIDTunner();
+			rotationPIDTunner();
+		}
 	}
 
 	private void pidsHandler() {
@@ -145,9 +153,14 @@ public class DriveSystem extends Subsystem {
 					new MultiSpeedController(frontRight,backRight),
 					new MultiSpeedController(frontLeft,backLeft));
 	}
+	
+	public void resetGyro()
+	{
+		navx.reset();
+	}
 	public void drive(double speed)
 	{
-		driveTrain.tankDrive(speed,speed);
+		driveTrain.arcadeDrive(speed, navx.getYaw()*STRAIGHT_DRIVE_KP);
 	}
 	public void rotate(double speed)
 	{
@@ -157,6 +170,7 @@ public class DriveSystem extends Subsystem {
 	public void setup()
 	{
 		SmartDashboard.putNumber("rotate",0.0);
+		
 		Robot.leftController.getButton(1).whileHeld(new Action() {
 			
 			@Override
@@ -187,6 +201,10 @@ public class DriveSystem extends Subsystem {
 				driveTrain.tankDrive(0,0);
 			}
 		}, driveTrain));
+		if(tuning)
+		{
+			Robot.leftController.getButton(2).whenPressed(new DrivePIDAction(0.0));
+		}
 	}
 	
 	private void drivePIDTunner()

@@ -18,10 +18,12 @@ public class DrivePIDAction extends Action {
 		requires(Robot.drive);
 		this.setpoint=setpoint;
 		Robot.drive.distanceSetPoint.set(setpoint);
+		
 	}
 	@Override
 	protected void initialize() {
 		startTime=FlashUtil.secs();
+		Robot.drive.resetGyro();
 	}
 	@Override
 	protected void end() {
