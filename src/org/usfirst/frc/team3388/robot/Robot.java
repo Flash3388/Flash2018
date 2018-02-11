@@ -222,8 +222,8 @@ public class Robot extends IterativeFRCRobot {
 	protected void teleopPeriodic() {
 		//System.out.println(enc.get());
 		DashHandle.telePeriodic();
-		System.out.println("encoder "+drive.rightEncoder.getDistance());
-		System.out.println("encoder "+drive.leftEncoder.getDistance());		
+		System.out.println("encoderR "+drive.rightEncoder.getDistance());
+		System.out.println("encoderL "+drive.leftEncoder.getDistance());		
 	
 	}
 	
