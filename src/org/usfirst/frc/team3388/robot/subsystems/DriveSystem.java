@@ -2,6 +2,7 @@ package org.usfirst.frc.team3388.robot.subsystems;
 
 import java.math.RoundingMode;
 
+import org.usfirst.frc.team3388.robot.DashNames;
 import org.usfirst.frc.team3388.robot.Robot;
 import org.usfirst.frc.team3388.robot.RobotMap;
 import org.usfirst.frc.team3388.robot.TalonSpeed;
@@ -46,6 +47,8 @@ public class DriveSystem extends Subsystem {
 	public AHRS navx; 
 	
 	WPI_TalonSRX headController;
+	
+	Action straightDrive;
 	public DriveSystem() {
 		final double PPR=1440;
 		
@@ -56,6 +59,7 @@ public class DriveSystem extends Subsystem {
 		driveTrain = setupDriveTrain();
 		driveTrain.setInverted(MotorSide.Left, true);
 		
+		stightDriveHandle();
 		/*distanceSource = new PIDSource() {
 			
 			@Override
@@ -69,6 +73,31 @@ public class DriveSystem extends Subsystem {
 		distancePID.setOutputLimit(-1, 1);
 		rotatePID = new PIDController(0.21, 0.0, 0.285,0.0,rotationSetPoint,rotationSource);
 		rotatePID.setOutputLimit(-1, 1);
+	}
+
+	private void stightDriveHandle() {
+		straightDrive = new SystemAction(new Action() {
+			final double kp = 0;
+			final double speed = 0.2;//later it will be pid calculate
+			@Override
+			protected void initialize() {
+			
+				super.initialize();
+				
+				SmartDashboard.putNumber(DashNames.driveKp, 0.0);
+				navx.reset();
+			}
+			@Override
+			protected void execute() {
+				double val = SmartDashboard.getNumber("straight drive kp", 0.0);
+				driveTrain.arcadeDrive(speed, navx.getYaw()*val);
+			}
+			
+			@Override
+			protected void end() {
+				driveTrain.stop();
+			}
+		}, this);
 	}
 
 	private void navxSetup() {
@@ -112,7 +141,6 @@ public class DriveSystem extends Subsystem {
 	
 	public void setup()
 	{
-		
 		SmartDashboard.putNumber("rotate",0.0);
 		Robot.leftController.getButton(1).whileHeld(new Action() {
 			
