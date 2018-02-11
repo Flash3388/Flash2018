@@ -1,5 +1,14 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Navx Connection" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="123"/>
+	</widget>
+	<widget field="Robot Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="95"/>
+	</widget>
+	<widget field="rotate" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="28"/>
+	</widget>
 	<widget field="dis Z" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="1008" y="82"/>
 		<height>29</height>
@@ -44,7 +53,4 @@
 </dashboard>
 <live-window>
 </live-window>
-	<hidden field="acc X"/>
-	<hidden field="acc Z"/>
-	<hidden field="acc Y"/>
 </xml>

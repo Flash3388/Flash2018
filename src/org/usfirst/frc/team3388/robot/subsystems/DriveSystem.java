@@ -31,8 +31,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DriveSystem extends Subsystem {
 	
 	public static final double WHEEL_RADIUS=10.16;
-	public Encoder rightEncoder;
-	public Encoder leftEncoder;
+	public Encoder encoder;
+	//public Encoder leftEncoder;
 
 	public FlashDrive driveTrain;
 	public PIDController distancePID;
@@ -51,26 +51,37 @@ public class DriveSystem extends Subsystem {
 	
 	Action straightDrive;
 	public DriveSystem() {
-		final double PPR=1440;
+		final double PPR=360;
 		
 		navxSetup();
-		rightEncoder= new Encoder(RobotMap.RIGHT_ENCODER_A, RobotMap.RIGHT_ENCODER_B);
-		rightEncoder.setDistancePerPulse((WHEEL_RADIUS*2.0*Math.PI)/PPR);
-		leftEncoder= new Encoder(RobotMap.LEFT_ENCODER_A, RobotMap.LEFT_ENCODER_B);
-		leftEncoder.setDistancePerPulse((WHEEL_RADIUS*2.0*Math.PI)/PPR);
+		encoder= new Encoder(RobotMap.RIGHT_ENCODER_A, RobotMap.RIGHT_ENCODER_B);
+		encoder.setDistancePerPulse((2*Math.PI*WHEEL_RADIUS)/PPR);
+		
+		//leftEncoder= new Encoder(RobotMap.LEFT_ENCODER_A, RobotMap.LEFT_ENCODER_B);
+		//leftEncoder.setDistancePerPulse((WHEEL_RADIUS*2.0*Math.PI)/PPR);
 		
 		driveTrain = setupDriveTrain();
 		driveTrain.setInverted(MotorSide.Left, true);
 		
 		stightDriveHandle();
-		/*distanceSource = new PIDSource() {
-			
+		pidsHandler();
+	}
+
+	private void pidsHandler() {
+		distanceSource = new PIDSource() {
 			@Override
 			public double pidGet() {
 				return encoder.getDistance();
 			}
 		};
-*/
+		
+		rotationSource = new PIDSource() {
+			@Override
+			public double pidGet() {
+				return navx.getYaw();
+			}
+		};
+
 		
 		distancePID = new PIDController(0.21, 0.0, 0.285, 0.0, distanceSetPoint, distanceSource);
 		distancePID.setOutputLimit(-1, 1);

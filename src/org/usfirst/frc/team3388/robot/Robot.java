@@ -209,11 +209,10 @@ public class Robot extends IterativeFRCRobot {
 
 	@Override
 	protected void teleopInit() {
-		
 		//controller.getRawButton(1);
 		//DriverStation.getInstance().getStickButton(0, 1);
 
-
+		drive.encoder.reset();
 		startTime = FlashUtil.secs();
 		DashHandle.teleInit();
 	}
@@ -222,8 +221,13 @@ public class Robot extends IterativeFRCRobot {
 	protected void teleopPeriodic() {
 		//System.out.println(enc.get());
 		DashHandle.telePeriodic();
+<<<<<<< HEAD
 		System.out.println("encoderR "+drive.rightEncoder.getDistance());
 		System.out.println("encoderL "+drive.leftEncoder.getDistance());		
+=======
+
+		//System.out.println("encoder "+drive.leftEncoder.getDistance());		
+>>>>>>> branch 'master' of https://gitlab.com/alonkle/flash2018.git
 	
 	}
 	
