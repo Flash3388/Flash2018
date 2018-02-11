@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 import com.kauailabs.navx.frc.AHRS.SerialDataType;
 
+import edu.flash3388.flashlib.flashboard.Flashboard;
 import edu.flash3388.flashlib.math.Mathf;
 import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.PIDController;
@@ -65,6 +66,9 @@ public class DriveSystem extends Subsystem {
 		
 		stightDriveHandle();
 		pidsHandler();
+		
+		drivePIDTunner();
+		rotationPIDTunner();
 	}
 
 	private void pidsHandler() {
@@ -185,12 +189,16 @@ public class DriveSystem extends Subsystem {
 		}, driveTrain));
 	}
 	
-	/*public double getPosition()
+	private void drivePIDTunner()
 	{
-		final double PERCITION = 4096.0;
-		double val = headController.getActiveTrajectoryPosition()/PERCITION;
-	
-		return WHEEL_RADIUS*Math.PI*2.0*val;
+		Flashboard.putPIDTuner("distance", distancePID.kpProperty(), distancePID.kiProperty()
+				, distancePID.kdProperty(), distancePID.kfProperty(), distanceSetPoint
+				, distanceSource, 5.0, 1000);
 	}
-	*/
+	private void rotationPIDTunner()
+	{
+		Flashboard.putPIDTuner("rotation", rotatePID.kpProperty(), rotatePID.kiProperty()
+				, rotatePID.kdProperty(), rotatePID.kfProperty(), rotationSetPoint
+				, rotationSource, 5.0, 1000);
+	}
 }

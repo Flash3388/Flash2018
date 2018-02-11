@@ -13,6 +13,7 @@ import org.usfirst.frc.team3388.robot.subsystems.RollerLiftingSystem;
 import com.kauailabs.navx.frc.AHRS;
 import com.kauailabs.navx.frc.AHRS.SerialDataType;
 
+import edu.flash3388.flashlib.flashboard.Flashboard;
 import edu.flash3388.flashlib.math.Mathf;
 import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.ActionGroup;
@@ -221,13 +222,8 @@ public class Robot extends IterativeFRCRobot {
 	protected void teleopPeriodic() {
 		//System.out.println(enc.get());
 		DashHandle.telePeriodic();
-<<<<<<< HEAD
-		System.out.println("encoderR "+drive.rightEncoder.getDistance());
-		System.out.println("encoderL "+drive.leftEncoder.getDistance());		
-=======
 
 		//System.out.println("encoder "+drive.leftEncoder.getDistance());		
->>>>>>> branch 'master' of https://gitlab.com/alonkle/flash2018.git
 	
 	}
 	
