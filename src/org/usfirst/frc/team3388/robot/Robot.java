@@ -221,6 +221,7 @@ public class Robot extends IterativeFRCRobot {
 		}
 		startTime = FlashUtil.secs();
 		DashHandle.teleInit();
+		System.out.println(systemController.getPOV());
 	}
 
 	@Override
