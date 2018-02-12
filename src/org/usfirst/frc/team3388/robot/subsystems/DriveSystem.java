@@ -3,14 +3,12 @@ package org.usfirst.frc.team3388.robot.subsystems;
 import java.math.RoundingMode;
 
 import org.usfirst.frc.team3388.actions.DrivePIDAction;
+import org.usfirst.frc.team3388.actions.RotatePIDAction;
 import org.usfirst.frc.team3388.robot.DashNames;
 import org.usfirst.frc.team3388.robot.Robot;
 import org.usfirst.frc.team3388.robot.RobotMap;
 import org.usfirst.frc.team3388.robot.TalonSpeed;
 
-import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 import com.kauailabs.navx.frc.AHRS.SerialDataType;
 
@@ -21,11 +19,14 @@ import edu.flash3388.flashlib.robot.PIDController;
 import edu.flash3388.flashlib.robot.PIDSource;
 import edu.flash3388.flashlib.robot.Subsystem;
 import edu.flash3388.flashlib.robot.SystemAction;
+
+import edu.flash3388.flashlib.robot.devices.Gyro;
 import edu.flash3388.flashlib.robot.devices.MultiSpeedController;
 import edu.flash3388.flashlib.robot.systems.FlashDrive;
 import edu.flash3388.flashlib.robot.systems.FlashDrive.MotorSide;
 import edu.flash3388.flashlib.util.beans.DoubleProperty;
 import edu.flash3388.flashlib.util.beans.PropertyHandler;
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -49,16 +50,16 @@ public class DriveSystem extends Subsystem {
 	public DoubleProperty distanceSetPoint = PropertyHandler.putNumber(DIS_NAME,0.0);
 	public DoubleProperty rotationSetPoint = PropertyHandler.putNumber(ROT_NAME,0.0);
 	
-	public AHRS navx; 
-	
+	public AnalogGyro gyro;
 	
 	Action straightDrive;
-	
-	final boolean tuning = true;
+	public boolean inited = false;
+	final boolean tuning = false;
 	public DriveSystem() {
 		final double PPR=360;
+		gyro = new AnalogGyro(RobotMap.GYRO);
 		
-		navxSetup();
+		//navxSetup();
 		encoder= new Encoder(RobotMap.RIGHT_ENCODER_A, RobotMap.RIGHT_ENCODER_B);
 		encoder.setDistancePerPulse((2*Math.PI*WHEEL_RADIUS)/PPR);
 		
@@ -78,6 +79,13 @@ public class DriveSystem extends Subsystem {
 		}
 	}
 
+	public void initGyro()
+	{
+		inited = true;
+		gyro.initGyro();
+		resetGyro();
+		System.out.println("inited");
+	}
 	private void pidsHandler() {
 		distanceSource = new PIDSource() {
 			@Override
@@ -89,13 +97,13 @@ public class DriveSystem extends Subsystem {
 		rotationSource = new PIDSource() {
 			@Override
 			public double pidGet() {
-				return navx.getYaw();
+				return gyro.getAngle();
 			}
 		};
 
 		
 		distancePID = new PIDController(0.21, 0.0, 0.285, 0.0, distanceSetPoint, distanceSource);
-		distancePID.setOutputLimit(-0.3, 0.3);
+		distancePID.setOutputLimit(-0.2, 0.2);
 		rotatePID = new PIDController(0.21, 0.0, 0.285,0.0,rotationSetPoint,rotationSource);
 		rotatePID.setOutputLimit(-1, 1);
 	}
@@ -109,12 +117,12 @@ public class DriveSystem extends Subsystem {
 			@Override
 			protected void initialize() {
 				super.initialize();
-				navx.reset();
+				resetGyro();
 			}
 			@Override
 			protected void execute() {
 				double val = -SmartDashboard.getNumber(DashNames.driveKp, 0.0);
-				driveTrain.arcadeDrive(SmartDashboard.getNumber("speed straight",0.0), navx.getYaw()*val);
+				driveTrain.arcadeDrive(SmartDashboard.getNumber("speed straight",0.0), rotationSource.pidGet()*val);
 			}
 			
 			@Override
@@ -122,17 +130,6 @@ public class DriveSystem extends Subsystem {
 				driveTrain.stop();
 			}
 		}, this);
-	}
-
-	private void navxSetup() {
-		navx=new AHRS(Port.kUSB, SerialDataType.kProcessedData, (byte)255);
-		rotationSource = new PIDSource() {
-			
-			@Override
-			public double pidGet() {
-				return navx.getYaw();
-			}
-		};
 	}
 
 	private FlashDrive setupDriveTrain() {
@@ -152,15 +149,24 @@ public class DriveSystem extends Subsystem {
 	}
 	
 	public void resetGyro()
-	{
-		navx.reset();
+	{	
+		gyro.reset();
 	}
 	public void drive(double speed)
 	{
-		System.out.println("speed "+speed);
-	
+		/*
+		 * SHOULD FIX
+		 */
+		//driveTrain.tankDrive(speed, speed);
+		/*double k = SmartDashboard.getNumber(DashNames.driveKp, 0.3);
+		if(Mathf.constrained(speed, -0.1, 0.1))
+			k=0;
+		else if(speed < 0)
+			k = -SmartDashboard.getNumber(DashNames.driveKp, 0.3);
+		driveTrain.arcadeDrive(speed, navx.getYaw()*k);*/
+		
 		driveTrain.tankDrive(speed, speed);
-		//driveTrain.arcadeDrive(speed, navx.getYaw()*STRAIGHT_DRIVE_KP*0);
+		
 	}
 	public void rotate(double speed)
 	{
@@ -169,8 +175,6 @@ public class DriveSystem extends Subsystem {
 	
 	public void setup()
 	{
-		Robot.leftController.getButton(1).whileHeld(straightDrive);
-		Robot.leftController.getButton(1).whenPressed(new DrivePIDAction(0.0));
 		SmartDashboard.putNumber("rotate", 0.3);
 		/*this.setDefaultAction(new SystemAction(new Action() {
 			final double bound = 0.4;
@@ -192,15 +196,17 @@ public class DriveSystem extends Subsystem {
 		}, driveTrain));*/
 		this.setDefaultAction(new SystemAction(new Action() {
 			final double bound = 0.2;
+			
 			@Override
 			protected void execute() {
 				double leftVal = Robot.leftController.getY();
-				//double rightVal = Robot.rightController.getY();
+				double rightVal = Robot.rightController.getY();
 				if(Mathf.constrained(leftVal, bound, -bound))
 					leftVal = 0;
-				//if(Mathf.constrained(rightVal, bound, -bound))
-				//	rightVal = 0;
-				driveTrain.tankDrive(leftVal, leftVal);
+				if(Mathf.constrained(rightVal, bound, -bound))
+					rightVal = 0;
+				driveTrain.arcadeDrive(leftVal, rightVal);
+				//rotate(rightVal);
 			}
 				
 			@Override
@@ -210,7 +216,9 @@ public class DriveSystem extends Subsystem {
 		}, this));
 		if(tuning)
 		{
-			Robot.leftController.getButton(2).whenPressed(new DrivePIDAction(0.0));
+			Robot.leftController.getButton(1).whileHeld(straightDrive);
+			Robot.leftController.getButton(1).whenPressed(new DrivePIDAction(0.0));
+			Robot.leftController.getButton(2).whenPressed(new RotatePIDAction(0.0));
 		}
 	}
 	
@@ -224,6 +232,6 @@ public class DriveSystem extends Subsystem {
 	{
 		Flashboard.putPIDTuner("rotation", rotatePID.kpProperty(), rotatePID.kiProperty()
 				, rotatePID.kdProperty(), rotatePID.kfProperty(), rotationSetPoint
-				, rotationSource, 5.0, 1000);
+				, rotationSource, 20, 5000);
 	}
 }

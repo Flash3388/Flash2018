@@ -33,4 +33,6 @@ public class RobotMap {
 	public final static int PCM_DEV = 0;
 	public static final int LIFT = 0;
 	
+	public static final int GYRO = 0;
+	
 }

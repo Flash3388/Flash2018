@@ -17,11 +17,14 @@ import edu.flash3388.flashlib.flashboard.Flashboard;
 import edu.flash3388.flashlib.math.Mathf;
 import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.ActionGroup;
+import edu.flash3388.flashlib.robot.devices.AnalogGyro;
+import edu.flash3388.flashlib.robot.devices.Gyro;
 import edu.flash3388.flashlib.robot.frc.IterativeFRCRobot;
 import edu.flash3388.flashlib.robot.frc.PDP;
 import edu.flash3388.flashlib.robot.hid.Joystick;
 import edu.flash3388.flashlib.util.FlashUtil;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -198,6 +201,12 @@ public class Robot extends IterativeFRCRobot {
 	@Override
 	protected void disabledPeriodic() {
 		getRobotSide();
+		DashHandle.disPeriodic();
+		if(drivingTrain)
+		{
+			if(!drive.inited && SmartDashboard.getBoolean(DashNames.initGyro, false))
+				drive.initGyro();
+		}
 	}
 
 	@Override
@@ -205,7 +214,9 @@ public class Robot extends IterativeFRCRobot {
 		if(drivingTrain)
 		{
 			drive.encoder.reset();
+			drive.resetGyro();
 		}
+		
 		startTime = FlashUtil.secs();
 		DashHandle.teleInit();
 	}

@@ -20,8 +20,8 @@ public class RotatePIDAction extends Action {
 	@Override
 	protected void initialize() {
 		startTime=FlashUtil.secs();
-		Robot.drive.distancePID.reset();
-		Robot.drive.distancePID.setEnabled(true);
+		Robot.drive.rotatePID.reset();
+		Robot.drive.rotatePID.setEnabled(true);
 		setpoint = Robot.drive.distanceSetPoint.get();
 		Robot.drive.resetGyro();
 	}
@@ -33,20 +33,18 @@ public class RotatePIDAction extends Action {
 
 	@Override
 	protected void execute() {
-		if(!Robot.drive.distancePID.isEnabled() || inDistanceThreshold())
+		if(!Robot.drive.rotatePID.isEnabled() || inDistanceThreshold())
 		{
 			if(thresholdStartTime < 1)
 				thresholdStartTime=FlashUtil.secs();
-			Robot.drive.drive(-Robot.drive.distancePID.calculate());	
-			
+			Robot.drive.rotate(-Robot.drive.rotatePID.calculate());	
 		}
 		else
 		{
 			if(thresholdStartTime >= 1)
 				thresholdStartTime = 0;
-			Robot.drive.drive(-Robot.drive.distancePID.calculate());		
+			Robot.drive.rotate(-Robot.drive.rotatePID.calculate());		
 		}
-		
 	}
 	
 	@Override
@@ -55,7 +53,7 @@ public class RotatePIDAction extends Action {
 	}
 	
 	public boolean inDistanceThreshold() {
-		double current = Robot.drive.distancePID.getPIDSource().pidGet();
+		double current = Robot.drive.rotatePID.getPIDSource().pidGet();
 		return Mathf.constrained(setpoint - current, -MARGIN, MARGIN);
 	
 	}
