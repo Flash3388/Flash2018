@@ -15,13 +15,14 @@ import edu.flash3388.flashlib.util.beans.DoubleSource;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class PoleSystem extends Subsystem implements Rotatable{
 
 	public static final double DEFAULT_SPEED=0.5;
-	private Spark controller;
+	private VictorSP controller;
 	private final int RANGE=360;
 	private final int OFFSET=0;
 	private Potentiometer potentiometer;
@@ -36,17 +37,15 @@ public class PoleSystem extends Subsystem implements Rotatable{
 		angle = new DoubleSource() {
 			@Override
 			public double get() {
-				return Mathf.scale(potentiometer.get(), 0.0, 240.0);
+				System.out.println("potentiometer "+potentiometer.get());
+				return potentiometer.get();
 			}
 		};
-		controller= new Spark(0);
-		
-		
+		controller= new VictorSP(RobotMap.POLE);
 	}
 	@Override
 	public void rotate(double speed) {
 		controller.set(speed);
-		System.out.println(speed);
 	}
 	public void rotate(boolean dir)
 	{

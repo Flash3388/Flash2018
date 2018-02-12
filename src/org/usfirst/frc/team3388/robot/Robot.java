@@ -63,11 +63,7 @@ public class Robot extends IterativeFRCRobot {
 		controllersSetup();
 		if(sysTrain)
 		{
-			PoleSystem = new PoleSystem();
-			//rollerGripperSystemSetup();	
-			PoleSystem.setup();
-			LiftSystem = new RollerLiftingSystem();//lift setup start
-			LiftSystem.setup();
+			//rollerGripperSystemSetup();
 		}
 		if(drivingTrain)
 		{
@@ -127,13 +123,6 @@ public class Robot extends IterativeFRCRobot {
 		final double DST_TO_SWITCH = 366.04;
 		final double RELEASE_SPEED = -1.0;
 		final double seconds=1.0;/*  */
-		final double MAX_ANGLE=0.0;
-		final double MIN_ANGLE=0.0;
-		final double MID_ANGLE=0.0;
-		final double DOWN = 75.0;
-		final double SWITCH_ANGLE=0.0;
-		final double HIDE_ANGLE=270.0;
-		final double USE_ANGLE=90.0;
 				
 		PoleSystem = new PoleSystem();//pole setup start
 		PoleSystem.setup();
@@ -144,42 +133,28 @@ public class Robot extends IterativeFRCRobot {
 		LiftSystem = new RollerLiftingSystem();//lift setup start
 		LiftSystem.setup();
 		
-		LiftAction hide = new LiftAction(HIDE_ANGLE);
-		LiftAction use = new LiftAction(USE_ANGLE);
-		
 		CaptureAction capture = new CaptureAction();
-		PoleAction scaleMinLift = new PoleAction(MIN_ANGLE);
-		PoleAction scaleMidLift = new PoleAction(MID_ANGLE);
-		PoleAction scaleMaxLift = new PoleAction(MAX_ANGLE);
-		PoleAction switchLift = new PoleAction(SWITCH_ANGLE);
-		PoleAction downLift = new PoleAction(DOWN);
+		PoleAction scaleMinLift = new PoleAction(Constants.MIN_ANGLE);
+		PoleAction scaleMidLift = new PoleAction(Constants.MID_ANGLE);
+		PoleAction scaleMaxLift = new PoleAction(Constants.MAX_ANGLE);
+		PoleAction switchLift = new PoleAction(Constants.SWITCH_ANGLE);
+		PoleAction downLift = new PoleAction(Constants.DOWN);
 
 				
 		
 		ActionGroup scalePutMax = new ActionGroup()
-			.addSequential(scaleMaxLift)
-			.addParallel(hide)
-			.addSequential(use);
+			.addSequential(scaleMaxLift);
 		ActionGroup scalePutMid = new ActionGroup()
-			.addSequential(scaleMidLift)
-			.addParallel(hide)
-			.addSequential(use);
+			.addSequential(scaleMidLift);
 		ActionGroup scalePutMin = new ActionGroup()
-			.addSequential(scaleMinLift)
-			.addParallel(hide)
-			.addSequential(use);
+			.addSequential(scaleMinLift);
 		ActionGroup PutSwitch = new ActionGroup()
-			.addSequential(switchLift)
-			.addParallel(hide)
-			.addSequential(use);
-		/*
+			.addSequential(switchLift);
+		
 		frontSwitchAuto = new ActionGroup()
 			.addSequential(switchPIDDrive = new DrivePIDAction(DST_TO_SWITCH))
 			.addParallel(PutSwitch)
 			.addSequential(rollerGripperSystem.release);
-		*/
-		systemController.getButton(1).whileHeld(hide);
-		systemController.getButton(1).whenReleased(use);
 	}
 	
 	private void controllersSetup() {
