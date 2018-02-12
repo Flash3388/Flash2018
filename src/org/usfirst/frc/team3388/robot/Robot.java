@@ -70,9 +70,9 @@ public class Robot extends IterativeFRCRobot {
 		controllersSetup();
 		if(sysTrain)
 		{
-			//PoleSystem = new PoleSystem();
+			PoleSystem = new PoleSystem();
 			//rollerGripperSystemSetup();	
-			//PoleSystem.setup();
+			PoleSystem.setup();
 			LiftSystem = new RollerLiftingSystem();//lift setup start
 			LiftSystem.setup();
 		}
