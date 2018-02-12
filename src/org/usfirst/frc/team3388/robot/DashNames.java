@@ -7,4 +7,6 @@ public class DashNames {
 	public final static String timeLeft = "time left";
 	public final static String navxConnection = "Navx Connection";
 	public final static String driveKp = "Straight Drive kp";
+	public final static String distance = "distance source";
+
 }
