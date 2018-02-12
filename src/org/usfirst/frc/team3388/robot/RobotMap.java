@@ -19,8 +19,11 @@ public class RobotMap {
 	public static final int LEFT_CONTROLLER = 2;
 	public static final int SYSTEM_CONTROLLER = 0;
 	
-	public static final int ROLLER_GRIPPER_R_CAPTURE_CONTROLLER = 0;
-	public static final int ROLLER_GRIPPER_L_CAPTURE_CONTROLLER = 1;
+	public static final int ROLLER_GRIPPER_R_CAPTURE_CONTROLLER = 6;
+	public static final int ROLLER_GRIPPER_L_CAPTURE_CONTROLLER = 8;
+	public static final int R_CHANNEL = 1;
+	public static final int L_CHANNEL = 1;
+	
 	public static final int ROLLER_GRIPPER_R_LIFT_CONTROLLER = 6;
 	public static final int ROLLER_GRIPPER_L_LIFT_CONTROLLER = 7;
 	
