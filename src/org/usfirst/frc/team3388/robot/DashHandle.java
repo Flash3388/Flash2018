@@ -24,6 +24,7 @@ public class DashHandle {
 	{
 		if(Robot.drivingTrain)
 		{
+			SmartDashboard.putNumber(DashNames.distance, Robot.drive.distanceSource.pidGet());
 			updateAngle();
 		}
 	}
@@ -39,6 +40,7 @@ public class DashHandle {
 	{
 		if(Robot.drivingTrain)
 		{
+			SmartDashboard.putNumber(DashNames.distance, Robot.drive.distanceSource.pidGet());
 			updateAngle();
 		}
 		updateTime();

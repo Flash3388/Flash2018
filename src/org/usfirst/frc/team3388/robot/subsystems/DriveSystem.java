@@ -51,11 +51,10 @@ public class DriveSystem extends Subsystem {
 	
 	public AHRS navx; 
 	
-	WPI_TalonSRX headController;
 	
 	Action straightDrive;
 	
-	final boolean tuning = false;
+	final boolean tuning = true;
 	public DriveSystem() {
 		final double PPR=360;
 		
@@ -96,27 +95,26 @@ public class DriveSystem extends Subsystem {
 
 		
 		distancePID = new PIDController(0.21, 0.0, 0.285, 0.0, distanceSetPoint, distanceSource);
-		distancePID.setOutputLimit(-1, 1);
+		distancePID.setOutputLimit(-0.3, 0.3);
 		rotatePID = new PIDController(0.21, 0.0, 0.285,0.0,rotationSetPoint,rotationSource);
 		rotatePID.setOutputLimit(-1, 1);
 	}
 
 	private void stightDriveHandle() {
+		SmartDashboard.putNumber(DashNames.driveKp, 0.3);
+		SmartDashboard.putNumber("speed straight",0.2);
 		straightDrive = new SystemAction(new Action() {
-			final double kp = 0;
+			final double kp = 0.0;
 			final double speed = 0.2;//later it will be pid calculate
 			@Override
 			protected void initialize() {
-			
 				super.initialize();
-				
-				SmartDashboard.putNumber(DashNames.driveKp, 0.0);
 				navx.reset();
 			}
 			@Override
 			protected void execute() {
-				double val = SmartDashboard.getNumber("straight drive kp", 0.0);
-				driveTrain.arcadeDrive(speed, navx.getYaw()*val);
+				double val = -SmartDashboard.getNumber(DashNames.driveKp, 0.0);
+				driveTrain.arcadeDrive(SmartDashboard.getNumber("speed straight",0.0), navx.getYaw()*val);
 			}
 			
 			@Override
@@ -128,7 +126,6 @@ public class DriveSystem extends Subsystem {
 
 	private void navxSetup() {
 		navx=new AHRS(Port.kUSB, SerialDataType.kProcessedData, (byte)255);
-		
 		rotationSource = new PIDSource() {
 			
 			@Override
@@ -160,7 +157,10 @@ public class DriveSystem extends Subsystem {
 	}
 	public void drive(double speed)
 	{
-		driveTrain.arcadeDrive(speed, navx.getYaw()*STRAIGHT_DRIVE_KP);
+		System.out.println("speed "+speed);
+	
+		driveTrain.tankDrive(speed, speed);
+		//driveTrain.arcadeDrive(speed, navx.getYaw()*STRAIGHT_DRIVE_KP*0);
 	}
 	public void rotate(double speed)
 	{
@@ -169,22 +169,11 @@ public class DriveSystem extends Subsystem {
 	
 	public void setup()
 	{
-		SmartDashboard.putNumber("rotate",0.0);
-		
-		Robot.leftController.getButton(1).whileHeld(new Action() {
-			
-			@Override
-			protected void execute() {
-				driveTrain.rotate(SmartDashboard.getNumber("rotate",0.0));
-			}
-			
-			@Override
-			protected void end() {
-				driveTrain.rotate(0.0);
-			}
-		});
-		this.setDefaultAction(new SystemAction(new Action() {
-			final double bound = 0.15;
+		Robot.leftController.getButton(1).whileHeld(straightDrive);
+		Robot.leftController.getButton(1).whenPressed(new DrivePIDAction(0.0));
+		SmartDashboard.putNumber("rotate", 0.3);
+		/*this.setDefaultAction(new SystemAction(new Action() {
+			final double bound = 0.4;
 			@Override
 			protected void execute() {
 				double leftVal = Robot.leftController.getY();
@@ -200,7 +189,25 @@ public class DriveSystem extends Subsystem {
 			protected void end() {
 				driveTrain.tankDrive(0,0);
 			}
-		}, driveTrain));
+		}, driveTrain));*/
+		this.setDefaultAction(new SystemAction(new Action() {
+			final double bound = 0.2;
+			@Override
+			protected void execute() {
+				double leftVal = Robot.leftController.getY();
+				//double rightVal = Robot.rightController.getY();
+				if(Mathf.constrained(leftVal, bound, -bound))
+					leftVal = 0;
+				//if(Mathf.constrained(rightVal, bound, -bound))
+				//	rightVal = 0;
+				driveTrain.tankDrive(leftVal, leftVal);
+			}
+				
+			@Override
+			protected void end() {
+				driveTrain.tankDrive(0,0);
+			}
+		}, this));
 		if(tuning)
 		{
 			Robot.leftController.getButton(2).whenPressed(new DrivePIDAction(0.0));
@@ -211,7 +218,7 @@ public class DriveSystem extends Subsystem {
 	{
 		Flashboard.putPIDTuner("distance", distancePID.kpProperty(), distancePID.kiProperty()
 				, distancePID.kdProperty(), distancePID.kfProperty(), distanceSetPoint
-				, distanceSource, 5.0, 1000);
+				, distanceSource, 20, 5000);
 	}
 	private void rotationPIDTunner()
 	{

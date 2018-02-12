@@ -17,21 +17,11 @@ import edu.flash3388.flashlib.flashboard.Flashboard;
 import edu.flash3388.flashlib.math.Mathf;
 import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.ActionGroup;
-import edu.flash3388.flashlib.robot.InstantAction;
-import edu.flash3388.flashlib.robot.SystemAction;
-import edu.flash3388.flashlib.robot.TimedAction;
-import edu.flash3388.flashlib.robot.devices.IndexEncoder;
 import edu.flash3388.flashlib.robot.frc.IterativeFRCRobot;
 import edu.flash3388.flashlib.robot.frc.PDP;
 import edu.flash3388.flashlib.robot.hid.Joystick;
-import edu.flash3388.flashlib.robot.hid.XboxController;
-import edu.flash3388.flashlib.robot.frc.FlashFRCUtil;
 import edu.flash3388.flashlib.util.FlashUtil;
-import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.SerialPort.Port;
-import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -55,8 +45,8 @@ public class Robot extends IterativeFRCRobot {
 	
 	static double startTime;
 	
-	public static boolean drivingTrain = false;
-	public static boolean sysTrain = true;
+	public static boolean drivingTrain = true;
+	public static boolean sysTrain = false;
 	
 	public enum Side {LEFT,MIDDLE,RIGHT};
 	
@@ -212,12 +202,9 @@ public class Robot extends IterativeFRCRobot {
 
 	@Override
 	protected void teleopInit() {
-		//controller.getRawButton(1);
-		//DriverStation.getInstance().getStickButton(0, 1);
 		if(drivingTrain)
 		{
 			drive.encoder.reset();
-			
 		}
 		startTime = FlashUtil.secs();
 		DashHandle.teleInit();
@@ -225,13 +212,7 @@ public class Robot extends IterativeFRCRobot {
 
 	@Override
 	protected void teleopPeriodic() {
-		//System.out.println(enc.get());
-		DashHandle.telePeriodic();
-
-		//System.out.println(systemController.getPOV().get());
-
-		//System.out.println("encoder "+drive.leftEncoder.getDistance());		
-	
+		DashHandle.telePeriodic();	
 	}
 	
 	@Override
