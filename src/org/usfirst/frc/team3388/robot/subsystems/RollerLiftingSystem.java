@@ -6,6 +6,7 @@ import org.usfirst.frc.team3388.robot.TalonSpeed;
 
 import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.Subsystem;
+import edu.flash3388.flashlib.robot.TimedAction;
 import edu.flash3388.flashlib.robot.devices.FlashSpeedController;
 import edu.flash3388.flashlib.robot.systems.Rotatable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -48,9 +49,10 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 	
 	public void setup()
 	{
+		
 		/*this.setDefaultAction(new Action() {
-			final int UP =1;
-			final int DOWN =-1;		
+			final int UP =0;
+			final int DOWN =180;		
 			@Override
 			protected void execute() {
 				int val =Robot.systemController.getPOV().get();
@@ -67,6 +69,24 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 				stop();
 			}
 		});*/
+		Robot.systemController.getButton(1).whenPressed(new TimedAction(new Action() {
+			boolean last = true;
+			@Override
+			protected void execute() {
+				if(last)
+					rotate(SmartDashboard.getNumber("upspeed", 0.0));
+				else
+					rotate(-SmartDashboard.getNumber("upspeed", 0.0));
+				
+			}
+			
+			@Override
+			protected void end() {
+				last = !last;
+				rotate(0.0);
+			}
+		}, 2.0));
+		/*
 		this.setDefaultAction(new Action() {
 			@Override
 			protected void execute() {
@@ -85,5 +105,6 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 				
 			}
 		});
+		*/
 	}
 }
