@@ -11,7 +11,7 @@ public class PistonController {
 	{
 		sol= new DoubleSolenoid(fChannel, rChannel);
 	}
-	private void use(boolean side)
+	public void use(boolean side)
 	{
 		if(side)
 			sol.set(Value.kForward);
@@ -26,11 +26,11 @@ public class PistonController {
 	{
 		use(false);
 	}
-	private void change()
+	public void change()
 	{
 		if(sol.get()==Value.kForward)
-			open();
-		else
 			close();
+		else
+			open();
 	}
 }

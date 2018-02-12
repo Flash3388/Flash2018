@@ -32,7 +32,7 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 	public TimedAction release;
 	public RollerGripperSystem() {
 		
-		piston = new PistonController(RobotMap.LEFT_CONTROLLER, RobotMap.RIGHT_CONTROLLER);
+		piston = new PistonController(RobotMap.L_CHANNEL, RobotMap.R_CHANNEL);
 		//sonic = new Ultrasonic(RobotMap.PING, RobotMap.ECHO);
 		//gyro = new ADXRS450_Gyro();//fill
 		angle = new DoubleSource() {
@@ -43,8 +43,9 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 			}
 		};
 		rController = new VictorSP(RobotMap.ROLLER_GRIPPER_R_CAPTURE_CONTROLLER);
-		rController.setInverted(true);
+		
 		lController = new VictorSP(RobotMap.ROLLER_GRIPPER_L_CAPTURE_CONTROLLER);
+		lController.setInverted(true);
 	}
 	public void rotate(double speed) {
 		rController.set(speed);
@@ -59,9 +60,20 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 	
 	public void setup()
 	{
+		Robot.systemController.getButton(2).whenPressed(new InstantAction() {
+			boolean last = false;
+			@Override
+			protected void execute() {
+				System.out.println("use");
+				piston.use(last);
+				last = !last;
+			}
+		});
+			
 		Robot.systemController.getButton(1).whileHeld(new SystemAction(new Action() {
 			@Override
 			protected void execute() {
+				//System.out.println("c");
 				rotate(true);
 			}
 			
