@@ -48,7 +48,7 @@ public class Robot extends IterativeFRCRobot {
 	
 	static double startTime;
 	
-	public static boolean drivingTrain = false;
+	public static boolean drivingTrain = true;
 	public static boolean sysTrain = true;
 	
 	public enum Side {LEFT,MIDDLE,RIGHT};
@@ -63,6 +63,7 @@ public class Robot extends IterativeFRCRobot {
 		controllersSetup();
 		if(sysTrain)
 		{
+			System.out.println("nti");
 			rollerGripperSystem = new RollerGripperSystem();
 			rollerGripperSystem.setup();
 			
@@ -79,7 +80,7 @@ public class Robot extends IterativeFRCRobot {
 			
 			if(sysTrain)
 			{
-				autoHandlers();
+				//autoHandlers();
 			}
 		}
 	}

@@ -10,8 +10,10 @@ public class RobotMap {
 	public static final int DRIVE_FRONTLEFT = 2;
 	public static final int DRIVE_BACKLEFT = 1;
 	public static final int DRIVE_BACKRIGHT = 6;
+	
 	public static final int RIGHT_ENCODER_A = 3;
 	public static final int RIGHT_ENCODER_B = 4;
+	
 	public static final int LEFT_ENCODER_A = 1;
 	public static final int LEFT_ENCODER_B = 2;
 	
@@ -36,6 +38,6 @@ public class RobotMap {
 	public final static int PCM_DEV = 0;
 	public static final int LIFT = 0;
 	
-	public static final int GYRO = 0;
+	public static final int GYRO = 1;
 	
 }
