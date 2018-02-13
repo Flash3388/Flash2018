@@ -63,6 +63,10 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 		Robot.systemController.getButton(1).whenPressed(new TimedAction(new Action() {
 			
 			@Override
+			protected void initialize() {
+				piston.open();
+			}
+			@Override
 			protected void execute() {
 				rotate(false);
 				piston.close();
