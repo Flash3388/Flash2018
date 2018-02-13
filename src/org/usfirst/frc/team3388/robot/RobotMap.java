@@ -26,8 +26,8 @@ public class RobotMap {
 	public static final int R_CHANNEL = 1;
 	public static final int L_CHANNEL = 0;
 	
-	public static final int ROLLER_GRIPPER_R_LIFT_CONTROLLER = 6;
-	public static final int ROLLER_GRIPPER_L_LIFT_CONTROLLER = 7;
+	public static final int ROLLER_GRIPPER_R_LIFT_CONTROLLER = 3;
+	public static final int ROLLER_GRIPPER_L_LIFT_CONTROLLER = 4;
 	
 	public static final int POLE = 6;
 	public static final int POLE_POTENTIOMETER=2;

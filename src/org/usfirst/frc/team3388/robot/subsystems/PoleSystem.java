@@ -36,14 +36,13 @@ public class PoleSystem extends Subsystem implements Rotatable{
 	
 	public PoleSystem()
 	{
-		in = new AnalogInput(2);
-		in.getVoltage();
-		
-		potentiometer = new AnalogPotentiometer(0);
+		in = new AnalogInput(RobotMap.POLE_POTENTIOMETER);
 		angle = new DoubleSource() {
+			final double UNITS = 240.0/5.0;
 			@Override
 			public double get() {
-				return in.getVoltage();
+
+				return in.getVoltage()*UNITS;
 			}
 		};
 		controller= new VictorSP(RobotMap.POLE);
