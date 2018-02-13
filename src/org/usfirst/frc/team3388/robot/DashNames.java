@@ -9,5 +9,6 @@ public class DashNames {
 	public final static String driveKp = "Straight Drive kp";
 	public final static String distance = "distance source";
 	public final static String initGyro = "Init Gyro";
+	public final static String polePotentiometer = "potentiometer";
 
 }

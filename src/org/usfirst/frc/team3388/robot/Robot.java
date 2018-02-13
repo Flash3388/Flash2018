@@ -23,6 +23,7 @@ import edu.flash3388.flashlib.robot.frc.IterativeFRCRobot;
 import edu.flash3388.flashlib.robot.frc.PDP;
 import edu.flash3388.flashlib.robot.hid.Joystick;
 import edu.flash3388.flashlib.util.FlashUtil;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -183,6 +184,7 @@ public class Robot extends IterativeFRCRobot {
 	protected void disabledPeriodic() {
 		getRobotSide();
 		DashHandle.disPeriodic();
+		
 		if(drivingTrain)
 		{
 			if(!drive.inited && SmartDashboard.getBoolean(DashNames.initGyro, false))

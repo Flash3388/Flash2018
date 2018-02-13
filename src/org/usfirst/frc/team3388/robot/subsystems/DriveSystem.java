@@ -27,6 +27,7 @@ import edu.flash3388.flashlib.robot.systems.FlashDrive.MotorSide;
 import edu.flash3388.flashlib.util.beans.DoubleProperty;
 import edu.flash3388.flashlib.util.beans.PropertyHandler;
 import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -58,7 +59,6 @@ public class DriveSystem extends Subsystem {
 	public DriveSystem() {
 		final double PPR=360;
 		gyro = new AnalogGyro(RobotMap.GYRO);
-		
 		//navxSetup();
 		encoder= new Encoder(RobotMap.RIGHT_ENCODER_A, RobotMap.RIGHT_ENCODER_B);
 		encoder.setDistancePerPulse((2*Math.PI*WHEEL_RADIUS)/PPR);
@@ -83,8 +83,6 @@ public class DriveSystem extends Subsystem {
 	{
 		inited = true;
 		gyro.initGyro();
-		resetGyro();
-		System.out.println("inited");
 	}
 	private void pidsHandler() {
 		distanceSource = new PIDSource() {

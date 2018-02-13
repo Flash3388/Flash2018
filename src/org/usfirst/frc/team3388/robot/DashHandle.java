@@ -15,7 +15,8 @@ public class DashHandle {
 		{
 			SmartDashboard.putBoolean(DashNames.initGyro, false);
 		}
-			
+		if(Robot.sysTrain)
+			SmartDashboard.putNumber(DashNames.polePotentiometer, Robot.poleSystem.angle.get());
 	}
 	public static void updateAngle()
 	{
@@ -31,9 +32,13 @@ public class DashHandle {
 	}
 	public static void teleInit()
 	{
+		
 		SmartDashboard.putBoolean(DashNames.enabled, true);
 		SmartDashboard.putNumber(DashNames.time, 0.0);
-		if(Robot.drivingTrain);
+		if(Robot.drivingTrain)
+		{
+			SmartDashboard.putNumber(DashNames.polePotentiometer, Robot.poleSystem.angle.get());
+		}
 			//SmartDashboard.putBoolean(DashNames.navxConnection, Robot.drive.navx.isConnected());
 	}
 	

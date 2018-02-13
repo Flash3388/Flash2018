@@ -4,6 +4,8 @@ import org.usfirst.frc.team3388.robot.Robot;
 import org.usfirst.frc.team3388.robot.RobotMap;
 import org.usfirst.frc.team3388.robot.TalonSpeed;
 
+import com.sun.java.swing.plaf.windows.WindowsBorders.DashedBorder;
+
 import edu.flash3388.flashlib.math.Mathf;
 import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.PIDController;
@@ -12,6 +14,7 @@ import edu.flash3388.flashlib.robot.Subsystem;
 import edu.flash3388.flashlib.robot.devices.FlashSpeedController;
 import edu.flash3388.flashlib.robot.systems.Rotatable;
 import edu.flash3388.flashlib.util.beans.DoubleSource;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Spark;
@@ -26,19 +29,20 @@ public class PoleSystem extends Subsystem implements Rotatable{
 	private final int RANGE=360;
 	private final int OFFSET=0;
 	private Potentiometer potentiometer;
-	public static DoubleSource angle;
+	public DoubleSource angle;
 	private final double UP_SPEED=0.8;
 	private final double DOWN_SPEED=-0.5;
-	
+	public AnalogInput in;
 	
 	public PoleSystem()
 	{
-		potentiometer = new AnalogPotentiometer(RobotMap.POLE_POTENTIOMETER);
+		in = new AnalogInput(2);
+		in.getVoltage();
+		
+		potentiometer = new AnalogPotentiometer(0);
 		angle = new DoubleSource() {
 			@Override
 			public double get() {
-				System.out.println("potentiometer "+potentiometer.get());
-				
 				return potentiometer.get();
 			}
 		};
