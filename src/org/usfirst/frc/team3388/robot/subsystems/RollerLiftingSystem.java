@@ -2,13 +2,12 @@ package org.usfirst.frc.team3388.robot.subsystems;
 
 import org.usfirst.frc.team3388.robot.Robot;
 import org.usfirst.frc.team3388.robot.RobotMap;
-import org.usfirst.frc.team3388.robot.TalonSpeed;
 
 import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.Subsystem;
 import edu.flash3388.flashlib.robot.TimedAction;
-import edu.flash3388.flashlib.robot.devices.FlashSpeedController;
 import edu.flash3388.flashlib.robot.systems.Rotatable;
+import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RollerLiftingSystem extends Subsystem implements Rotatable {
@@ -17,12 +16,12 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 	public final double DEFAULT_UP_SPEED=0.3;
 	public final double DEFAULT_DOWN_SPEED=0.3;
 	
-	FlashSpeedController rController;
-	FlashSpeedController lController;
+	VictorSP rController;
+	VictorSP lController;
 	
 	public RollerLiftingSystem() {
-		rController = new TalonSpeed(RobotMap.ROLLER_GRIPPER_L_LIFT_CONTROLLER);
-		lController = new TalonSpeed(RobotMap.ROLLER_GRIPPER_R_LIFT_CONTROLLER);
+		rController = new VictorSP(RobotMap.ROLLER_GRIPPER_L_LIFT_CONTROLLER);
+		lController = new VictorSP(RobotMap.ROLLER_GRIPPER_R_LIFT_CONTROLLER);
 	}
 	@Override
 	public void rotate(double speed) {
@@ -43,8 +42,8 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 	
 	@Override
 	public void stop() {
-		rController.stop();
-		lController.stop();
+		rController.set(0.0);
+		lController.set(0.0);
 	}
 	
 	public void setup()

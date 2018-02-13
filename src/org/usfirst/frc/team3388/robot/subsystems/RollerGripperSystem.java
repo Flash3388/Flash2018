@@ -24,7 +24,7 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 	VictorSP lController;
 	
 	PistonController piston;
-
+		
 	Ultrasonic sonic;
 	ADXRS450_Gyro gyro;
 	public static DoubleSource angle;
@@ -53,44 +53,40 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 	}
 	public void rotate(boolean in) {
 		if(in)
-			rotate(SmartDashboard.getNumber("speed", 0.3));
+			rotate(0.7);
 		else
-			rotate(-SmartDashboard.getNumber("speed", 0.3));
+			rotate(-0.7);
 	}
 	
 	public void setup()
 	{
-		Robot.systemController.getButton(2).whenPressed(new InstantAction() {
-			boolean last = false;
-			@Override
-			protected void execute() {
-				System.out.println("use");
-				piston.use(last);
-				last = !last;
-			}
-		});
+		Robot.systemController.getButton(1).whenPressed(new TimedAction(new Action() {
 			
-		Robot.systemController.getButton(1).whileHeld(new SystemAction(new Action() {
 			@Override
 			protected void execute() {
-				//System.out.println("c");
-				rotate(true);
+				rotate(false);
+				piston.close();
 			}
 			
 			@Override
 			protected void end() {
 				stop();
 			}
-		}, this));
+		},1.0));
+	Robot.systemController.getButton(2).whenPressed(new TimedAction(new Action() {
 		
-		release = new TimedAction(new InstantAction() {	
-			@Override
-			protected void execute() {
-				rotate(DEFAULT_SPEED);
-			}
-		}, 0.5);//roller setup end
+		@Override
+		protected void execute() {
+			rotate(true);
+		}
 		
-	}
+		@Override
+		protected void end() {
+			piston.open();
+			stop();
+		}
+	},1.0));
+}
 	public double getDist()
 	{
 		return sonic.get();

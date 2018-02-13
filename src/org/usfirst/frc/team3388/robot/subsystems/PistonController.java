@@ -18,11 +18,11 @@ public class PistonController {
 		else
 			sol.set(Value.kReverse);
 	}
-	private void close()
+	public void close()
 	{
 		use(true);
 	}
-	private void open()
+	public void open()
 	{
 		use(false);
 	}

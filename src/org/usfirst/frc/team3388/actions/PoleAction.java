@@ -10,25 +10,25 @@ public class PoleAction extends Action{
 	private double setpoint;
 	static final double ERROR = 10.0;
 	public PoleAction(double setpoint) {
-		requires(Robot.PoleSystem);
+		requires(Robot.poleSystem);
 		this.setpoint=setpoint;
 	}
 
 	@Override
 	protected void end() {
-		Robot.PoleSystem.stop();
+		Robot.poleSystem.stop();
 	}
 	@Override
 	protected void execute() {
-		if(setpoint>Robot.PoleSystem.angle.get())
-			Robot.PoleSystem.rotate(true);
+		if(setpoint>Robot.poleSystem.angle.get())
+			Robot.poleSystem.rotate(true);
 		else
-			Robot.PoleSystem.rotate(false);
+			Robot.poleSystem.rotate(false);
 	}
 
 	@Override
 	protected boolean isFinished() {
 
-		return Mathf.constrained(Robot.PoleSystem.angle.get(), setpoint, setpoint + ERROR);
+		return Mathf.constrained(Robot.poleSystem.angle.get(), setpoint, setpoint + ERROR);
 	}
 }

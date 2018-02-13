@@ -42,7 +42,7 @@ public class Robot extends IterativeFRCRobot {
 	public static Joystick leftController;
 	public static Joystick systemController;
 	
-	public static PoleSystem PoleSystem;
+	public static PoleSystem poleSystem;
 	public static RollerGripperSystem rollerGripperSystem;
 	public static RollerLiftingSystem LiftSystem;
 	
@@ -65,6 +65,9 @@ public class Robot extends IterativeFRCRobot {
 		{
 			rollerGripperSystem = new RollerGripperSystem();
 			rollerGripperSystem.setup();
+			
+			poleSystem = new PoleSystem();
+			poleSystem.setup();
 			//rollerGripperSystemSetup();
 		}
 		if(drivingTrain)
@@ -126,8 +129,8 @@ public class Robot extends IterativeFRCRobot {
 		final double RELEASE_SPEED = -1.0;
 		final double seconds=1.0;/*  */
 				
-		PoleSystem = new PoleSystem();//pole setup start
-		PoleSystem.setup();
+		poleSystem = new PoleSystem();//pole setup start
+		poleSystem.setup();
 		
 		rollerGripperSystem = new RollerGripperSystem();//roller setup start
 		rollerGripperSystem.setup();
