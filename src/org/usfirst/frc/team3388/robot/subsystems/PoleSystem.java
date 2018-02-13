@@ -27,8 +27,8 @@ public class PoleSystem extends Subsystem implements Rotatable{
 	private final int OFFSET=0;
 	private Potentiometer potentiometer;
 	public static DoubleSource angle;
-	private final double UP_SPEED=1.0;
-	private final double DOWN_SPEED=-0.1;
+	private final double UP_SPEED=0.8;
+	private final double DOWN_SPEED=-0.5;
 	
 	
 	public PoleSystem()
@@ -68,9 +68,9 @@ public class PoleSystem extends Subsystem implements Rotatable{
 			protected void execute() {
 				//rollerGripperPole.rotate(0.5*systemController.getY());
 				if(Robot.systemController.getY() > 0.2)
-					rotate(SmartDashboard.getNumber("upspeed", 0.8));
+					rotate(true);
 				else if(Robot.systemController.getY()  < -0.2)
-					rotate(-SmartDashboard.getNumber("downspeed", 0.5));
+					rotate(false);
 				else
 					stop();
 			}
