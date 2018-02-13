@@ -3,6 +3,9 @@ package org.usfirst.frc.team3388.robot.subsystems;
 import org.usfirst.frc.team3388.robot.Robot;
 import org.usfirst.frc.team3388.robot.RobotMap;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
 import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.Subsystem;
 import edu.flash3388.flashlib.robot.TimedAction;
@@ -16,18 +19,18 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 	public final double DEFAULT_UP_SPEED=0.3;
 	public final double DEFAULT_DOWN_SPEED=0.3;
 	
-	VictorSP rController;
-	VictorSP lController;
+	TalonSRX rController;
+	TalonSRX lController;
 	
 	public RollerLiftingSystem() {
-		rController = new VictorSP(RobotMap.ROLLER_GRIPPER_L_LIFT_CONTROLLER);
-		lController = new VictorSP(RobotMap.ROLLER_GRIPPER_R_LIFT_CONTROLLER);
+		rController = new TalonSRX(RobotMap.ROLLER_GRIPPER_L_LIFT_CONTROLLER);
+		lController = new TalonSRX(RobotMap.ROLLER_GRIPPER_R_LIFT_CONTROLLER);
+		rController.follow(lController);
 	}
 	@Override
 	public void rotate(double speed) {
-		lController.set(speed);
-		rController.set(-speed);
-
+		lController.set(ControlMode.Current, speed);
+		rController.set(ControlMode.Follower, speed);
 	}
 	
 	public void liftUp()
@@ -42,8 +45,7 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 	
 	@Override
 	public void stop() {
-		rController.set(0.0);
-		lController.set(0.0);
+		rotate(0.0);
 	}
 	
 	public void setup()
@@ -68,42 +70,5 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 				stop();
 			}
 		});*/
-		Robot.systemController.getButton(1).whenPressed(new TimedAction(new Action() {
-			boolean last = true;
-			@Override
-			protected void execute() {
-				if(last)
-					rotate(SmartDashboard.getNumber("upspeed", 0.0));
-				else
-					rotate(-SmartDashboard.getNumber("upspeed", 0.0));
-				
-			}
-			
-			@Override
-			protected void end() {
-				last = !last;
-				rotate(0.0);
-			}
-		}, 2.0));
-		/*
-		this.setDefaultAction(new Action() {
-			@Override
-			protected void execute() {
-				//rollerGripperPole.rotate(0.5*systemController.getY());
-				if(Robot.systemController.getY() <-0.2)
-					rotate(SmartDashboard.getNumber("upspeed", 0.0));
-				else if(Robot.systemController.getY() > 0.2)
-					rotate(-SmartDashboard.getNumber("downspeed", 0.0));
-				else
-					stop();
-			}
-
-			@Override
-			protected void end() {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-		*/
 	}
 }
