@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class PoleSystem extends Subsystem implements Rotatable{
 
 	public static final double DEFAULT_SPEED=0.5;
-	private TalonSpeed controller;
+	private VictorSP controller;
 	private final int RANGE=360;
 	private final int OFFSET=0;
 	private Potentiometer potentiometer;
@@ -43,10 +43,10 @@ public class PoleSystem extends Subsystem implements Rotatable{
 		angle = new DoubleSource() {
 			@Override
 			public double get() {
-				return potentiometer.get();
+				return in.getVoltage();
 			}
 		};
-		controller= new TalonSpeed(RobotMap.POLE);
+		controller= new VictorSP(RobotMap.POLE);
 	}
 	@Override
 	public void rotate(double speed) {
@@ -71,9 +71,9 @@ public class PoleSystem extends Subsystem implements Rotatable{
 			@Override
 			protected void execute() {
 				//rollerGripperPole.rotate(0.5*systemController.getY());
-				if(Robot.systemController.getY() > 0.2)
+				if(Robot.systemController.RightStick.getY() > 0.2)
 					rotate(true);
-				else if(Robot.systemController.getY()  < -0.2)
+				else if(Robot.systemController.RightStick.getY()  < -0.2)
 					rotate(false);
 				else
 					stop();

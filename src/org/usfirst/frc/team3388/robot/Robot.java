@@ -22,6 +22,7 @@ import edu.flash3388.flashlib.robot.devices.Gyro;
 import edu.flash3388.flashlib.robot.frc.IterativeFRCRobot;
 import edu.flash3388.flashlib.robot.frc.PDP;
 import edu.flash3388.flashlib.robot.hid.Joystick;
+import edu.flash3388.flashlib.robot.hid.XboxController;
 import edu.flash3388.flashlib.util.FlashUtil;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -41,7 +42,7 @@ public class Robot extends IterativeFRCRobot {
 	
 	public static Joystick rightController;
 	public static Joystick leftController;
-	public static Joystick systemController;
+	public static XboxController systemController;
 	
 	public static PoleSystem poleSystem;
 	public static RollerGripperSystem rollerGripperSystem;
@@ -167,7 +168,7 @@ public class Robot extends IterativeFRCRobot {
 	private void controllersSetup() {
 		final int BUTTON_COUNT = 4;
 		if(sysTrain)
-			systemController = new Joystick(RobotMap.SYSTEM_CONTROLLER, BUTTON_COUNT);
+			systemController = new XboxController(RobotMap.SYSTEM_CONTROLLER);
 		
 		if(drivingTrain)
 		{
@@ -199,7 +200,6 @@ public class Robot extends IterativeFRCRobot {
 			drive.encoder.reset();
 			drive.resetGyro();
 		}
-		
 		startTime = FlashUtil.secs();
 		DashHandle.teleInit();
 	}
@@ -207,6 +207,9 @@ public class Robot extends IterativeFRCRobot {
 	@Override
 	protected void teleopPeriodic() {
 		DashHandle.telePeriodic();	
+		//System.out.println(poleSystem.in.getVoltage());
+		System.out.println("follower: " + LiftSystem.getRController() + "followed: "
+				+ LiftSystem.getLController());
 	}
 	
 	@Override

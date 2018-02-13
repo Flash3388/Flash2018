@@ -29,8 +29,8 @@ public class PistonController {
 	public void change()
 	{
 		if(sol.get()==Value.kForward)
-			close();
-		else
 			open();
+		else
+			close();
 	}
 }

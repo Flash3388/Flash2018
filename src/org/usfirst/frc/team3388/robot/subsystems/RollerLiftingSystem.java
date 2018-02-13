@@ -29,8 +29,8 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 	}
 	@Override
 	public void rotate(double speed) {
-		lController.set(ControlMode.Current, speed);
-		rController.set(ControlMode.Follower, speed);
+		lController.set(ControlMode.PercentOutput, speed);
+		
 	}
 	
 	public void liftUp()
@@ -70,5 +70,11 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 				stop();
 			}
 		});*/
+	}
+	public double getRController() {
+		return rController.getOutputCurrent();
+	}
+	public double getLController() {
+		return lController.getOutputCurrent();
 	}
 }

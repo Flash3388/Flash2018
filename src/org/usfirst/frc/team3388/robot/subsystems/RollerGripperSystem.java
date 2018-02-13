@@ -14,14 +14,15 @@ import edu.flash3388.flashlib.robot.devices.Ultrasonic;
 import edu.flash3388.flashlib.robot.systems.Rotatable;
 import edu.flash3388.flashlib.util.beans.DoubleSource;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class RollerGripperSystem extends Subsystem implements Rotatable{
 
-	VictorSP rController;
-	VictorSP lController;
+	private VictorSP rController;
+	private VictorSP lController;
 	
 	PistonController piston;
 		
@@ -60,37 +61,37 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 	
 	public void setup()
 	{
-		Robot.systemController.getButton(1).whenPressed(new TimedAction(new Action() {
+		Robot.systemController.RB.whileHeld(new Action() {
 			
-			@Override
-			protected void initialize() {
-				piston.open();
-			}
 			@Override
 			protected void execute() {
 				rotate(false);
-				piston.close();
 			}
-			
+
 			@Override
 			protected void end() {
 				stop();
 			}
-		},1.0));
-	Robot.systemController.getButton(2).whenPressed(new TimedAction(new Action() {
-		
-		@Override
-		protected void execute() {
-			rotate(true);
-		}
-		
-		@Override
-		protected void end() {
-			piston.open();
-			stop();
-		}
-	},1.0));
-}
+		});
+		Robot.systemController.LB.whileHeld(new Action() {
+			
+			@Override
+			protected void execute() {
+				rotate(true);
+			}
+			@Override
+			protected void end() {
+				stop();
+			}
+		});
+		Robot.systemController.A.whenPressed(new InstantAction() {
+			
+			@Override
+			protected void execute() {
+				piston.change();
+			}
+		});
+	}
 	public double getDist()
 	{
 		return sonic.get();
@@ -100,7 +101,4 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 		rController.set(0.0);
 		lController.set(0.0);
 	}
-	
-	
-
 }

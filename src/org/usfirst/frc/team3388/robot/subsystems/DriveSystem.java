@@ -197,13 +197,11 @@ public class DriveSystem extends Subsystem {
 			
 			@Override
 			protected void execute() {
-				double leftVal = Robot.leftController.getY();
+				double zVal = Robot.rightController.getZ();
 				double rightVal = Robot.rightController.getY();
-				if(Mathf.constrained(leftVal, bound, -bound))
-					leftVal = 0;
 				if(Mathf.constrained(rightVal, bound, -bound))
 					rightVal = 0;
-				driveTrain.arcadeDrive(leftVal, rightVal);
+				driveTrain.arcadeDrive(rightVal, zVal);
 				//rotate(rightVal);
 			}
 				
