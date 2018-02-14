@@ -17,11 +17,6 @@ public class PoleAction extends Action{
 	}
 	
 	@Override
-	protected void initialize() {
-		super.initialize();
-	}
-
-	@Override
 	protected void end() {
 		Robot.poleSystem.stop();
 	}
@@ -42,6 +37,6 @@ public class PoleAction extends Action{
 	@Override
 	protected boolean isFinished() {
 
-		return Mathf.constrained(Robot.poleSystem.angle.get(), setpoint, setpoint + ERROR)|| (!Robot.poleSystem.s.get() && !dir);
+		return Mathf.constrained(Robot.poleSystem.angle.get(), setpoint, setpoint + ERROR)|| (Robot.poleSystem.isPressed.get() && !dir);
 	}
 }

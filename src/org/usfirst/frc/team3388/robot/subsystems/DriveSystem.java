@@ -1,36 +1,25 @@
 package org.usfirst.frc.team3388.robot.subsystems;
 
-import java.math.RoundingMode;
-
-import org.usfirst.frc.team3388.actions.DrivePIDAction;
-import org.usfirst.frc.team3388.actions.RotatePIDAction;
 import org.usfirst.frc.team3388.robot.AutoHandlers;
 import org.usfirst.frc.team3388.robot.DashNames;
 import org.usfirst.frc.team3388.robot.Robot;
 import org.usfirst.frc.team3388.robot.RobotMap;
 import org.usfirst.frc.team3388.robot.TalonSpeed;
 
-import com.kauailabs.navx.frc.AHRS;
-import com.kauailabs.navx.frc.AHRS.SerialDataType;
-
 import edu.flash3388.flashlib.flashboard.Flashboard;
-import edu.flash3388.flashlib.math.Mathf;
 import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.PIDController;
 import edu.flash3388.flashlib.robot.PIDSource;
 import edu.flash3388.flashlib.robot.Subsystem;
 import edu.flash3388.flashlib.robot.SystemAction;
 
-import edu.flash3388.flashlib.robot.devices.Gyro;
 import edu.flash3388.flashlib.robot.devices.MultiSpeedController;
 import edu.flash3388.flashlib.robot.systems.FlashDrive;
 import edu.flash3388.flashlib.robot.systems.FlashDrive.MotorSide;
 import edu.flash3388.flashlib.util.beans.DoubleProperty;
 import edu.flash3388.flashlib.util.beans.PropertyHandler;
 import edu.wpi.first.wpilibj.AnalogGyro;
-import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -77,6 +66,8 @@ public class DriveSystem extends Subsystem {
 		{	
 			drivePIDTunner();
 			rotationPIDTunner();
+			
+			Robot.rightController.getButton(1).whenPressed(AutoHandlers.switchChoose(true));
 		}
 	}
 
@@ -151,20 +142,8 @@ public class DriveSystem extends Subsystem {
 		gyro.reset();
 	}
 	public void drive(double speed)
-	{
-		/*
-		 * SHOULD FIX
-		 */
-		//driveTrain.tankDrive(speed, speed);
-		/*double k = SmartDashboard.getNumber(DashNames.driveKp, 0.3);
-		if(Mathf.constrained(speed, -0.1, 0.1))
-			k=0;
-		else if(speed < 0)
-			k = -SmartDashboard.getNumber(DashNames.driveKp, 0.3);
-		driveTrain.arcadeDrive(speed, navx.getYaw()*k);*/
-		
-		driveTrain.tankDrive(speed, speed);
-		
+	{	
+		driveTrain.tankDrive(speed, speed);	
 	}
 	public void rotate(double speed)
 	{
@@ -174,24 +153,6 @@ public class DriveSystem extends Subsystem {
 	public void setup()
 	{
 		SmartDashboard.putNumber("rotate", 0.3);
-		/*this.setDefaultAction(new SystemAction(new Action() {
-			final double bound = 0.4;
-			@Override
-			protected void execute() {
-				double leftVal = Robot.leftController.getY();
-				double rightVal = Robot.rightController.getY();
-				if(Mathf.constrained(leftVal, bound, -bound))
-					leftVal = 0;
-				if(Mathf.constrained(rightVal, bound, -bound))
-					rightVal = 0;
-				driveTrain.tankDrive(leftVal, rightVal);
-			}
-				
-			@Override
-			protected void end() {
-				driveTrain.tankDrive(0,0);
-			}
-		}, driveTrain));*/
 		this.setDefaultAction(new SystemAction(new Action() {
 			final double bound = 0.3;
 			
@@ -204,7 +165,6 @@ public class DriveSystem extends Subsystem {
 				if(inRange(leftVal, bound))
 					leftVal = 0.0;
 				driveTrain.tankDrive(rightVal, leftVal);
-				//rotate(rightVal);
 			}
 				
 			@Override
@@ -212,12 +172,6 @@ public class DriveSystem extends Subsystem {
 				driveTrain.tankDrive(0,0);
 			}
 		}, this));
-		if(tuning)
-		{
-			//Robot.rightController.getButton(1).whileHeld(straightDrive);
-			//Robot.rightController.getButton(1).whenPressed(new RotatePIDAction(90.0));
-			Robot.rightController.getButton(1).whenPressed(AutoHandlers.switchChoose(true));
-		}
 	}
 	
 	private boolean inRange(double val,double bound)

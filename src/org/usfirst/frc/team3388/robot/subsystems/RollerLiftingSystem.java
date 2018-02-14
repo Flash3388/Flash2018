@@ -4,15 +4,12 @@ import org.usfirst.frc.team3388.robot.Robot;
 import org.usfirst.frc.team3388.robot.RobotMap;
 import org.usfirst.frc.team3388.robot.TalonSpeed;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
 import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.Subsystem;
 import edu.flash3388.flashlib.robot.SystemAction;
-import edu.flash3388.flashlib.robot.TimedAction;
+import edu.flash3388.flashlib.robot.devices.IndexEncoder;
 import edu.flash3388.flashlib.robot.systems.Rotatable;
-import edu.wpi.first.wpilibj.VictorSP;
+import edu.flash3388.flashlib.util.beans.DoubleSource;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RollerLiftingSystem extends Subsystem implements Rotatable {
@@ -22,8 +19,20 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 	
 	TalonSpeed controller;
 	
+	private IndexEncoder in;
+	public DoubleSource angle;
+	
 	public RollerLiftingSystem() {
 		controller = new TalonSpeed(RobotMap.LIFT_CONTROLLER);
+		
+		in = new IndexEncoder(RobotMap.LIFT_ENCODER);
+		angle = new DoubleSource() {
+			
+			@Override
+			public double get() {
+				return in.get();
+			}
+		};
 	}
 	@Override
 	public void rotate(double speed) {

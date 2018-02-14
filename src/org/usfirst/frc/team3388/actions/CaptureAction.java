@@ -20,9 +20,7 @@ public class CaptureAction extends Action{
 	@Override
 	protected void end() {
 		Robot.rollerGripperSystem.stop();
-		if(side)
-			Robot.rollerGripperSystem.piston.close();
-		else
+		if(!side)
 			Robot.rollerGripperSystem.piston.open();
 	}
 
@@ -31,14 +29,7 @@ public class CaptureAction extends Action{
 		if(side)
 		{
 			Robot.rollerGripperSystem.rotate(false);
-			if(Robot.rollerGripperSystem.getDist()<=CAPTURING_DISTANCE)
-			{
-				if(startTime == 0)
-					startTime=FlashUtil.secs();
-				timeCaptured = FlashUtil.secs() - startTime;
-			}
-			else
-				startTime=0;
+			Robot.rollerGripperSystem.piston.close();
 		}
 		else
 			Robot.rollerGripperSystem.rotate(true);
@@ -46,7 +37,8 @@ public class CaptureAction extends Action{
 
 	@Override
 	protected boolean isFinished() {
-		return timeCaptured >= CAPTURING_TIME;
+		return (Robot.rollerGripperSystem.isPressed.get() && side) 
+				|| (!Robot.rollerGripperSystem.isPressed.get() && !side);
 	}
 
 }

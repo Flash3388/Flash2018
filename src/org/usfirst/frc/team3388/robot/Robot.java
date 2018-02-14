@@ -1,30 +1,20 @@
 
 package org.usfirst.frc.team3388.robot;
 
-import org.usfirst.frc.team3388.actions.CaptureAction;
 import org.usfirst.frc.team3388.actions.DrivePIDAction;
-import org.usfirst.frc.team3388.actions.LiftAction;
-import org.usfirst.frc.team3388.actions.PoleAction;
 import org.usfirst.frc.team3388.robot.subsystems.DriveSystem;
 import org.usfirst.frc.team3388.robot.subsystems.PoleSystem;
 import org.usfirst.frc.team3388.robot.subsystems.RollerGripperSystem;
 import org.usfirst.frc.team3388.robot.subsystems.RollerLiftingSystem;
 
-import com.kauailabs.navx.frc.AHRS;
-import com.kauailabs.navx.frc.AHRS.SerialDataType;
-
-import edu.flash3388.flashlib.flashboard.Flashboard;
 import edu.flash3388.flashlib.math.Mathf;
 import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.ActionGroup;
-import edu.flash3388.flashlib.robot.devices.AnalogGyro;
-import edu.flash3388.flashlib.robot.devices.Gyro;
 import edu.flash3388.flashlib.robot.frc.IterativeFRCRobot;
 import edu.flash3388.flashlib.robot.frc.PDP;
 import edu.flash3388.flashlib.robot.hid.Joystick;
 import edu.flash3388.flashlib.robot.hid.XboxController;
 import edu.flash3388.flashlib.util.FlashUtil;
-import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -56,7 +46,6 @@ public class Robot extends IterativeFRCRobot {
 	public enum Side {LEFT,MIDDLE,RIGHT};
 	
 	Side side;
-	AHRS navx;
 	@Override
 	protected void initRobot() {
 		SmartDashboard.putNumber("upspeed", 0.8);
@@ -107,63 +96,8 @@ public class Robot extends IterativeFRCRobot {
 	}
 	
 	private void autoHandlers() {
-		final double seconds = 5;
-		Action toDrive = new Action() {
-			final double speed = 0.5;		
-			@Override
-			protected void execute() {
-				drive.driveTrain.forward(speed);
-			}
-			
-			@Override
-			protected void end() {
-				drive.driveTrain.forward(0);
-			}
-		};
 		autoChooser = new SendableChooser<Action>();
-		autoChooser.addDefault("drive to switch (cross)", switchPIDDrive);
-		autoChooser.addObject("Switch front auto",frontSwitchAuto);
 		SmartDashboard.putData(autoChooser);
-	}
-	private void rollerGripperSystemSetup()
-	{ 
-		/*TODO:
-		 * find all constants
-		 */
-		final double DST_TO_SWITCH = 366.04;
-		final double RELEASE_SPEED = -1.0;
-		final double seconds=1.0;/*  */
-				
-		poleSystem = new PoleSystem();//pole setup start
-		poleSystem.setup();
-		
-		rollerGripperSystem = new RollerGripperSystem();//roller setup start
-		rollerGripperSystem.setup();
-		
-		liftSystem = new RollerLiftingSystem();//lift setup start
-		liftSystem.setup();
-		
-		PoleAction scaleMinLift = new PoleAction(Constants.MIN_ANGLE);
-		PoleAction scaleMidLift = new PoleAction(Constants.MID_ANGLE);
-		PoleAction scaleMaxLift = new PoleAction(Constants.MAX_ANGLE);
-		PoleAction switchLift = new PoleAction(Constants.SWITCH_ANGLE);
-		PoleAction downLift = new PoleAction(Constants.DOWN);
-
-				
-		
-		ActionGroup scalePutMax = new ActionGroup()
-			.addSequential(scaleMaxLift);
-		ActionGroup scalePutMid = new ActionGroup()
-			.addSequential(scaleMidLift);
-		ActionGroup scalePutMin = new ActionGroup()
-			.addSequential(scaleMinLift);
-		ActionGroup PutSwitch = new ActionGroup()
-			.addSequential(switchLift);
-		
-		frontSwitchAuto = new ActionGroup()
-			.addSequential(switchPIDDrive = new DrivePIDAction(DST_TO_SWITCH))
-			.addParallel(PutSwitch)
-			.addSequential(rollerGripperSystem.release);
 	}
 	
 	private void controllersSetup() {
@@ -210,9 +144,6 @@ public class Robot extends IterativeFRCRobot {
 	@Override
 	protected void teleopPeriodic() {
 		DashHandle.telePeriodic();
-		//drive.distancePID.setOutputLimit(-SmartDashboard.getNumber("speed", 0.0)
-			//	,SmartDashboard.getNumber("speed", 0.0));
-		
 	}
 	
 	@Override
@@ -222,25 +153,7 @@ public class Robot extends IterativeFRCRobot {
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
 		Action auto = AutoHandlers.switchChoose(gameData.charAt(0) == 'R');
 		auto.start();
-		/*
-		Action chosenAction = autoChooser.getSelected();
-		
-		if((gameData.charAt(0) == 'L' && autoChooser.getSelected().getName().charAt(1)=='w'
-				&& side==Side.RIGHT) || (gameData.charAt(0) == 'R' 
-				&& autoChooser.getSelected().getName().charAt(1)=='w'
-				&& side==Side.LEFT))
-		{
-			chosenAction=switchPIDDrive;
-		}
-		else if((gameData.charAt(1) == 'L' && autoChooser.getSelected().getName().charAt(1)=='c'
-				&& side==Side.RIGHT)||(gameData.charAt(1) == 'R' 
-				&& autoChooser.getSelected().getName().charAt(1)=='c'
-				&& side==Side.LEFT))
-		{
-			chosenAction=switchPIDDrive;
-		}
-		chosenAction.start();
-		*/
+		//Action chosenAction = autoChooser.getSelected();
 	}
 
 	@Override

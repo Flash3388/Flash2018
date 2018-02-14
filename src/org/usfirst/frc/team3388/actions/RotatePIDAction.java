@@ -13,15 +13,16 @@ public class RotatePIDAction extends Action {
 	int start;
 	double setpoint;
 	public RotatePIDAction(double setpoint) {
+		requires(Robot.drive);
 		this.setpoint=setpoint;
 	}
 	@Override
 	protected void initialize() {
-		requires(Robot.drive);
+		thresholdStartTime=0;
 		Robot.drive.rotationSetPoint.set(setpoint + Robot.drive.rotationSource.pidGet());
+		Robot.drive.encoder.reset();
 		Robot.drive.rotatePID.setEnabled(true);
 		Robot.drive.rotatePID.reset();
-		start = FlashUtil.millisInt();
 	}
 	@Override
 	protected void end() {

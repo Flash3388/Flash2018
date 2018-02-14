@@ -11,10 +11,6 @@ import edu.flash3388.flashlib.robot.ActionGroup;
 
 public class AutoHandlers {
 	
-	public AutoHandlers() {
-		
-	}
-	
 	public static Action switchChoose(boolean switchSide)
 	{
 		Action a = new ActionGroup()
@@ -29,14 +25,13 @@ public class AutoHandlers {
 	public static Action scaleChoose(boolean scaleSide)
 	{
 		Action a = new ActionGroup()
-				.addParallel(new PoleAction(Constants.MAX_ANGLE))
-				.addSequential(new DrivePIDAction(700.0))
-				//.addSequential(new CaptureAction(false))
-				.addParallel(new PoleAction(Constants.DOWN))
-				.addSequential(new RotatePIDAction(170.0))
-				.addSequential(new DrivePIDAction(500.0))
-				//.addSequential(new CaptureAction(true))
-				.addSequential(new PoleAction(Constants.SWITCH_ANGLE));
+				.addParallel(ActionHandler.maxLift)
+				.addSequential(ActionHandler.scaleDrive)
+				.addSequential(ActionHandler.max)
+				.addParallel(ActionHandler.downLift)
+				.addSequential(ActionHandler.scaleToSwitchRotate)
+				.addSequential(ActionHandler.scaleToSwitchDrive)
+				.addSequential(ActionHandler.down);
 		return a;
 	}
 

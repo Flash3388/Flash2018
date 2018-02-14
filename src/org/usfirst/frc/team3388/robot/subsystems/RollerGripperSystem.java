@@ -9,14 +9,11 @@ import edu.flash3388.flashlib.robot.InstantAction;
 import edu.flash3388.flashlib.robot.Subsystem;
 import edu.flash3388.flashlib.robot.SystemAction;
 import edu.flash3388.flashlib.robot.TimedAction;
-import edu.flash3388.flashlib.robot.devices.FlashSpeedController;
-import edu.flash3388.flashlib.robot.devices.Ultrasonic;
 import edu.flash3388.flashlib.robot.systems.Rotatable;
+import edu.flash3388.flashlib.util.beans.BooleanSource;
 import edu.flash3388.flashlib.util.beans.DoubleSource;
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.PWM;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.VictorSP;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class RollerGripperSystem extends Subsystem implements Rotatable{
@@ -25,28 +22,29 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 	private VictorSP lController;
 	
 	public PistonController piston;
-		
-	Ultrasonic sonic;
-	ADXRS450_Gyro gyro;
 	public static DoubleSource angle;
-	public static final double DEFAULT_SPEED = 0.5;
-	public TimedAction release;
+	public static final double DEFAULT_SPEED = 0.7;
+	
+	private DigitalInput in;
+	public BooleanSource isPressed;
+	
 	public RollerGripperSystem() {
 		
 		piston = new PistonController(RobotMap.L_CHANNEL, RobotMap.R_CHANNEL);
-		//sonic = new Ultrasonic(RobotMap.PING, RobotMap.ECHO);
-		//gyro = new ADXRS450_Gyro();//fill
-		angle = new DoubleSource() {
-			
-			@Override
-			public double get() {
-				return gyro.getAngle();
-			}
-		};
+
 		rController = new VictorSP(RobotMap.CAPTURE_R);
 		
 		lController = new VictorSP(RobotMap.CAPTURE_L);
 		lController.setInverted(true);
+		
+		in = new DigitalInput(RobotMap.CAPTURE_SWITCH);
+		isPressed = new BooleanSource() {
+			
+			@Override
+			public boolean get() {
+				return in.get();
+			}
+		};
 	}
 	public void rotate(double speed) {
 		rController.set(speed);
@@ -54,9 +52,9 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 	}
 	public void rotate(boolean in) {
 		if(in)
-			rotate(0.7);
+			rotate(DEFAULT_SPEED);
 		else
-			rotate(-0.7);
+			rotate(-DEFAULT_SPEED);
 	}
 	
 	public void setup()
@@ -91,10 +89,6 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 				piston.change();
 			}
 		});
-	}
-	public double getDist()
-	{
-		return sonic.get();
 	}
 	@Override
 	public void stop() {

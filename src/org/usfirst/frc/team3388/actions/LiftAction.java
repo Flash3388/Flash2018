@@ -8,7 +8,7 @@ import edu.flash3388.flashlib.robot.Action;
 public class LiftAction extends Action{
 
 	double setpoint=0.0;
-	static final double ERROR = 10.0;
+	static final double ERROR = 2.0;
 	public static final double DEFAULT_LIFT_SPEED=0.3;
 	
 	public LiftAction(double setpoint)

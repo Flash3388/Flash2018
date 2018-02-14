@@ -14,6 +14,7 @@ import edu.flash3388.flashlib.robot.PIDSource;
 import edu.flash3388.flashlib.robot.Subsystem;
 import edu.flash3388.flashlib.robot.devices.FlashSpeedController;
 import edu.flash3388.flashlib.robot.systems.Rotatable;
+import edu.flash3388.flashlib.util.beans.BooleanSource;
 import edu.flash3388.flashlib.util.beans.DoubleSource;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
@@ -28,18 +29,25 @@ public class PoleSystem extends Subsystem implements Rotatable{
 
 	public static final double DEFAULT_SPEED=0.5;
 	private VictorSP controller;
-	private final int RANGE=360;
-	private final int OFFSET=0;
-	private Potentiometer potentiometer;
-	public DoubleSource angle;
 	private final double UP_SPEED=0.8;
 	private final double DOWN_SPEED=-0.5;
+	
 	public AnalogInput in;
+	public DoubleSource angle;
+
 	public DigitalInput s;
+	public BooleanSource isPressed;
 	
 	public PoleSystem()
 	{
-		s = new  DigitalInput(RobotMap.SWITCH);
+		s = new  DigitalInput(RobotMap.POLE_SWITCH);
+		isPressed = new BooleanSource() {
+			
+			@Override
+			public boolean get() {
+				return !s.get();
+			}
+		};
 		in = new AnalogInput(RobotMap.POLE_POTENTIOMETER);
 		angle = new DoubleSource() {
 			final double UNITS = 240.0/4.5;
@@ -74,10 +82,9 @@ public class PoleSystem extends Subsystem implements Rotatable{
 		this.setDefaultAction(new Action() {
 			@Override
 			protected void execute() {
-				//rollerGripperPole.rotate(0.5*systemController.getY());
 				if(Robot.systemController.RightStick.getY() > 0.2)
 					rotate(true);
-				else if(s.get() && Robot.systemController.RightStick.getY()  < -0.2)
+				else if(!isPressed.get() && Robot.systemController.RightStick.getY()  < -0.2)
 					rotate(false);
 				else
 					stop();
