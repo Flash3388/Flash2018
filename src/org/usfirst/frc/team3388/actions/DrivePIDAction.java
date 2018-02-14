@@ -11,9 +11,8 @@ import edu.flash3388.flashlib.util.FlashUtil;
 public class DrivePIDAction extends Action {
 
 	public final static double MARGIN=2.5;
-	public final static double TIME_IN_THRESHOLD=2.0;
-	double thresholdStartTime
-	,startTime;
+	public final static int TIME_IN_THRESHOLD=500;
+	double thresholdStartTime;
 	double setpoint;
 	public DrivePIDAction(double setpoint) {
 		requires(Robot.drive);
@@ -23,16 +22,17 @@ public class DrivePIDAction extends Action {
 	}
 	@Override
 	protected void initialize() {
-		startTime=FlashUtil.secs();
-		Robot.drive.distancePID.reset();
+		thresholdStartTime=0;
+		Robot.drive.encoder.reset();
+		Robot.drive.distanceSetPoint.set(setpoint + Robot.drive.distanceSource.pidGet());
 		Robot.drive.distancePID.setEnabled(true);
-		setpoint = Robot.drive.distanceSetPoint.get();
-		Robot.drive.resetGyro();
+		Robot.drive.distancePID.reset();
 	}
 	@Override
 	protected void end() {
 		Robot.drive.driveTrain.tankDrive(0.0,0.0);
 		Robot.drive.distancePID.setEnabled(false);
+		System.out.println("end");
 	}
 
 	@Override
@@ -40,7 +40,8 @@ public class DrivePIDAction extends Action {
 		if(!Robot.drive.distancePID.isEnabled() || inDistanceThreshold())
 		{
 			if(thresholdStartTime < 1)
-				thresholdStartTime=FlashUtil.secs();
+				thresholdStartTime= FlashUtil.millisInt();
+			
 			Robot.drive.drive(-Robot.drive.distancePID.calculate());	
 			
 		}
@@ -50,17 +51,16 @@ public class DrivePIDAction extends Action {
 				thresholdStartTime = 0;
 			Robot.drive.drive(-Robot.drive.distancePID.calculate());		
 		}
-		
 	}
 	
 	@Override
 	protected boolean isFinished() {
-		return inDistanceThreshold() && thresholdStartTime > 0 &&FlashUtil.secs() - thresholdStartTime >= TIME_IN_THRESHOLD;
+		return inDistanceThreshold() && thresholdStartTime > 0 &&FlashUtil.millisInt() - thresholdStartTime >= TIME_IN_THRESHOLD;
 	}
 	
 	public boolean inDistanceThreshold() {
 		double current = Robot.drive.distancePID.getPIDSource().pidGet();
-		return Mathf.constrained(setpoint - current, -MARGIN, MARGIN);
+		return Mathf.constrained(Robot.drive.distanceSetPoint.get() - current, -MARGIN, MARGIN);
 	
 	}
 }

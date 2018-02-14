@@ -4,6 +4,7 @@ import java.math.RoundingMode;
 
 import org.usfirst.frc.team3388.actions.DrivePIDAction;
 import org.usfirst.frc.team3388.actions.RotatePIDAction;
+import org.usfirst.frc.team3388.robot.AutoHandlers;
 import org.usfirst.frc.team3388.robot.DashNames;
 import org.usfirst.frc.team3388.robot.Robot;
 import org.usfirst.frc.team3388.robot.RobotMap;
@@ -49,13 +50,13 @@ public class DriveSystem extends Subsystem {
 	public static final String DIS_NAME= "distanceSetPoint";
 	public static final String ROT_NAME= "rotationSetPoint";
 	public DoubleProperty distanceSetPoint = PropertyHandler.putNumber(DIS_NAME,0.0);
-	public DoubleProperty rotationSetPoint = PropertyHandler.putNumber(ROT_NAME,0.0);
+	public DoubleProperty rotationSetPoint = PropertyHandler.putNumber(ROT_NAME,90.0);
 	
 	public AnalogGyro gyro;
 	
 	Action straightDrive;
 	public boolean inited = false;
-	final boolean tuning = false;
+	final boolean tuning = true;
 	public DriveSystem() {
 		final double PPR=360;
 		gyro = new AnalogGyro(RobotMap.GYRO);
@@ -99,11 +100,10 @@ public class DriveSystem extends Subsystem {
 			}
 		};
 
-		
 		distancePID = new PIDController(0.21, 0.0, 0.285, 0.0, distanceSetPoint, distanceSource);
-		distancePID.setOutputLimit(-0.2, 0.2);
+		distancePID.setOutputLimit(-0.5, 0.5);
 		rotatePID = new PIDController(0.21, 0.0, 0.285,0.0,rotationSetPoint,rotationSource);
-		rotatePID.setOutputLimit(-1, 1);
+		rotatePID.setOutputLimit(-0.4, 0.4);
 	}
 
 	private void stightDriveHandle() {
@@ -193,15 +193,17 @@ public class DriveSystem extends Subsystem {
 			}
 		}, driveTrain));*/
 		this.setDefaultAction(new SystemAction(new Action() {
-			final double bound = 0.2;
+			final double bound = 0.3;
 			
 			@Override
 			protected void execute() {
-				double zVal = Robot.rightController.getZ();
+				double leftVal = Robot.leftController.getY();
 				double rightVal = Robot.rightController.getY();
-				if(Mathf.constrained(rightVal, bound, -bound))
-					rightVal = 0;
-				driveTrain.arcadeDrive(rightVal, zVal);
+				if(inRange(rightVal, bound))
+					rightVal = 0.0;
+				if(inRange(leftVal, bound))
+					leftVal = 0.0;
+				driveTrain.tankDrive(rightVal, leftVal);
 				//rotate(rightVal);
 			}
 				
@@ -212,22 +214,26 @@ public class DriveSystem extends Subsystem {
 		}, this));
 		if(tuning)
 		{
-			Robot.leftController.getButton(1).whileHeld(straightDrive);
-			Robot.leftController.getButton(1).whenPressed(new DrivePIDAction(0.0));
-			Robot.leftController.getButton(2).whenPressed(new RotatePIDAction(0.0));
+			//Robot.rightController.getButton(1).whileHeld(straightDrive);
+			//Robot.rightController.getButton(1).whenPressed(new RotatePIDAction(90.0));
+			Robot.rightController.getButton(1).whenPressed(AutoHandlers.switchChoose(true));
 		}
 	}
 	
+	private boolean inRange(double val,double bound)
+	{
+		return(val >= -bound && val <= bound);
+	}
 	private void drivePIDTunner()
 	{
 		Flashboard.putPIDTuner("distance", distancePID.kpProperty(), distancePID.kiProperty()
 				, distancePID.kdProperty(), distancePID.kfProperty(), distanceSetPoint
-				, distanceSource, 20, 5000);
+				, distanceSource, 20, 1000);
 	}
 	private void rotationPIDTunner()
 	{
 		Flashboard.putPIDTuner("rotation", rotatePID.kpProperty(), rotatePID.kiProperty()
 				, rotatePID.kdProperty(), rotatePID.kfProperty(), rotationSetPoint
-				, rotationSource, 20, 5000);
+				, rotationSource, 20, 1000);
 	}
 }

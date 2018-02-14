@@ -10,29 +10,38 @@ public class CaptureAction extends Action{
 
 	double startTime=0;
 	double timeCaptured=0;
+	boolean side;
 	static final double CAPTURING_TIME = 1.9;
 	final double CAPTURING_DISTANCE = 10;
-	public CaptureAction() {
+	public CaptureAction(boolean side) {
 		requires(Robot.rollerGripperSystem);
+		this.side=side;
 	}
 	@Override
 	protected void end() {
 		Robot.rollerGripperSystem.stop();
+		if(side)
+			Robot.rollerGripperSystem.piston.close();
+		else
+			Robot.rollerGripperSystem.piston.open();
 	}
 
 	@Override
 	protected void execute() {
-		Robot.rollerGripperSystem.rotate(true);
-		if(Robot.rollerGripperSystem.getDist()<=CAPTURING_DISTANCE)
+		if(side)
 		{
-			if(startTime == 0)
-				startTime=FlashUtil.secs();
-			timeCaptured = FlashUtil.secs() - startTime;
+			Robot.rollerGripperSystem.rotate(false);
+			if(Robot.rollerGripperSystem.getDist()<=CAPTURING_DISTANCE)
+			{
+				if(startTime == 0)
+					startTime=FlashUtil.secs();
+				timeCaptured = FlashUtil.secs() - startTime;
+			}
+			else
+				startTime=0;
 		}
 		else
-		{
-			startTime=0;
-		}
+			Robot.rollerGripperSystem.rotate(true);
 	}
 
 	@Override

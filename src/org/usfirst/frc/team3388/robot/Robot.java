@@ -50,7 +50,7 @@ public class Robot extends IterativeFRCRobot {
 	
 	static double startTime;
 	
-	public static boolean drivingTrain = false;
+	public static boolean drivingTrain = true;
 	public static boolean sysTrain = true;
 	
 	public enum Side {LEFT,MIDDLE,RIGHT};
@@ -65,7 +65,6 @@ public class Robot extends IterativeFRCRobot {
 		controllersSetup();
 		if(sysTrain)
 		{
-			System.out.println("nti");
 			//rollerGripperSystem = new RollerGripperSystem();
 			//rollerGripperSystem.setup();
 			
@@ -144,7 +143,6 @@ public class Robot extends IterativeFRCRobot {
 		liftSystem = new RollerLiftingSystem();//lift setup start
 		liftSystem.setup();
 		
-		CaptureAction capture = new CaptureAction();
 		PoleAction scaleMinLift = new PoleAction(Constants.MIN_ANGLE);
 		PoleAction scaleMidLift = new PoleAction(Constants.MID_ANGLE);
 		PoleAction scaleMaxLift = new PoleAction(Constants.MAX_ANGLE);
@@ -194,7 +192,6 @@ public class Robot extends IterativeFRCRobot {
 			if(!drive.inited && SmartDashboard.getBoolean(DashNames.initGyro, false))
 				drive.initGyro();
 		}
-		System.out.println(poleSystem.s.get());
 	}
 
 	@Override
@@ -206,12 +203,16 @@ public class Robot extends IterativeFRCRobot {
 		}
 		startTime = FlashUtil.secs();
 		DashHandle.teleInit();
+		systemController.X.whenPressed(AutoHandlers.scaleChoose(true));
 	}
-
+	
+	
 	@Override
 	protected void teleopPeriodic() {
 		DashHandle.telePeriodic();
-		System.out.println(poleSystem.in.getVoltage());
+		//drive.distancePID.setOutputLimit(-SmartDashboard.getNumber("speed", 0.0)
+			//	,SmartDashboard.getNumber("speed", 0.0));
+		
 	}
 	
 	@Override
@@ -219,14 +220,9 @@ public class Robot extends IterativeFRCRobot {
 		String gameData;
 		
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
-		// Example for gameData : LRL
-		//means that the closet LEFT switch is yours
-		//the right scale is yours
-		//and the far left switch is yours
-		//
-		//Other example is : RRL
-
-
+		Action auto = AutoHandlers.switchChoose(gameData.charAt(0) == 'R');
+		auto.start();
+		/*
 		Action chosenAction = autoChooser.getSelected();
 		
 		if((gameData.charAt(0) == 'L' && autoChooser.getSelected().getName().charAt(1)=='w'
@@ -244,6 +240,7 @@ public class Robot extends IterativeFRCRobot {
 			chosenAction=switchPIDDrive;
 		}
 		chosenAction.start();
+		*/
 	}
 
 	@Override

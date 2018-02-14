@@ -7,28 +7,27 @@ import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.util.FlashUtil;
 
 public class RotatePIDAction extends Action {
-	public final static double MARGIN=2.5;
-	public final static double TIME_IN_THRESHOLD=2.0;
-	double thresholdStartTime
-	,startTime;
+	public final static double MARGIN=1.5;
+	public final static int TIME_IN_THRESHOLD=500;
+	int thresholdStartTime;
+	int start;
 	double setpoint;
 	public RotatePIDAction(double setpoint) {
-		requires(Robot.drive);
 		this.setpoint=setpoint;
-		Robot.drive.rotationSetPoint.set(setpoint);
 	}
 	@Override
 	protected void initialize() {
-		startTime=FlashUtil.secs();
-		Robot.drive.rotatePID.reset();
+		requires(Robot.drive);
+		Robot.drive.rotationSetPoint.set(setpoint + Robot.drive.rotationSource.pidGet());
 		Robot.drive.rotatePID.setEnabled(true);
-		setpoint = Robot.drive.distanceSetPoint.get();
-		Robot.drive.resetGyro();
+		Robot.drive.rotatePID.reset();
+		start = FlashUtil.millisInt();
 	}
 	@Override
 	protected void end() {
 		Robot.drive.driveTrain.tankDrive(0.0,0.0);
 		Robot.drive.distancePID.setEnabled(false);
+		System.out.println("end " + (FlashUtil.millisInt()- start));
 	}
 
 	@Override
@@ -36,12 +35,12 @@ public class RotatePIDAction extends Action {
 		if(!Robot.drive.rotatePID.isEnabled() || inDistanceThreshold())
 		{
 			if(thresholdStartTime < 1)
-				thresholdStartTime=FlashUtil.secs();
+				thresholdStartTime=FlashUtil.millisInt();
 			Robot.drive.rotate(-Robot.drive.rotatePID.calculate());	
 		}
 		else
 		{
-			if(thresholdStartTime >= 1)
+			if(thresholdStartTime >=1 )
 				thresholdStartTime = 0;
 			Robot.drive.rotate(-Robot.drive.rotatePID.calculate());		
 		}
@@ -49,12 +48,14 @@ public class RotatePIDAction extends Action {
 	
 	@Override
 	protected boolean isFinished() {
-		return inDistanceThreshold() && thresholdStartTime > 0 &&FlashUtil.secs() - thresholdStartTime >= TIME_IN_THRESHOLD;
+		
+		return inDistanceThreshold() && thresholdStartTime > 0 &&FlashUtil.millisInt() - thresholdStartTime >= TIME_IN_THRESHOLD;
 	}
 	
 	public boolean inDistanceThreshold() {
 		double current = Robot.drive.rotatePID.getPIDSource().pidGet();
-		return Mathf.constrained(setpoint - current, -MARGIN, MARGIN);
+		
+		return Mathf.constrained(Robot.drive.rotationSetPoint.get() - current, -MARGIN, MARGIN);
 	
 	}
 }

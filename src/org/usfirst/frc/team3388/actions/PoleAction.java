@@ -10,16 +10,15 @@ public class PoleAction extends Action{
 
 	private double setpoint;
 	static final double ERROR = 2.5;
+	boolean dir = true;
 	public PoleAction(double setpoint) {
 		requires(Robot.poleSystem);
 		this.setpoint=setpoint;
-		SmartDashboard.putNumber("setpoint angle", 0.0);
 	}
 	
 	@Override
 	protected void initialize() {
 		super.initialize();
-		setpoint = SmartDashboard.getNumber("setpoint angle", 0.0);
 	}
 
 	@Override
@@ -29,14 +28,20 @@ public class PoleAction extends Action{
 	@Override
 	protected void execute() {
 		if(setpoint>Robot.poleSystem.angle.get())
+		{
+			dir= true;
 			Robot.poleSystem.rotate(true);
+		}
 		else
+		{
+			dir = false;
 			Robot.poleSystem.rotate(false);
+		}
 	}
 
 	@Override
 	protected boolean isFinished() {
 
-		return Mathf.constrained(Robot.poleSystem.angle.get(), setpoint, setpoint + ERROR);
+		return Mathf.constrained(Robot.poleSystem.angle.get(), setpoint, setpoint + ERROR)|| (!Robot.poleSystem.s.get() && !dir);
 	}
 }

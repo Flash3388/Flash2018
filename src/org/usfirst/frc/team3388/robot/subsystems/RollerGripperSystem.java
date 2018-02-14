@@ -24,7 +24,7 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 	private VictorSP rController;
 	private VictorSP lController;
 	
-	PistonController piston;
+	public PistonController piston;
 		
 	Ultrasonic sonic;
 	ADXRS450_Gyro gyro;
