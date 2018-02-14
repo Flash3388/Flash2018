@@ -43,9 +43,9 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 				return gyro.getAngle();
 			}
 		};
-		rController = new VictorSP(RobotMap.ROLLER_GRIPPER_R_CAPTURE_CONTROLLER);
+		rController = new VictorSP(RobotMap.CAPTURE_R);
 		
-		lController = new VictorSP(RobotMap.ROLLER_GRIPPER_L_CAPTURE_CONTROLLER);
+		lController = new VictorSP(RobotMap.CAPTURE_L);
 		lController.setInverted(true);
 	}
 	public void rotate(double speed) {

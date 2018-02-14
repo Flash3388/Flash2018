@@ -2,6 +2,7 @@ package org.usfirst.frc.team3388.robot.subsystems;
 
 import org.usfirst.frc.team3388.robot.Robot;
 import org.usfirst.frc.team3388.robot.RobotMap;
+import org.usfirst.frc.team3388.robot.TalonSpeed;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -19,22 +20,22 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 	public final double DEFAULT_UP_SPEED=0.3;
 	public final double DEFAULT_DOWN_SPEED=0.3;
 	
-	TalonSRX rController;
-	TalonSRX lController;
+	TalonSpeed controller;
 	
 	public RollerLiftingSystem() {
-		rController = new TalonSRX(RobotMap.ROLLER_GRIPPER_L_LIFT_CONTROLLER);
-		lController = new TalonSRX(RobotMap.ROLLER_GRIPPER_R_LIFT_CONTROLLER);
-		rController.follow(lController);
+		controller = new TalonSpeed(RobotMap.LIFT_CONTROLLER);
 	}
 	@Override
 	public void rotate(double speed) {
-		lController.set(ControlMode.PercentOutput, speed);
+		controller.set(speed);
 	}
 	
 	public void rotate(boolean dir)
 	{
-		lController.set(ControlMode.PercentOutput, SmartDashboard.getNumber("lift speed", 0.2));
+		if(dir)
+			rotate(SmartDashboard.getNumber("lift speed", 0.2));
+		else
+			rotate(-SmartDashboard.getNumber("down speed", 0.2));
 	}
 	
 	public void liftUp()
@@ -63,12 +64,11 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 			protected void execute() {
 				double y = Robot.systemController.LeftStick.getY();
 				if(y > MARGIN)
-					rotate(SmartDashboard.getNumber("lift speed", 0.2));
+					rotate(true);
 				else if(y < -MARGIN)
-					rotate(-SmartDashboard.getNumber("down speed", 0.2));
+					rotate(false);
 				else
 					stop();
-				System.out.println(SmartDashboard.getNumber("lift speed", 0.2));
 			}
 			
 			@Override
@@ -95,11 +95,5 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 				stop();
 			}
 		});*/
-	}
-	public double getRController() {
-		return rController.getOutputCurrent();
-	}
-	public double getLController() {
-		return lController.getOutputCurrent();
 	}
 }
