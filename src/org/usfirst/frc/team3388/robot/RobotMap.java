@@ -30,7 +30,8 @@ public class RobotMap {
 	public static final int ROLLER_GRIPPER_L_LIFT_CONTROLLER = 4;
 	
 	public static final int POLE = 6;
-	public static final int POLE_POTENTIOMETER=2;
+	public static final int POLE_POTENTIOMETER=3;
+	public static final int SWITCH = 9;
 	
 	public static final int ADXRS450= 0;	
 	public final static int CAM_PORT1 = 0;

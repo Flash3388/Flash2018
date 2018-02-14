@@ -37,9 +37,10 @@ public class DashHandle {
 		SmartDashboard.putNumber(DashNames.time, 0.0);
 		if(Robot.drivingTrain)
 		{
-			SmartDashboard.putNumber(DashNames.polePotentiometer, Robot.poleSystem.angle.get());
 		}
-			//SmartDashboard.putBoolean(DashNames.navxConnection, Robot.drive.navx.isConnected());
+		if(Robot.sysTrain)
+			SmartDashboard.putNumber(DashNames.polePotentiometer, Robot.poleSystem.angle.get());
+			
 	}
 	
 	public static void telePeriodic()
@@ -49,6 +50,8 @@ public class DashHandle {
 			SmartDashboard.putNumber(DashNames.distance, Robot.drive.distanceSource.pidGet());
 			updateAngle();
 		}
+		if(Robot.sysTrain)
+			SmartDashboard.putNumber(DashNames.polePotentiometer, Robot.poleSystem.angle.get());
 		updateTime();
 	}
 	public static void updateTime()

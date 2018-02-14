@@ -46,11 +46,11 @@ public class Robot extends IterativeFRCRobot {
 	
 	public static PoleSystem poleSystem;
 	public static RollerGripperSystem rollerGripperSystem;
-	public static RollerLiftingSystem LiftSystem;
+	public static RollerLiftingSystem liftSystem;
 	
 	static double startTime;
 	
-	public static boolean drivingTrain = true;
+	public static boolean drivingTrain = false;
 	public static boolean sysTrain = true;
 	
 	public enum Side {LEFT,MIDDLE,RIGHT};
@@ -66,11 +66,14 @@ public class Robot extends IterativeFRCRobot {
 		if(sysTrain)
 		{
 			System.out.println("nti");
-			rollerGripperSystem = new RollerGripperSystem();
-			rollerGripperSystem.setup();
+			//rollerGripperSystem = new RollerGripperSystem();
+			//rollerGripperSystem.setup();
 			
 			poleSystem = new PoleSystem();
 			poleSystem.setup();
+			
+			//liftSystem = new RollerLiftingSystem();
+			//liftSystem.setup();
 			//rollerGripperSystemSetup();
 		}
 		if(drivingTrain)
@@ -138,8 +141,8 @@ public class Robot extends IterativeFRCRobot {
 		rollerGripperSystem = new RollerGripperSystem();//roller setup start
 		rollerGripperSystem.setup();
 		
-		LiftSystem = new RollerLiftingSystem();//lift setup start
-		LiftSystem.setup();
+		liftSystem = new RollerLiftingSystem();//lift setup start
+		liftSystem.setup();
 		
 		CaptureAction capture = new CaptureAction();
 		PoleAction scaleMinLift = new PoleAction(Constants.MIN_ANGLE);
@@ -191,6 +194,7 @@ public class Robot extends IterativeFRCRobot {
 			if(!drive.inited && SmartDashboard.getBoolean(DashNames.initGyro, false))
 				drive.initGyro();
 		}
+		System.out.println(poleSystem.s.get());
 	}
 
 	@Override
@@ -206,10 +210,8 @@ public class Robot extends IterativeFRCRobot {
 
 	@Override
 	protected void teleopPeriodic() {
-		DashHandle.telePeriodic();	
-		//System.out.println(poleSystem.in.getVoltage());
-		System.out.println("follower: " + LiftSystem.getRController() + "followed: "
-				+ LiftSystem.getLController());
+		DashHandle.telePeriodic();
+		System.out.println(poleSystem.in.getVoltage());
 	}
 	
 	@Override

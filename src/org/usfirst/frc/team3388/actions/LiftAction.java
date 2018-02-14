@@ -13,7 +13,7 @@ public class LiftAction extends Action{
 	
 	public LiftAction(double setpoint)
 	{
-		requires(Robot.LiftSystem);
+		requires(Robot.liftSystem);
 		this.setpoint=setpoint;
 	}
 
@@ -26,9 +26,9 @@ public class LiftAction extends Action{
 	protected void execute() {
 		double angle =Robot.rollerGripperSystem.angle.get(); 
 		if(setpoint>angle)
-			Robot.LiftSystem.liftUp();
+			Robot.liftSystem.liftUp();
 		else if(setpoint<angle)
-			Robot.LiftSystem.liftDown();
+			Robot.liftSystem.liftDown();
 	}
 
 	@Override
