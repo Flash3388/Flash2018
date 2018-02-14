@@ -76,24 +76,5 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 				stop();
 			}
 		}, this));
-		/*this.setDefaultAction(new Action() {
-			final int UP =0;
-			final int DOWN =180;		
-			@Override
-			protected void execute() {
-				int val =Robot.systemController.getPOV().get();
-				if(val == UP)
-					liftUp();
-				else if(val == DOWN)
-					liftDown();
-				else
-					stop();
-			}
-			
-			@Override
-			protected void end() {
-				stop();
-			}
-		});*/
 	}
 }
