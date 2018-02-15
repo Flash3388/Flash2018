@@ -25,6 +25,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveSystem extends Subsystem {
 	
+	public static final double DRIVE_LIMIT = 0.5;
+	public static final double ROTATE_LIMIT = 0.4;
 	public static final double WHEEL_RADIUS=10.16;
 	public Encoder encoder;
 	//public Encoder leftEncoder;
@@ -66,6 +68,9 @@ public class DriveSystem extends Subsystem {
 		{	
 			drivePIDTunner();
 			rotationPIDTunner();
+			if(distanceSetPoint == null)
+				System.out.println("null");
+			Robot.rightController.getButton(1).whileHeld(straightDrive);
 			
 			Robot.rightController.getButton(1).whenPressed(AutoHandlers.switchChoose(true));
 		}
@@ -92,9 +97,9 @@ public class DriveSystem extends Subsystem {
 		};
 
 		distancePID = new PIDController(0.21, 0.0, 0.285, 0.0, distanceSetPoint, distanceSource);
-		distancePID.setOutputLimit(-0.5, 0.5);
-		rotatePID = new PIDController(0.21, 0.0, 0.285,0.0,rotationSetPoint,rotationSource);
-		rotatePID.setOutputLimit(-0.4, 0.4);
+		distancePID.setOutputLimit(-DRIVE_LIMIT, DRIVE_LIMIT);
+		rotatePID = new PIDController(0.308, 0.0, 0.628,0.0,rotationSetPoint,rotationSource);
+		rotatePID.setOutputLimit(-ROTATE_LIMIT, ROTATE_LIMIT);
 	}
 
 	private void stightDriveHandle() {

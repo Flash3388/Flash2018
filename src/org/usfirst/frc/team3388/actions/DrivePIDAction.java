@@ -16,6 +16,9 @@ public class DrivePIDAction extends Action {
 	double setpoint;
 	public DrivePIDAction(double setpoint) {
 		requires(Robot.drive);
+		if(Robot.drive.distanceSetPoint == null)
+			System.out.println("here");
+		
 		this.setpoint=setpoint;
 		Robot.drive.distanceSetPoint.set(setpoint);
 		

@@ -35,7 +35,7 @@ public class PoleSystem extends Subsystem implements Rotatable{
 	public AnalogInput in;
 	public DoubleSource angle;
 
-	public DigitalInput s;
+	private DigitalInput s;
 	public BooleanSource isPressed;
 	
 	public PoleSystem()
