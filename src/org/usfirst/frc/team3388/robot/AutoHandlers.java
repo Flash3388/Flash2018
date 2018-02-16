@@ -27,11 +27,13 @@ public class AutoHandlers {
 		Action a = new ActionGroup()
 				.addParallel(ActionHandler.maxLift)
 				.addSequential(ActionHandler.scaleDrive)
-				.addSequential(ActionHandler.max)
+				.addSequential(ActionHandler.release)
 				.addParallel(ActionHandler.downLift)
 				.addSequential(ActionHandler.scaleToSwitchRotate)
 				.addSequential(ActionHandler.scaleToSwitchDrive)
-				.addSequential(ActionHandler.down);
+				.addSequential(ActionHandler.capture)
+				.addSequential(ActionHandler.s)
+				
 		return a;
 	}
 

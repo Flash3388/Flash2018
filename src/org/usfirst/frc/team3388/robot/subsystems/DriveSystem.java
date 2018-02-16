@@ -28,7 +28,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DriveSystem extends Subsystem {
 	
 	public static final double DRIVE_LIMIT = 0.5;
-	public static final double ROTATE_LIMIT = 0.4;
+	public static final double ROTATE_LIMIT = 0.65;
 	public static final double WHEEL_RADIUS=10.16;
 	public Encoder encoder;
 	//public Encoder leftEncoder;
@@ -94,7 +94,7 @@ public class DriveSystem extends Subsystem {
 		};
 
 		distancePID = new PIDController(0.21, 0.0, 0.285, 0.0, distanceSetPoint, distanceSource);
-		distancePID.setOutputLimit(-0.3, 0.3);
+		distancePID.setOutputLimit(-DRIVE_LIMIT, DRIVE_LIMIT);
 		rotatePID = new PIDController(0.308, 0.0, 0.628,0.0,rotationSetPoint,rotationSource);
 		rotatePID.setOutputLimit(-ROTATE_LIMIT, ROTATE_LIMIT);
 	}
@@ -152,7 +152,7 @@ public class DriveSystem extends Subsystem {
 		final double MARGIN = 1.0;
 		//driveTrain.tankDrive(speed, speed);
 		double k = SmartDashboard.getNumber(DashNames.driveKp, 0.3);
-		if(DrivePIDAction.inThreshold && RotatePIDAction.isFinished)
+		if(DrivePIDAction.inThreshold)
 			k=0;
 		else if(speed < 0)
 			k = -SmartDashboard.getNumber(DashNames.driveKp, 0.3);
@@ -169,7 +169,7 @@ public class DriveSystem extends Subsystem {
 	{
 		SmartDashboard.putNumber("rotate", 0.3);
 		this.setDefaultAction(new SystemAction(new Action() {
-			final double bound = 0.3;
+			final double bound = 0.15;
 			
 			@Override
 			protected void execute() {
@@ -191,8 +191,11 @@ public class DriveSystem extends Subsystem {
 		if(distanceSetPoint == null)
 			System.out.println("null");
 		Robot.rightController.getButton(1).whileHeld(straightDrive);
-		Robot.rightController.getButton(1).whenPressed(new DrivePIDAction(100.0));
-		Robot.leftController.getButton(1).whenPressed(new DrivePIDAction(-30.0));
+		Robot.rightController.getButton(1).whenPressed(new DrivePIDAction(300.0));
+		Robot.rightController.getButton(2).whenPressed(new RotatePIDAction(90.0));
+		
+		Robot.leftController.getButton(2).whenPressed(new RotatePIDAction(-90.0));
+		Robot.leftController.getButton(1).whenPressed(new DrivePIDAction(-100.0));
 		//Robot.rightController.getButton(1).whenPressed(AutoHandlers.switchChoose(true));
 
 	}

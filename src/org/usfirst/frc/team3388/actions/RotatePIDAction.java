@@ -10,8 +10,9 @@ public class RotatePIDAction extends Action {
 	
 	public static boolean isFinished=false;
 	public final static double MARGIN=1.5;
-	public final static int TIME_IN_THRESHOLD=500;
+	public final static int TIME_IN_THRESHOLD=300;
 	int thresholdStartTime;
+	int start;
 	double setpoint;
 	public RotatePIDAction(double setpoint) {
 		requires(Robot.drive);
@@ -19,6 +20,7 @@ public class RotatePIDAction extends Action {
 	}
 	@Override
 	protected void initialize() {
+		start=FlashUtil.millisInt();
 		isFinished=false;
 		thresholdStartTime=0;
 		Robot.drive.rotationSetPoint.set(setpoint + Robot.drive.rotationSource.pidGet());
@@ -31,6 +33,7 @@ public class RotatePIDAction extends Action {
 		Robot.drive.driveTrain.tankDrive(0.0,0.0);
 		Robot.drive.distancePID.setEnabled(false);
 		isFinished=true;
+		System.out.println("time: "+(FlashUtil.millisInt()-start));
 	}
 
 	@Override

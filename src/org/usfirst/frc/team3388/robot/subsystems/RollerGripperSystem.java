@@ -1,5 +1,7 @@
 package org.usfirst.frc.team3388.robot.subsystems;
 
+import org.usfirst.frc.team3388.actions.CaptureAction;
+import org.usfirst.frc.team3388.robot.ActionHandler;
 import org.usfirst.frc.team3388.robot.Robot;
 import org.usfirst.frc.team3388.robot.RobotMap;
 import org.usfirst.frc.team3388.robot.TalonSpeed;
@@ -57,31 +59,17 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 			rotate(-DEFAULT_SPEED);
 	}
 	
+	public boolean isClosed()
+	{
+		return piston.isClosed();
+	}
+	
 	public void setup()
 	{
-		Robot.systemController.RB.whileHeld(new Action() {
-			
-			@Override
-			protected void execute() {
-				rotate(false);
-			}
+	
+		Robot.systemController.RB.whenPressed(ActionHandler.capture);
+		Robot.systemController.LB.whenPressed(ActionHandler.release);
 
-			@Override
-			protected void end() {
-				stop();
-			}
-		});
-		Robot.systemController.LB.whileHeld(new Action() {
-			
-			@Override
-			protected void execute() {
-				rotate(true);
-			}
-			@Override
-			protected void end() {
-				stop();
-			}
-		});
 		Robot.systemController.A.whenPressed(new InstantAction() {
 			
 			@Override

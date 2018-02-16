@@ -22,6 +22,8 @@ public class CaptureAction extends Action{
 		Robot.rollerGripperSystem.stop();
 		if(!side)
 			Robot.rollerGripperSystem.piston.open();
+		else
+			Robot.liftSystem.stall(false);
 	}
 
 	@Override
@@ -34,12 +36,13 @@ public class CaptureAction extends Action{
 		else
 			Robot.rollerGripperSystem.rotate(true);
 	}
-
+	/*
 	@Override
 	protected boolean isFinished() {
 		return (Robot.rollerGripperSystem.isPressed.get() && side) 
 				|| (!Robot.rollerGripperSystem.isPressed.get() && !side);
 	}
+	*/
 	@Override
 	protected void interrupted() {
 		end();

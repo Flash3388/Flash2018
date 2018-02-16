@@ -7,11 +7,15 @@ import org.usfirst.frc.team3388.actions.PoleAction;
 import org.usfirst.frc.team3388.actions.RotatePIDAction;
 
 import edu.flash3388.flashlib.robot.ActionGroup;
+import edu.flash3388.flashlib.robot.TimedAction;
 
 public class ActionHandler{
 
-	public static CaptureAction capture;
-	public static CaptureAction release;
+	public static TimedAction capture;
+	public static TimedAction release;
+	
+	private static CaptureAction c;
+	private static CaptureAction r;
 	
 	public static LiftAction use;
 	public static LiftAction hide;
@@ -37,11 +41,11 @@ public class ActionHandler{
 	{
 		if(Robot.sysTrain)
 		{
-			//captureSetup();
+			captureSetup();
 			liftSetup();
-			//poleSetup();
+			poleSetup();
 
-			//combinedSetup();
+			combinedSetup();
 				
 		}
 		if(Robot.drivingTrain)
@@ -60,8 +64,11 @@ public class ActionHandler{
 	
 	private static void captureSetup()
 	{
-		capture = new CaptureAction(true);
-		release = new CaptureAction(false);
+		c = new CaptureAction(true);
+		r = new CaptureAction(false);
+		
+		capture = new TimedAction(c, Constants.CAPTURE_TIME);
+		release = new TimedAction(r, Constants.CAPTURE_TIME);
 	}
 	
 	private static void poleSetup()
@@ -74,28 +81,33 @@ public class ActionHandler{
 	
 	private static void combinedSetup()
 	{
-		max.addParallel(hide)
+		
+		max = new ActionGroup()
+				.addParallel(hide)
 				.addSequential(maxLift)
 				.addSequential(use)
 				.addSequential(release);
 		
-		mid.addParallel(hide)
+		mid = new ActionGroup()
+				.addParallel(hide)
 				.addSequential(midLift)
 				.addSequential(use)
 				.addSequential(release);
 		
-		min.addParallel(hide)
+		min = new ActionGroup()
+				.addParallel(hide)
 				.addSequential(minLift)
 				.addSequential(use)
 				.addSequential(release);
 		
-		down.addParallel(hide)
+		down = new ActionGroup()
+				.addParallel(hide)
 				.addSequential(downLift)
 				.addSequential(use)
 				.addSequential(capture);
 		
-		switchShoot.addParallel(shoot)
-				.addSequential(downLift)
+		switchShoot = new ActionGroup()
+				.addParallel(shoot)
 				.addSequential(release);
 	}
 	

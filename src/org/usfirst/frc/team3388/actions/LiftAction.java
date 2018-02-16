@@ -20,6 +20,8 @@ public class LiftAction extends Action{
 	@Override
 	protected void end() {
 		Robot.rollerGripperSystem.stop();
+		if(Robot.liftSystem.isUsed)
+			Robot.liftSystem.isUsed=false;
 	}
 
 	@Override

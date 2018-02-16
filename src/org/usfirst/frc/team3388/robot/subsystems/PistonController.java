@@ -33,4 +33,9 @@ public class PistonController {
 		else
 			close();
 	}
+	
+	public boolean isClosed()
+	{
+		return sol.get()==Value.kForward;
+	}
 }

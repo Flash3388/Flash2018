@@ -28,7 +28,8 @@ public class RobotMap {
 	public static final int CAPTURE_SWITCH = 6;
 	
 	public static final int LIFT_CONTROLLER = 4;
-	public static final int LIFT_ENCODER= 4;
+	public static final int LIFT_A= 9;
+	public static final int LIFT_B=8;
 	
 	public static final int POLE = 6;
 	public static final int POLE_POTENTIOMETER=3;

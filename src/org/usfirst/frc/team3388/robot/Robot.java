@@ -7,6 +7,8 @@ import org.usfirst.frc.team3388.robot.subsystems.PoleSystem;
 import org.usfirst.frc.team3388.robot.subsystems.RollerGripperSystem;
 import org.usfirst.frc.team3388.robot.subsystems.RollerLiftingSystem;
 
+import com.sun.java.swing.plaf.windows.WindowsBorders.DashedBorder;
+
 import edu.flash3388.flashlib.math.Mathf;
 import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.ActionGroup;
@@ -40,7 +42,7 @@ public class Robot extends IterativeFRCRobot {
 	
 	static double startTime;
 	
-	public static boolean drivingTrain = false;
+	public static boolean drivingTrain = true;
 	public static boolean sysTrain = true;
 	
 	public enum Side {LEFT,MIDDLE,RIGHT};
@@ -54,8 +56,8 @@ public class Robot extends IterativeFRCRobot {
 		controllersSetup();
 		if(sysTrain)
 		{
-			//rollerGripperSystem = new RollerGripperSystem();
-			//rollerGripperSystem.setup();
+			rollerGripperSystem = new RollerGripperSystem();
+			rollerGripperSystem.setup();
 			
 			poleSystem = new PoleSystem();
 			poleSystem.setup();
@@ -63,8 +65,6 @@ public class Robot extends IterativeFRCRobot {
 			liftSystem = new RollerLiftingSystem();
 			liftSystem.setup();
 			//rollerGripperSystemSetup();
-			ActionHandler.setup();
-			
 		}
 		if(drivingTrain)
 		{
@@ -75,9 +75,11 @@ public class Robot extends IterativeFRCRobot {
 			
 			if(sysTrain)
 			{
-				//autoHandlers();
+				ActionHandler.setup();
+				
 			}
 		}
+		
 	}
 	private void getRobotSide()
 	{
@@ -139,13 +141,18 @@ public class Robot extends IterativeFRCRobot {
 		}
 		startTime = FlashUtil.secs();
 		DashHandle.teleInit();
-		systemController.X.whenPressed(AutoHandlers.scaleChoose(true));
+		//systemController.X.whenPressed(AutoHandlers.scaleChoose(true));
+		//SmartDashboard.putNumber("rotate limit",0.4); 
+		//SmartDashboard.putNumber("drive limit", 0.4);
 	}
 	
 	
 	@Override
 	protected void teleopPeriodic() {
 		DashHandle.telePeriodic();
+		//drive.rotatePID.setOutputLimit(SmartDashboard.getNumber("rotate limit",0.4));
+	//	drive.distancePID.setOutputLimit(SmartDashboard.getNumber("drive limit",0.4));
+
 	}
 	
 	@Override
