@@ -2,9 +2,8 @@ package org.usfirst.frc.team3388.robot;
 
 public class Constants {
 
-	public static final double MAX_ANGLE=2.218017351;
-	public static final double MIN_ANGLE=50.0;
-	public static final double MID_ANGLE=100.0;
+	public static final double SCALE=2.218017351;
+	
 	public static final double DOWN_ANGLE = 0.0;
 	public static final double SHOOT_ANGLE=20.0;
 	

@@ -25,9 +25,10 @@ public class AutoHandlers {
 	public static Action scaleChoose(boolean scaleSide)
 	{
 		Action a = new ActionGroup()
-				.addParallel(ActionHandler.maxLift)
+				.addSequential(ActionHandler.close)
+				.addParallel(ActionHandler.scaleLift)
 				.addSequential(ActionHandler.scaleDrive)
-				.addSequential(ActionHandler.release)
+				.addSequential(ActionHandler.open)
 				.addParallel(ActionHandler.downLift)
 				.addSequential(ActionHandler.scaleToSwitchRotate)
 				.addSequential(ActionHandler.scaleToSwitchDrive)
