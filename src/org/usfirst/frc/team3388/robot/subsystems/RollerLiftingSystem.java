@@ -22,6 +22,10 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 	private IndexEncoder in;
 	public DoubleSource angle;
 	
+	
+	
+	
+	
 	public RollerLiftingSystem() {
 		controller = new TalonSpeed(RobotMap.LIFT_CONTROLLER);
 		
@@ -32,7 +36,7 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 			public double get() {
 				return in.get();
 			}
-		};
+		};		
 	}
 	@Override
 	public void rotate(double speed) {

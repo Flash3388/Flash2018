@@ -40,5 +40,9 @@ public class CaptureAction extends Action{
 		return (Robot.rollerGripperSystem.isPressed.get() && side) 
 				|| (!Robot.rollerGripperSystem.isPressed.get() && !side);
 	}
+	@Override
+	protected void interrupted() {
+		end();
+	}
 
 }

@@ -35,5 +35,9 @@ public class LiftAction extends Action{
 	protected boolean isFinished() {
 		return Mathf.constrained(Robot.rollerGripperSystem.angle.get(), setpoint, setpoint + ERROR);
 	}
+	@Override
+	protected void interrupted() {
+		end();
+	}
 
 }

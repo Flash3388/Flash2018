@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class PoleSystem extends Subsystem implements Rotatable{
 
+	public static final double ZERO=59.07852386000001;
 	public static final double DEFAULT_SPEED=0.5;
 	private VictorSP controller;
 	private final double UP_SPEED=0.8;
@@ -53,7 +54,7 @@ public class PoleSystem extends Subsystem implements Rotatable{
 			final double UNITS = 240.0/4.5;
 			@Override
 			public double get() {
-				return (4.5-in.getVoltage())*UNITS;
+				return ((4.5-in.getVoltage())*UNITS)+ZERO;
 			}
 		};
 		controller= new VictorSP(RobotMap.POLE);

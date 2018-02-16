@@ -1,5 +1,7 @@
 package org.usfirst.frc.team3388.robot.subsystems;
 
+import org.usfirst.frc.team3388.actions.DrivePIDAction;
+import org.usfirst.frc.team3388.actions.RotatePIDAction;
 import org.usfirst.frc.team3388.robot.AutoHandlers;
 import org.usfirst.frc.team3388.robot.DashNames;
 import org.usfirst.frc.team3388.robot.Robot;
@@ -68,11 +70,6 @@ public class DriveSystem extends Subsystem {
 		{	
 			drivePIDTunner();
 			rotationPIDTunner();
-			if(distanceSetPoint == null)
-				System.out.println("null");
-			Robot.rightController.getButton(1).whileHeld(straightDrive);
-			
-			Robot.rightController.getButton(1).whenPressed(AutoHandlers.switchChoose(true));
 		}
 	}
 
@@ -97,13 +94,13 @@ public class DriveSystem extends Subsystem {
 		};
 
 		distancePID = new PIDController(0.21, 0.0, 0.285, 0.0, distanceSetPoint, distanceSource);
-		distancePID.setOutputLimit(-DRIVE_LIMIT, DRIVE_LIMIT);
+		distancePID.setOutputLimit(-0.3, 0.3);
 		rotatePID = new PIDController(0.308, 0.0, 0.628,0.0,rotationSetPoint,rotationSource);
 		rotatePID.setOutputLimit(-ROTATE_LIMIT, ROTATE_LIMIT);
 	}
 
 	private void stightDriveHandle() {
-		SmartDashboard.putNumber(DashNames.driveKp, 0.3);
+		SmartDashboard.putNumber(DashNames.driveKp, 0.1);
 		SmartDashboard.putNumber("speed straight",0.2);
 		straightDrive = new SystemAction(new Action() {
 			final double kp = 0.0;
@@ -146,9 +143,22 @@ public class DriveSystem extends Subsystem {
 	{	
 		gyro.reset();
 	}
+	public void resetEncoder()
+	{
+		encoder.reset();
+	}
 	public void drive(double speed)
 	{	
-		driveTrain.tankDrive(speed, speed);	
+		final double MARGIN = 1.0;
+		//driveTrain.tankDrive(speed, speed);
+		double k = SmartDashboard.getNumber(DashNames.driveKp, 0.3);
+		if(DrivePIDAction.inThreshold && RotatePIDAction.isFinished)
+			k=0;
+		else if(speed < 0)
+			k = -SmartDashboard.getNumber(DashNames.driveKp, 0.3);
+		driveTrain.arcadeDrive(speed, rotationSource.pidGet()*k);
+		
+		//driveTrain.arcadeDrive(speed, SmartDashboard.getNumber(DashNames.driveKp, 0.0)*rotationSource.pidGet());	
 	}
 	public void rotate(double speed)
 	{
@@ -177,6 +187,14 @@ public class DriveSystem extends Subsystem {
 				driveTrain.tankDrive(0,0);
 			}
 		}, this));
+		
+		if(distanceSetPoint == null)
+			System.out.println("null");
+		Robot.rightController.getButton(1).whileHeld(straightDrive);
+		Robot.rightController.getButton(1).whenPressed(new DrivePIDAction(100.0));
+		Robot.leftController.getButton(1).whenPressed(new DrivePIDAction(-30.0));
+		//Robot.rightController.getButton(1).whenPressed(AutoHandlers.switchChoose(true));
+
 	}
 	
 	private boolean inRange(double val,double bound)

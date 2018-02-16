@@ -10,32 +10,32 @@ import edu.flash3388.flashlib.util.FlashUtil;
 
 public class DrivePIDAction extends Action {
 
+	public static boolean inThreshold=false;
 	public final static double MARGIN=2.5;
 	public final static int TIME_IN_THRESHOLD=500;
 	double thresholdStartTime;
 	double setpoint;
 	public DrivePIDAction(double setpoint) {
 		requires(Robot.drive);
-		if(Robot.drive.distanceSetPoint == null)
-			System.out.println("here");
-		
 		this.setpoint=setpoint;
 		Robot.drive.distanceSetPoint.set(setpoint);
 		
 	}
 	@Override
 	protected void initialize() {
+		inThreshold=false;
 		thresholdStartTime=0;
-		Robot.drive.encoder.reset();
+		Robot.drive.resetEncoder();
+		Robot.drive.resetGyro();
 		Robot.drive.distanceSetPoint.set(setpoint + Robot.drive.distanceSource.pidGet());
 		Robot.drive.distancePID.setEnabled(true);
 		Robot.drive.distancePID.reset();
 	}
+	
 	@Override
 	protected void end() {
 		Robot.drive.driveTrain.tankDrive(0.0,0.0);
 		Robot.drive.distancePID.setEnabled(false);
-		System.out.println("end");
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class DrivePIDAction extends Action {
 		{
 			if(thresholdStartTime < 1)
 				thresholdStartTime= FlashUtil.millisInt();
-			
+			inThreshold=true;
 			Robot.drive.drive(-Robot.drive.distancePID.calculate());	
 			
 		}
@@ -65,5 +65,9 @@ public class DrivePIDAction extends Action {
 		double current = Robot.drive.distancePID.getPIDSource().pidGet();
 		return Mathf.constrained(Robot.drive.distanceSetPoint.get() - current, -MARGIN, MARGIN);
 	
+	}
+	@Override
+	protected void interrupted() {
+		end();
 	}
 }

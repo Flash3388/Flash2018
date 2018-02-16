@@ -7,10 +7,11 @@ import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.util.FlashUtil;
 
 public class RotatePIDAction extends Action {
+	
+	public static boolean isFinished=false;
 	public final static double MARGIN=1.5;
 	public final static int TIME_IN_THRESHOLD=500;
 	int thresholdStartTime;
-	int start;
 	double setpoint;
 	public RotatePIDAction(double setpoint) {
 		requires(Robot.drive);
@@ -18,6 +19,7 @@ public class RotatePIDAction extends Action {
 	}
 	@Override
 	protected void initialize() {
+		isFinished=false;
 		thresholdStartTime=0;
 		Robot.drive.rotationSetPoint.set(setpoint + Robot.drive.rotationSource.pidGet());
 		Robot.drive.encoder.reset();
@@ -28,7 +30,7 @@ public class RotatePIDAction extends Action {
 	protected void end() {
 		Robot.drive.driveTrain.tankDrive(0.0,0.0);
 		Robot.drive.distancePID.setEnabled(false);
-		System.out.println("end " + (FlashUtil.millisInt()- start));
+		isFinished=true;
 	}
 
 	@Override
@@ -58,5 +60,10 @@ public class RotatePIDAction extends Action {
 		
 		return Mathf.constrained(Robot.drive.rotationSetPoint.get() - current, -MARGIN, MARGIN);
 	
+	}
+	
+	@Override
+	protected void interrupted() {
+		end();
 	}
 }

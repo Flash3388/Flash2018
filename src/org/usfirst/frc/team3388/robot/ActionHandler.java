@@ -33,32 +33,38 @@ public class ActionHandler{
 	
 	public static RotatePIDAction scaleToSwitchRotate;
 	
-	public ActionHandler()
+	public static void setup()
 	{
-		captureSetup();
-		liftSetup();
-		poleSetup();
+		if(Robot.sysTrain)
+		{
+			//captureSetup();
+			liftSetup();
+			//poleSetup();
+
+			//combinedSetup();
+				
+		}
+		if(Robot.drivingTrain)
+		{
+			driveSetup();
+			rotateSetup();
 		
-		driveSetup();
-		rotateSetup();
-		
-		combinedSetup();
+		}
 	}
-	
-	private void liftSetup()
+	private static void liftSetup()
 	{
 		use = new LiftAction(Constants.USE_ANGLE);
 		hide = new LiftAction(Constants.HIDE_ANGLE);
 		shoot = new LiftAction(Constants.SHOOT_ANGLE);
 	}
 	
-	private void captureSetup()
+	private static void captureSetup()
 	{
 		capture = new CaptureAction(true);
 		release = new CaptureAction(false);
 	}
 	
-	private void poleSetup()
+	private static void poleSetup()
 	{
 		maxLift = new PoleAction(Constants.MAX_ANGLE);
 		midLift = new PoleAction(Constants.MID_ANGLE);
@@ -66,7 +72,7 @@ public class ActionHandler{
 		downLift = new PoleAction(Constants.DOWN_ANGLE);
 	}
 	
-	private void combinedSetup()
+	private static void combinedSetup()
 	{
 		max.addParallel(hide)
 				.addSequential(maxLift)
@@ -93,13 +99,13 @@ public class ActionHandler{
 				.addSequential(release);
 	}
 	
-	private void driveSetup()
+	private static void driveSetup()
 	{
 		scaleDrive = new DrivePIDAction(Constants.SCALE_DRIVE);
 		scaleToSwitchDrive = new DrivePIDAction(Constants.SCALE_TO_SWITCH_DRIVE);
 	}
 	
-	private void rotateSetup()
+	private static void rotateSetup()
 	{
 		scaleToSwitchRotate = new RotatePIDAction(Constants.SCALE_TO_SWITCH_ROTATE);
 	}
