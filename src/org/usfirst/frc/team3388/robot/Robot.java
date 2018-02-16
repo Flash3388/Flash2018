@@ -127,7 +127,6 @@ public class Robot extends IterativeFRCRobot {
 		
 		if(drivingTrain)
 		{
-			if(!drive.inited && SmartDashboard.getBoolean(DashNames.initGyro, false))
 				drive.initGyro();
 		}
 	}

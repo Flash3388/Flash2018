@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RollerLiftingSystem extends Subsystem implements Rotatable {
 
-	public final double DEFAULT_UP_SPEED=0.3;
+	public final double DEFAULT_UP_SPEED=0.5;
 	public final double DEFAULT_DOWN_SPEED=0.3;
 	
 	TalonSpeed controller;
@@ -48,19 +48,9 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 	public void rotate(boolean dir)
 	{
 		if(dir)
-			rotate(SmartDashboard.getNumber("lift speed", 0.2));
+			rotate(DEFAULT_UP_SPEED);
 		else
-			rotate(-SmartDashboard.getNumber("down speed", 0.2));
-	}
-	
-	public void liftUp()
-	{
-		rotate(DEFAULT_UP_SPEED);
-	}
-	
-	public void liftDown()
-	{
-		rotate(DEFAULT_DOWN_SPEED);
+			rotate(DEFAULT_DOWN_SPEED);
 	}
 	
 	@Override
@@ -73,8 +63,6 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 	}
 	public void setup()
 	{
-		SmartDashboard.putNumber("lift speed", 0.5);
-		SmartDashboard.putNumber("down speed", 0.3);
 		this.setDefaultAction(new SystemAction(new Action() {
 			
 			final double MARGIN = 0.2;

@@ -63,13 +63,12 @@ public class DriveSystem extends Subsystem {
 		driveTrain = setupDriveTrain();
 		driveTrain.setInverted(MotorSide.Left, true);
 		
-		stightDriveHandle();
 		pidsHandler();
 		
 		if(tuning)
 		{	
-			drivePIDTunner();
-			rotationPIDTunner();
+			//drivePIDTunner();
+			//rotationPIDTunner();
 		}
 	}
 
@@ -99,30 +98,6 @@ public class DriveSystem extends Subsystem {
 		rotatePID.setOutputLimit(-ROTATE_LIMIT, ROTATE_LIMIT);
 	}
 
-	private void stightDriveHandle() {
-		SmartDashboard.putNumber(DashNames.driveKp, 0.1);
-		SmartDashboard.putNumber("speed straight",0.2);
-		straightDrive = new SystemAction(new Action() {
-			final double kp = 0.0;
-			final double speed = 0.2;//later it will be pid calculate
-			@Override
-			protected void initialize() {
-				super.initialize();
-				resetGyro();
-			}
-			@Override
-			protected void execute() {
-				double val = -SmartDashboard.getNumber(DashNames.driveKp, 0.0);
-				driveTrain.arcadeDrive(SmartDashboard.getNumber("speed straight",0.0), rotationSource.pidGet()*val);
-			}
-			
-			@Override
-			protected void end() {
-				driveTrain.stop();
-			}
-		}, this);
-	}
-
 	private FlashDrive setupDriveTrain() {
 		TalonSpeed frontRight;
 		TalonSpeed frontLeft;
@@ -149,13 +124,14 @@ public class DriveSystem extends Subsystem {
 	}
 	public void drive(double speed)
 	{	
+		final double KP = 0.1;
 		final double MARGIN = 1.0;
 		//driveTrain.tankDrive(speed, speed);
-		double k = SmartDashboard.getNumber(DashNames.driveKp, 0.3);
+		double k = KP;
 		if(DrivePIDAction.inThreshold)
 			k=0;
 		else if(speed < 0)
-			k = -SmartDashboard.getNumber(DashNames.driveKp, 0.3);
+			k = -KP;
 		driveTrain.arcadeDrive(speed, rotationSource.pidGet()*k);
 		
 		//driveTrain.arcadeDrive(speed, SmartDashboard.getNumber(DashNames.driveKp, 0.0)*rotationSource.pidGet());	
@@ -167,7 +143,6 @@ public class DriveSystem extends Subsystem {
 	
 	public void setup()
 	{
-		SmartDashboard.putNumber("rotate", 0.3);
 		this.setDefaultAction(new SystemAction(new Action() {
 			final double bound = 0.15;
 			
@@ -187,23 +162,16 @@ public class DriveSystem extends Subsystem {
 				driveTrain.tankDrive(0,0);
 			}
 		}, this));
-		
-		if(distanceSetPoint == null)
-			System.out.println("null");
 		Robot.rightController.getButton(1).whileHeld(straightDrive);
 		Robot.rightController.getButton(1).whenPressed(new DrivePIDAction(300.0));
 		Robot.rightController.getButton(2).whenPressed(new RotatePIDAction(90.0));
-		
-		Robot.leftController.getButton(2).whenPressed(new RotatePIDAction(-90.0));
-		Robot.leftController.getButton(1).whenPressed(new DrivePIDAction(-100.0));
-		//Robot.rightController.getButton(1).whenPressed(AutoHandlers.switchChoose(true));
-
 	}
 	
 	private boolean inRange(double val,double bound)
 	{
 		return(val >= -bound && val <= bound);
 	}
+	/*
 	private void drivePIDTunner()
 	{
 		Flashboard.putPIDTuner("distance", distancePID.kpProperty(), distancePID.kiProperty()
@@ -216,4 +184,5 @@ public class DriveSystem extends Subsystem {
 				, rotatePID.kdProperty(), rotatePID.kfProperty(), rotationSetPoint
 				, rotationSource, 20, 1000);
 	}
+	*/
 }

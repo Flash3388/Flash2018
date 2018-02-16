@@ -28,9 +28,9 @@ public class LiftAction extends Action{
 	protected void execute() {
 		double angle =Robot.rollerGripperSystem.angle.get(); 
 		if(setpoint>angle)
-			Robot.liftSystem.liftUp();
+			Robot.liftSystem.rotate(true);
 		else if(setpoint<angle)
-			Robot.liftSystem.liftDown();
+			Robot.liftSystem.rotate(false);
 	}
 
 	@Override
