@@ -107,7 +107,7 @@ public class ActionHandler{
 				.addSequential(capture);
 		
 		switchShoot = new ActionGroup()
-				.addParallel(shoot)
+				.addSequential(shoot)
 				.addSequential(release);
 	}
 	

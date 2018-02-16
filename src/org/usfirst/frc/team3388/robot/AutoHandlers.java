@@ -32,7 +32,7 @@ public class AutoHandlers {
 				.addSequential(ActionHandler.scaleToSwitchRotate)
 				.addSequential(ActionHandler.scaleToSwitchDrive)
 				.addSequential(ActionHandler.capture)
-				.addSequential(ActionHandler.s)
+				.addSequential(ActionHandler.switchShoot);
 				
 		return a;
 	}
