@@ -20,19 +20,16 @@ public class LiftAction extends Action{
 	@Override
 	protected void end() {
 		Robot.rollerGripperSystem.stop();
-		if(Robot.liftSystem.isUsed)
-			Robot.liftSystem.isUsed=false;
 	}
 
 	@Override
 	protected void execute() {
-		double angle =Robot.rollerGripperSystem.angle.get(); 
+		double angle = Robot.rollerGripperSystem.angle.get(); 
 		if(setpoint>angle)
 			Robot.liftSystem.rotate(true);
 		else if(setpoint<angle)
 			Robot.liftSystem.rotate(false);
 	}
-
 	@Override
 	protected boolean isFinished() {
 		return Mathf.constrained(Robot.rollerGripperSystem.angle.get(), setpoint, setpoint + ERROR);

@@ -22,21 +22,19 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 	
 	TalonSpeed controller;
 	
-	public 	boolean isUsed=false;
-	
-	private Encoder in;
+	private Encoder enc;
 	public DoubleSource angle;
 	final double STALL=0.15;
 	private boolean stall = false;
 	public RollerLiftingSystem() {
 		controller = new TalonSpeed(RobotMap.LIFT_CONTROLLER);
 		
-		in = new Encoder(RobotMap.LIFT_A, RobotMap.LIFT_B);
+		enc = new Encoder(RobotMap.LIFT_A, RobotMap.LIFT_B);
 		angle = new DoubleSource() {
 			
 			@Override
 			public double get() {
-				return 0;
+				return enc.get();
 			}
 		};		
 	}
@@ -52,10 +50,13 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 		else
 			rotate(DEFAULT_DOWN_SPEED);
 	}
-	
 	@Override
 	public void stop() {
 		rotate(0.0);
+	}
+	public void resetEncoder()
+	{
+		enc.reset();
 	}
 	public void stall(boolean s)
 	{
@@ -71,16 +72,11 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 			@Override
 			protected void execute() {
 				double y = Robot.systemController.LeftStick.getY();
-				if(Robot.poleSystem.angle.get()>HIDE && Robot.poleSystem.angle.get()<USE && !isUsed)
-				{
-					ActionHandler.hide.start();
-					isUsed=true;
-				}
-				else if(y > MARGIN)
+				if(y > MARGIN)
 					rotate(true);
 				else if(y < -MARGIN)
 					rotate(false);
-				else if (Robot.rollerGripperSystem.piston.isClosed() || Robot.poleSystem.isPressed.get())
+				else if (stall || (Robot.rollerGripperSystem.piston.isClosed() || Robot.poleSystem.isPressed.get()))
 						rotate(STALL);
 				else
 					stop();
