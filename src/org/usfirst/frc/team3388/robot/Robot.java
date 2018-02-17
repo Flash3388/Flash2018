@@ -50,22 +50,10 @@ public class Robot extends IterativeFRCRobot {
 	Side side;
 	@Override
 	protected void initRobot() {
-		SmartDashboard.putNumber("upspeed", 0.8);
-		SmartDashboard.putNumber("downspeed", 0.32);
 		
 		controllersSetup();
 		if(sysTrain)
-		{
-			rollerGripperSystem = new RollerGripperSystem();
-			rollerGripperSystem.setup();
-			
-			poleSystem = new PoleSystem();
-			poleSystem.setup();
-			
-			liftSystem = new RollerLiftingSystem();
-			liftSystem.setup();
-			//rollerGripperSystemSetup();
-		}
+			systemSetup();
 		if(drivingTrain)
 		{
 			drive = new DriveSystem();
@@ -76,10 +64,23 @@ public class Robot extends IterativeFRCRobot {
 			if(sysTrain)
 			{
 				ActionHandler.setup();
-				
+				systemController.RightStickButton.whenPressed(ActionHandler.fullScaleLift);
 			}
 		}
 		
+		
+	}
+	
+	private void systemSetup()
+	{
+		rollerGripperSystem = new RollerGripperSystem();
+		rollerGripperSystem.setup();
+		
+		poleSystem = new PoleSystem();
+		poleSystem.setup();
+		
+		liftSystem = new RollerLiftingSystem();
+		liftSystem.setup();
 	}
 	private void getRobotSide()
 	{

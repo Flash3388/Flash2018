@@ -7,7 +7,8 @@ public class Constants {
 	public static final double DOWN_ANGLE = 0.0;
 	public static final double SHOOT_ANGLE=20.0;
 	
-	public static final double USE_ANGLE=0.0;
+	public static final double DOWN_USE_ANGLE=0.0;
+	public static final double UP_USE_ANGLE=60.0;
 	public static final double HIDE_ANGLE=0.0;
 	
 	public static final int SCALE_DRIVE=300;

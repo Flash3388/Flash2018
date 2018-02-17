@@ -8,18 +8,21 @@ import edu.flash3388.flashlib.robot.Action;
 public class LiftAction extends Action{
 
 	double setpoint=0.0;
+	boolean stall=false;
 	static final double ERROR = 2.0;
 	public static final double DEFAULT_LIFT_SPEED=0.3;
 	
-	public LiftAction(double setpoint)
+	public LiftAction(double setpoin, boolean stall)
 	{
 		requires(Robot.liftSystem);
 		this.setpoint=setpoint;
+		this.stall=stall;
 	}
 
 	@Override
 	protected void end() {
-		Robot.rollerGripperSystem.stop();
+		Robot.liftSystem.stall(stall);
+		
 	}
 
 	@Override

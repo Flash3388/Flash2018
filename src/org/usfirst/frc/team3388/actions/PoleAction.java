@@ -32,8 +32,9 @@ public class PoleAction extends Action{
 			dir = false;
 			Robot.poleSystem.rotate(false);
 		}
-		if(!dir && Robot.poleSystem.angle.get()>180.0)
-			Robot.poleSystem.rotate(true);
+		
+		//if(!dir && Robot.poleSystem.angle.get()>180.0)
+			//Robot.poleSystem.rotate(true);
 	}
 
 	@Override
