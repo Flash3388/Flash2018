@@ -24,17 +24,41 @@ public class AutoHandlers {
 	}
 	public static Action scaleChoose(boolean scaleSide)
 	{
+		
 		Action a = new ActionGroup()
 				.addSequential(ActionHandler.close)
-				.addParallel(ActionHandler.scaleLift)
+				.addParallel(ActionHandler.scaleLift);
+				/*
 				.addSequential(ActionHandler.scaleDrive);
-			/*	.addSequential(ActionHandler.open)
+				.addSequential(ActionHandler.open)
 				.addParallel(ActionHandler.downLift)
 				.addSequential(ActionHandler.scaleToSwitchRotate)
 				.addSequential(ActionHandler.scaleToSwitchDrive)
 				.addSequential(ActionHandler.capture)
 				.addSequential(ActionHandler.switchShoot);
 				*/
+		return a;
+	}
+	public static Action centerSwitch(boolean switchSide)
+	{
+		Action a = new ActionGroup()
+				.addSequential(ActionHandler.close)
+				.addParallel(ActionHandler.shoot)
+				.addSequential(ActionHandler.smallStartDrive)
+				.addSequential(switchSide ? ActionHandler.centerRotationR : ActionHandler.centerRotationL)
+				.addSequential(ActionHandler.centerSwitchDrive)
+				.addSequential(ActionHandler.release)
+				.addParallel(ActionHandler.downUse)
+				.addSequential(switchSide ? ActionHandler.centerCaptureRotateR : ActionHandler.centerCaptureRotateL)
+				.addSequential(ActionHandler.captureDrive)
+				.addParallel(ActionHandler.capture)
+				.addSequential(ActionHandler.returnCaptureDrive)
+				.addParallel(ActionHandler.shoot)
+				.addParallel(ActionHandler.switchLift)
+				.addSequential(switchSide ? ActionHandler.centerCaptureRotateL : ActionHandler.centerCaptureRotateR)
+				.addSequential(ActionHandler.release);
+				
+		
 		return a;
 	}
 

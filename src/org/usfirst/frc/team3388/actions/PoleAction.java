@@ -11,9 +11,11 @@ public class PoleAction extends Action{
 	private double setpoint;
 	static final double ERROR = 2.5;
 	boolean dir = true;
-	public PoleAction(double setpoint) {
+	double unsoleAngle;
+	public PoleAction(double setpoint, double unsoleAngle) {
 		requires(Robot.poleSystem);
 		this.setpoint=setpoint;
+		this.unsoleAngle = unsoleAngle;
 	}
 	
 	@Override
@@ -22,16 +24,29 @@ public class PoleAction extends Action{
 	}
 	@Override
 	protected void execute() {
-		if(setpoint>Robot.poleSystem.angle.get())
+		double curr = Robot.poleSystem.angle.get();
+		if(setpoint>curr)
 		{
 			dir= true;
 			Robot.poleSystem.rotate(true);
+			
+			if(unsoleAngle >= curr)
+			{
+				Robot.liftSystem.stall(false);
+				System.out.println("unstole");
+			}
+				
 		}
 		else
 		{
 			dir = false;
 			Robot.poleSystem.rotate(false);
+			
+			if(unsoleAngle == curr)
+				Robot.liftSystem.stall(false);
 		}
+		
+		
 		
 		//if(!dir && Robot.poleSystem.angle.get()>180.0)
 			//Robot.poleSystem.rotate(true);

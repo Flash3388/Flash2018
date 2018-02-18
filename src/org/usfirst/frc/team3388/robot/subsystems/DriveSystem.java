@@ -28,7 +28,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DriveSystem extends Subsystem {
 	
 	public static final double DRIVE_LIMIT = 0.5;
-	public static final double ROTATE_LIMIT = 0.65;
+	public static final double ROTATE_LIMIT = 0.55;
 	public static final double WHEEL_RADIUS=10.16;
 	public Encoder encoder;
 	//public Encoder leftEncoder;
@@ -162,9 +162,6 @@ public class DriveSystem extends Subsystem {
 				driveTrain.tankDrive(0,0);
 			}
 		}, this));
-		Robot.rightController.getButton(1).whileHeld(straightDrive);
-		Robot.rightController.getButton(1).whenPressed(new DrivePIDAction(300.0));
-		Robot.rightController.getButton(2).whenPressed(new RotatePIDAction(90.0));
 	}
 	
 	private boolean inRange(double val,double bound)

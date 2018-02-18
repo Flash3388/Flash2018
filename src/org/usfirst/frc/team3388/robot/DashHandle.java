@@ -9,12 +9,12 @@ public class DashHandle {
 	{
 		SmartDashboard.putBoolean(DashNames.enabled, false);
 		SmartDashboard.putNumber(DashNames.timeLeft, 0.0);
-		if(Robot.sysTrain)
-			SmartDashboard.putNumber(DashNames.polePotentiometer, Robot.poleSystem.angle.get());
+	
+		SmartDashboard.putNumber(DashNames.polePotentiometer, Robot.poleSystem.angle.get());
 	}
 	public static void disPeriodic()
 	{
-		
+		SmartDashboard.putBoolean(DashNames.pressed, Robot.rollerGripperSystem.isPressed.get());
 	}
 	public static void updateAngle()
 	{
@@ -24,18 +24,19 @@ public class DashHandle {
 	{
 		
 		SmartDashboard.putBoolean(DashNames.enabled, true);
-		if(Robot.drivingTrain)
-		{
-		}
-		if(Robot.sysTrain)
-			SmartDashboard.putNumber(DashNames.polePotentiometer, Robot.poleSystem.angle.get());
-			
+		
+		SmartDashboard.putNumber(DashNames.polePotentiometer, Robot.poleSystem.angle.get());		
 	}
 	
 	public static void telePeriodic()
 	{
-		if(Robot.sysTrain)
-			SmartDashboard.putNumber(DashNames.polePotentiometer, Robot.poleSystem.angle.get());
+		SmartDashboard.putNumber(DashNames.polePotentiometer, Robot.poleSystem.angle.get());
+		SmartDashboard.putBoolean(DashNames.pressed, Robot.rollerGripperSystem.isPressed.get());
+		
+		SmartDashboard.putNumber(DashNames.angle, Robot.drive.rotationSource.pidGet());
+		SmartDashboard.putNumber(DashNames.distance, Robot.drive.distanceSource.pidGet());
+
+		
 		updateTime();
 	}
 	public static void updateTime()

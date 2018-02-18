@@ -10,7 +10,7 @@ public class RotatePIDAction extends Action {
 	
 	public static boolean isFinished=false;
 	public final static double MARGIN=1.5;
-	public final static int TIME_IN_THRESHOLD=300;
+	public final static int TIME_IN_THRESHOLD=200;
 	int thresholdStartTime;
 	int start;
 	double setpoint;

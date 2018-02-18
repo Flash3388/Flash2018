@@ -12,11 +12,14 @@ import com.sun.java.swing.plaf.windows.WindowsBorders.DashedBorder;
 import edu.flash3388.flashlib.math.Mathf;
 import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.ActionGroup;
+import edu.flash3388.flashlib.robot.InstantAction;
+import edu.flash3388.flashlib.robot.TimedAction;
 import edu.flash3388.flashlib.robot.frc.IterativeFRCRobot;
 import edu.flash3388.flashlib.robot.frc.PDP;
 import edu.flash3388.flashlib.robot.hid.Joystick;
 import edu.flash3388.flashlib.robot.hid.XboxController;
 import edu.flash3388.flashlib.util.FlashUtil;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -42,34 +45,39 @@ public class Robot extends IterativeFRCRobot {
 	
 	static double startTime;
 	
-	public static boolean drivingTrain = true;
-	public static boolean sysTrain = true;
-	
 	public enum Side {LEFT,MIDDLE,RIGHT};
 	
 	Side side;
 	@Override
 	protected void initRobot() {
-		
 		controllersSetup();
-		if(sysTrain)
-			systemSetup();
-		if(drivingTrain)
-		{
-			drive = new DriveSystem();
-			drive.setup();
-			
-			camHandler = new CamerasHandler();
-			
-			if(sysTrain)
-			{
-				ActionHandler.setup();
-				systemController.RightStickButton.whenPressed(ActionHandler.fullScaleLift);
+		/*
+		Compressor c = new Compressor();
+		c.stop();
+		*/
+		
+		systemSetup();
+		drive = new DriveSystem();
+		drive.setup();
+		
+		camHandler = new CamerasHandler();
+		
+		ActionHandler.setup();
+		systemController.B.whenPressed(ActionHandler.fullHide);
+		//systemController.X.whenPressed(ActionHandler.fullScaleLift);
+		systemController.X.whenPressed(AutoHandlers.centerSwitch(true));
+		systemController.Y.whenPressed(ActionHandler.shoot);
+		systemController.RB.whenPressed(ActionHandler.capture);
+		systemController.LB.whenPressed(ActionHandler.release);
+		
+		systemController.Back.whenPressed(new InstantAction() {		
+			@Override
+			protected void execute() {
+				liftSystem.resetEncoder();
 			}
-		}
-		
-		
+		});	
 	}
+	
 	
 	private void systemSetup()
 	{
@@ -107,14 +115,10 @@ public class Robot extends IterativeFRCRobot {
 	
 	private void controllersSetup() {
 		final int BUTTON_COUNT = 4;
-		if(sysTrain)
-			systemController = new XboxController(RobotMap.SYSTEM_CONTROLLER);
-		
-		if(drivingTrain)
-		{
-			rightController = new Joystick(RobotMap.RIGHT_CONTROLLER,BUTTON_COUNT);
-			leftController = new Joystick(RobotMap.LEFT_CONTROLLER,BUTTON_COUNT);
-		}
+		systemController = new XboxController(RobotMap.SYSTEM_CONTROLLER);
+	
+		rightController = new Joystick(RobotMap.RIGHT_CONTROLLER,BUTTON_COUNT);
+		leftController = new Joystick(RobotMap.LEFT_CONTROLLER,BUTTON_COUNT);
 	}
 
 	protected void disabledInit() {
@@ -126,43 +130,40 @@ public class Robot extends IterativeFRCRobot {
 		getRobotSide();
 		DashHandle.disPeriodic();
 		
-		if(drivingTrain)
-		{
-				drive.initGyro();
-		}
+		drive.initGyro();
 	}
 
 	@Override
 	protected void teleopInit() {
-		if(drivingTrain)
-		{
-			drive.encoder.reset();
-			drive.resetGyro();
-		}
+		resetSensors();
 		startTime = FlashUtil.secs();
 		DashHandle.teleInit();
-		//systemController.X.whenPressed(AutoHandlers.scaleChoose(true));
-		//SmartDashboard.putNumber("rotate limit",0.4); 
-		//SmartDashboard.putNumber("drive limit", 0.4);
 	}
-	
 	
 	@Override
 	protected void teleopPeriodic() {
-		DashHandle.telePeriodic();
-		//drive.rotatePID.setOutputLimit(SmartDashboard.getNumber("rotate limit",0.4));
-	//	drive.distancePID.setOutputLimit(SmartDashboard.getNumber("drive limit",0.4));
-
+		DashHandle.telePeriodic();	
 	}
 	
 	@Override
 	protected void autonomousInit() {
+		resetSensors();
+	
 		String gameData;
-		
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
-		Action auto = AutoHandlers.switchChoose(gameData.charAt(0) == 'R');
+		Action auto = AutoHandlers.centerSwitch(gameData.charAt(0) == 'R');
 		auto.start();
 		//Action chosenAction = autoChooser.getSelected();
+	}
+
+
+	private void resetSensors() {
+		drive.encoder.reset();
+		drive.resetGyro();
+
+		poleSystem.resetStartAngle();
+		liftSystem.resetEncoder();
+
 	}
 
 	@Override

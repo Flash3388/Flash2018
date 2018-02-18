@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3388.actions;
 
 import org.usfirst.frc.team3388.robot.Robot;
+import org.usfirst.frc.team3388.robot.subsystems.DriveSystem;
 
 import edu.flash3388.flashlib.math.Mathf;
 import edu.flash3388.flashlib.robot.Action;
@@ -11,16 +12,31 @@ import edu.flash3388.flashlib.util.FlashUtil;
 public class DrivePIDAction extends Action {
 
 	public static boolean inThreshold=false;
-	public final static double MARGIN=2.5;
-	public final static int TIME_IN_THRESHOLD=500;
+	public final static double MARGIN=1.5;
+	public final static int TIME_IN_THRESHOLD=350;
 	double thresholdStartTime;
 	double setpoint;
-	public DrivePIDAction(double setpoint) {
+	double speedLimit;
+	int timeInThreshold = TIME_IN_THRESHOLD;
+	
+	public DrivePIDAction(double setpoint,double speedLimit,int timeInThreshold) {
 		requires(Robot.drive);
 		this.setpoint=setpoint;
 		Robot.drive.distanceSetPoint.set(setpoint);
-		
+		this.speedLimit = speedLimit;
+		this.timeInThreshold = timeInThreshold;
 	}
+
+	public DrivePIDAction(double setpoint) {
+		this(setpoint,DriveSystem.DRIVE_LIMIT,TIME_IN_THRESHOLD);
+	}
+	public DrivePIDAction(double setpoint ,double speedLimit) {
+		this(setpoint,speedLimit,TIME_IN_THRESHOLD);
+	}
+	public DrivePIDAction(double setpoint ,int timeInThreshold) {
+		this(setpoint,DriveSystem.DRIVE_LIMIT,timeInThreshold);
+	}
+	
 	@Override
 	protected void initialize() {
 		inThreshold=false;
@@ -29,6 +45,7 @@ public class DrivePIDAction extends Action {
 		Robot.drive.resetGyro();
 		Robot.drive.distanceSetPoint.set(setpoint + Robot.drive.distanceSource.pidGet());
 		Robot.drive.distancePID.setEnabled(true);
+		Robot.drive.distancePID.setOutputLimit(-speedLimit,speedLimit);
 		Robot.drive.distancePID.reset();
 	}
 	
@@ -62,7 +79,7 @@ public class DrivePIDAction extends Action {
 	
 	@Override
 	protected boolean isFinished() {
-		return inDistanceThreshold() && thresholdStartTime > 0 &&FlashUtil.millisInt() - thresholdStartTime >= TIME_IN_THRESHOLD;
+		return inDistanceThreshold() && thresholdStartTime > 0 &&FlashUtil.millisInt() - thresholdStartTime >= timeInThreshold;
 	}
 	
 	public boolean inDistanceThreshold() {

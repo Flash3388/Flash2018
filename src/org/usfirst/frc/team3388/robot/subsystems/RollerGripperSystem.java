@@ -16,6 +16,7 @@ import edu.flash3388.flashlib.util.beans.BooleanSource;
 import edu.flash3388.flashlib.util.beans.DoubleSource;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class RollerGripperSystem extends Subsystem implements Rotatable{
@@ -24,7 +25,6 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 	private VictorSP lController;
 	
 	public PistonController piston;
-	public static DoubleSource angle;
 	public static final double DEFAULT_SPEED = 0.7;
 	
 	private DigitalInput in;
@@ -65,11 +65,8 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 	}
 	
 	public void setup()
-	{
-	
-		Robot.systemController.RB.whenPressed(ActionHandler.capture);
-		Robot.systemController.LB.whenPressed(ActionHandler.release);
-
+	{		
+		
 		Robot.systemController.A.whenPressed(new InstantAction() {
 			
 			@Override

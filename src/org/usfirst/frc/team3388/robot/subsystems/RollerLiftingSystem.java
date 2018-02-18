@@ -17,15 +17,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RollerLiftingSystem extends Subsystem implements Rotatable {
 
-	public final double DEFAULT_UP_SPEED=0.5;
-	public final double DEFAULT_DOWN_SPEED=0.3;
+	public static final double DEFAULT_UP_SPEED=0.6;
+	public static final double DEFAULT_DOWN_SPEED=0.3;
 	
 	TalonSpeed controller;
 	
 	private Encoder enc;
 	public DoubleSource angle;
-	final double STALL=0.15;
-	private boolean stall = false;
+	final double STALL=0.11;
+	private boolean stall = true;
 	public RollerLiftingSystem() {
 		controller = new TalonSpeed(RobotMap.LIFT_CONTROLLER);
 		
@@ -48,7 +48,7 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 		if(dir)
 			rotate(DEFAULT_UP_SPEED);
 		else
-			rotate(DEFAULT_DOWN_SPEED);
+			rotate(-DEFAULT_DOWN_SPEED);
 	}
 	@Override
 	public void stop() {
@@ -63,7 +63,10 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 		stall = s;
 	}
 	public void setup()
-	{
+	{	
+		SmartDashboard.putNumber("up speed", DEFAULT_UP_SPEED);
+		SmartDashboard.putNumber("down speed", DEFAULT_DOWN_SPEED);
+
 		this.setDefaultAction(new SystemAction(new Action() {
 			
 			final double MARGIN = 0.2;
@@ -76,10 +79,11 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 					rotate(true);
 				else if(y < -MARGIN)
 					rotate(false);
-				else if (stall || (Robot.rollerGripperSystem.piston.isClosed() || Robot.poleSystem.isPressed.get()))
+				else if (stall || Robot.poleSystem.isPressed.get())
 						rotate(STALL);
 				else
 					stop();
+				SmartDashboard.putNumber("enc lift", angle.get());
 			}
 			
 			@Override

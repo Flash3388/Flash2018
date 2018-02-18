@@ -1,6 +1,8 @@
 package org.usfirst.frc.team3388.robot.subsystems;
 
 import org.usfirst.frc.team3388.actions.PoleAction;
+import org.usfirst.frc.team3388.robot.ActionHandler;
+import org.usfirst.frc.team3388.robot.Constants;
 import org.usfirst.frc.team3388.robot.Robot;
 import org.usfirst.frc.team3388.robot.RobotMap;
 import org.usfirst.frc.team3388.robot.TalonSpeed;
@@ -30,17 +32,18 @@ public class PoleSystem extends Subsystem implements Rotatable{
 	public static final double ZERO=0.0;
 	public static final double DEFAULT_SPEED=0.5;
 	private VictorSP controller;
-	private final double UP_SPEED=0.8;
-	private final double DOWN_SPEED=-0.5;
+	private final double UP_SPEED=0.9;
+	private final double DOWN_SPEED=-0.6;
 	
 	public AnalogInput in;
 	public DoubleSource angle;
 
 	private DigitalInput s;
 	public BooleanSource isPressed;
-	
+	double startAngle;
 	public PoleSystem()
 	{
+		
 		s = new  DigitalInput(RobotMap.POLE_SWITCH);
 		isPressed = new BooleanSource() {
 			
@@ -49,18 +52,25 @@ public class PoleSystem extends Subsystem implements Rotatable{
 				return !s.get();
 			}
 		};
+		setupAngle();
+		controller= new VictorSP(RobotMap.POLE);
+	}
+	private void setupAngle() {
 		in = new AnalogInput(RobotMap.POLE_POTENTIOMETER);
+		resetStartAngle();
 		angle = new DoubleSource() {
-			//final double START_ANGLE = in.getVoltage();
-			final double START_ANGLE = 4.232177301;
+			//final double START_ANGLE = 4.232177301;
 			final double UNITS = 240.0/5;
 			@Override
 			public double get() {
 				//return (in.getVoltage()*UNITS)-ZERO;
-				return (START_ANGLE - in.getVoltage());
+				return (startAngle - in.getVoltage());
 			}
 		};
-		controller= new VictorSP(RobotMap.POLE);
+	}
+	public void resetStartAngle()
+	{
+		startAngle = in.getVoltage();
 	}
 	@Override
 	public void rotate(double speed) {
@@ -81,7 +91,7 @@ public class PoleSystem extends Subsystem implements Rotatable{
 	
 	public void setup()
 	{
-		Robot.systemController.Y.whenPressed(new PoleAction(0.0));
+		//Robot.systemController.Y.whenPressed(new PoleAction(0.0,Constants.STALL_ANGLE));
 		
 		this.setDefaultAction(new Action() {
 			@Override

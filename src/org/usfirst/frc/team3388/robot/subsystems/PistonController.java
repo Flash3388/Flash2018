@@ -8,7 +8,7 @@ public class PistonController {
 	private DoubleSolenoid sol;
 	
 	public PistonController(int fChannel , int rChannel)
-	{
+	{System.out.println("init");
 		sol= new DoubleSolenoid(fChannel, rChannel);
 	}
 	public void use(boolean side)
