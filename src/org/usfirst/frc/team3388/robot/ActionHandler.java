@@ -31,11 +31,7 @@ public class ActionHandler{
 	public static PoleAction scaleLift;
 	public static PoleAction downLift;
 	public static PoleAction switchLift;
-	
-	public static ActionGroup fullHide;
-	public static ActionGroup fullScaleLift;
-	public static ActionGroup scale;
-	public static ActionGroup switchShoot;
+
 	
 	public static DrivePIDAction centerSwitchDrive;
 	public static DrivePIDAction scaleDrive;
@@ -43,6 +39,7 @@ public class ActionHandler{
 	public static DrivePIDAction captureDrive;
 	public static DrivePIDAction returnCaptureDrive;
 	public static DrivePIDAction smallStartDrive;
+	public static DrivePIDAction testDrive;
 	
 	public static RotatePIDAction scaleToSwitchRotate;
 	public static RotatePIDAction centerRotationR;
@@ -51,16 +48,21 @@ public class ActionHandler{
 	public static RotatePIDAction centerCaptureRotateL;
 	public static RotatePIDAction centerToSwitchRotate;
 	
+	public static ActionGroup backNScale;
+	public static ActionGroup fullHide;
+	public static ActionGroup fullScaleLift;
+	public static ActionGroup scale;
+	public static ActionGroup switchShoot;
+
 	public static void setup()
 	{
 		captureSetup();
 		liftSetup();
 		poleSetup();
-		combinedSetup();
 
 		driveSetup();
 		rotateSetup();
-		
+		combinedSetup();
 	}
 	private static void liftSetup()
 	{
@@ -118,6 +120,9 @@ public class ActionHandler{
 		switchShoot = new ActionGroup()
 				.addSequential(shoot)
 				.addSequential(release);
+		backNScale = new ActionGroup()
+				.addParallel(testDrive)
+				.addSequential(fullScaleLift);
 	}
 	
 	private static void driveSetup()
@@ -128,6 +133,7 @@ public class ActionHandler{
 		scaleToSwitchDrive = new DrivePIDAction(Constants.SCALE_TO_SWITCH_DRIVE);
 		captureDrive = new DrivePIDAction(Constants.SMALL_CAPTURE_DRIVE,0.2,10);
 		returnCaptureDrive = new DrivePIDAction(-Constants.SMALL_CAPTURE_DRIVE/2, 0.3, 10);
+		testDrive = new DrivePIDAction(-250, 0.3);
 	}
 	
 	private static void rotateSetup()

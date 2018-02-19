@@ -68,7 +68,7 @@ public class Robot extends IterativeFRCRobot {
 		
 		//systemController.X.whenPressed(ActionHandler.fullScaleLift);
 		//systemController.X.whenPressed(AutoHandlers.centerSwitch(true));
-		systemController.Y.whenPressed(ActionHandler.shoot);
+		systemController.Y.whenPressed(ActionHandler.backNScale);
 		systemController.RB.whenPressed(ActionHandler.capture);
 		systemController.LB.whenPressed(ActionHandler.release);
 		

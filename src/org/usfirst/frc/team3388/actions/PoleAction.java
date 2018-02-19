@@ -33,9 +33,8 @@ public class PoleAction extends Action{
 			
 			if(unsoleAngle >= curr)
 			{
-				Robot.liftSystem.stall(false);
+				//Robot.liftSystem.stall(false);
 			}
-				
 		}
 		else
 		{

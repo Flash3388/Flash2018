@@ -142,12 +142,14 @@ public class DriveSystem extends Subsystem {
 	public void setup()
 	{
 		this.setDefaultAction(new SystemAction(new Action() {
-			final double bound = 0.15;
+			final double bound = 0.11;
 			
 			@Override
 			protected void execute() {
 				double leftVal = Robot.leftController.getY();
 				double rightVal = Robot.rightController.getY();
+			//	System.out.println(leftVal + "left");
+				//System.out.println(rightVal + "rigjht");
 				if(inRange(rightVal, bound))
 					rightVal = 0.0;
 				if(inRange(leftVal, bound))
