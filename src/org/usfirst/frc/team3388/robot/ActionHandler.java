@@ -5,6 +5,7 @@ import org.usfirst.frc.team3388.actions.DrivePIDAction;
 import org.usfirst.frc.team3388.actions.LiftAction;
 import org.usfirst.frc.team3388.actions.PoleAction;
 import org.usfirst.frc.team3388.actions.RotatePIDAction;
+import org.usfirst.frc.team3388.actions.SimpleDistanceDrive;
 import org.usfirst.frc.team3388.robot.subsystems.RollerLiftingSystem;
 
 import edu.flash3388.flashlib.robot.Action;
@@ -34,24 +35,27 @@ public class ActionHandler{
 
 	
 	public static DrivePIDAction centerSwitchDrive;
-	public static DrivePIDAction scaleDrive;
-	public static DrivePIDAction scaleToSwitchDrive;
+	public static SimpleDistanceDrive startScaleDrive;
 	public static DrivePIDAction captureDrive;
 	public static DrivePIDAction returnCaptureDrive;
 	public static DrivePIDAction smallStartDrive;
-	public static DrivePIDAction testDrive;
+	public static DrivePIDAction secondScaleDrive;
+	public static DrivePIDAction toSwitchDrive;
+	public static DrivePIDAction firstBackScaleDrive;
 	
-	public static RotatePIDAction scaleToSwitchRotate;
 	public static RotatePIDAction centerRotationR;
 	public static RotatePIDAction centerRotationL;
 	public static RotatePIDAction centerCaptureRotateR;
 	public static RotatePIDAction centerCaptureRotateL;
 	public static RotatePIDAction centerToSwitchRotate;
+	public static RotatePIDAction scaleRotateR;
+	public static RotatePIDAction scaleRotateL;
 	
+	public static ActionGroup fullDown;
+	public static ActionGroup fullDownUse;
 	public static ActionGroup backNScale;
 	public static ActionGroup fullHide;
 	public static ActionGroup fullScaleLift;
-	public static ActionGroup scale;
 	public static ActionGroup switchShoot;
 
 	public static void setup()
@@ -105,6 +109,15 @@ public class ActionHandler{
 	
 	private static void combinedSetup()
 	{
+		fullDown = new ActionGroup()
+				.addParallel(fullHide)
+				.addSequential(downLift)
+				.addSequential(fullDownUse);
+		
+		fullDownUse = new ActionGroup()
+				.addSequential(downUse)
+				.addSequential(open);
+		
 		fullHide = new ActionGroup()
 				.addSequential(close)
 				.addSequential(hide);
@@ -114,32 +127,34 @@ public class ActionHandler{
 				.addSequential(scaleLift)
 				.addSequential(upUse);
 		
-		scale = new ActionGroup()
-				.addSequential(scaleLift)
-				.addSequential(open);
-		
 		switchShoot = new ActionGroup()
 				.addSequential(shoot)
 				.addSequential(release);
+		
 		backNScale = new ActionGroup()
-				.addParallel(testDrive)
-				.addSequential(fullScaleLift);
+				.addSequential(new DrivePIDAction(-20,0.2,10,false))
+				.addSequential(startScaleDrive)
+				.addParallel(secondScaleDrive)
+				.addSequential(fullScaleLift)
+				.addSequential(release);
 	}
 	
 	private static void driveSetup()
 	{
+
+		toSwitchDrive = new DrivePIDAction(Constants.TO_SWITCH_DRIVE);
 		smallStartDrive = new DrivePIDAction(Constants.SMALL_START_DRIVE);
 		centerSwitchDrive = new DrivePIDAction(Constants.CENTER_SWITCH_DRIVE,200);
-		scaleDrive = new DrivePIDAction(Constants.SCALE_DRIVE);
-		scaleToSwitchDrive = new DrivePIDAction(Constants.SCALE_TO_SWITCH_DRIVE);
-		captureDrive = new DrivePIDAction(Constants.SMALL_CAPTURE_DRIVE,0.2,10);
-		returnCaptureDrive = new DrivePIDAction(-Constants.SMALL_CAPTURE_DRIVE/2, 0.3, 10);
-		testDrive = new DrivePIDAction(-250, 0.3);
+		captureDrive = new DrivePIDAction(Constants.SMALL_CAPTURE_DRIVE,0.2,10,true);
+		returnCaptureDrive = new DrivePIDAction(-Constants.SMALL_CAPTURE_DRIVE/2, 0.3, 10,true);
+		secondScaleDrive = new DrivePIDAction(-Constants.SCEOND_SCALE_DRIVE, 0.3);
+		startScaleDrive = new SimpleDistanceDrive(-Constants.FIRST_SCALE_DRIVE,-0.5);
 	}
 	
 	private static void rotateSetup()
 	{
-		scaleToSwitchRotate = new RotatePIDAction(Constants.SCALE_TO_SWITCH_ROTATE);
+		scaleRotateR = new RotatePIDAction(Constants.SCALE_ROTATE);
+		scaleRotateL = new RotatePIDAction(-Constants.SCALE_ROTATE);
 		centerRotationR = new RotatePIDAction(Constants.CENTER_ROTATE);
 		centerRotationL = new RotatePIDAction(-Constants.CENTER_ROTATE);
 		centerCaptureRotateR = new RotatePIDAction(Constants.CENTER_CAPTURE);

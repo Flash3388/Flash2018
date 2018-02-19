@@ -33,7 +33,7 @@ public class PoleSystem extends Subsystem implements Rotatable{
 	public static final double DEFAULT_SPEED=0.5;
 	private VictorSP controller;
 	private final double UP_SPEED=0.9;
-	private final double DOWN_SPEED=-0.6;
+	private final double DOWN_SPEED=-0.8;
 	
 	public AnalogInput in;
 	public DoubleSource angle;

@@ -124,15 +124,13 @@ public class DriveSystem extends Subsystem {
 	}
 	public void drive(double speed)
 	{	
-		final double KP = 0.1;
+		final double KP = 0.2;
 		final double MARGIN = 1.0;
 		//driveTrain.tankDrive(speed, speed);
-		double k = KP;
+		double angle = rotationSource.pidGet();
 		if(DrivePIDAction.inThreshold)
-			k=0;
-		else if(speed < 0)
-			k = -KP;
-		driveTrain.arcadeDrive(speed, rotationSource.pidGet()*k);
+			angle = 0;
+		driveTrain.arcadeDrive(speed, -angle*KP);
 	}
 	public void rotate(double speed)
 	{
@@ -164,7 +162,7 @@ public class DriveSystem extends Subsystem {
 		}, this));
 	}
 	
-	private boolean inRange(double val,double bound)
+	private static boolean inRange(double val,double bound)
 	{
 		return(val >= -bound && val <= bound);
 	}

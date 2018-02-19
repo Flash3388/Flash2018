@@ -18,23 +18,27 @@ public class DrivePIDAction extends Action {
 	double setpoint;
 	double speedLimit;
 	int timeInThreshold = TIME_IN_THRESHOLD;
-	
-	public DrivePIDAction(double setpoint,double speedLimit,int timeInThreshold) {
+	boolean stop;
+	public DrivePIDAction(double setpoint,double speedLimit,int timeInThreshold,boolean stop) {
 		requires(Robot.drive);
 		this.setpoint=setpoint;
 		Robot.drive.distanceSetPoint.set(setpoint);
 		this.speedLimit = speedLimit;
 		this.timeInThreshold = timeInThreshold;
+		this.stop = stop;
 	}
 
 	public DrivePIDAction(double setpoint) {
-		this(setpoint,DriveSystem.DRIVE_LIMIT,TIME_IN_THRESHOLD);
+		this(setpoint,DriveSystem.DRIVE_LIMIT,TIME_IN_THRESHOLD,true);
 	}
 	public DrivePIDAction(double setpoint ,double speedLimit) {
-		this(setpoint,speedLimit,TIME_IN_THRESHOLD);
+		this(setpoint,speedLimit,TIME_IN_THRESHOLD,true);
 	}
 	public DrivePIDAction(double setpoint ,int timeInThreshold) {
-		this(setpoint,DriveSystem.DRIVE_LIMIT,timeInThreshold);
+		this(setpoint,DriveSystem.DRIVE_LIMIT,timeInThreshold,true);
+	}
+	public DrivePIDAction(double setpoint ,int timeInThreshold,boolean stop) {
+		this(setpoint,DriveSystem.DRIVE_LIMIT,timeInThreshold,stop);
 	}
 	
 	@Override
@@ -51,8 +55,10 @@ public class DrivePIDAction extends Action {
 	
 	@Override
 	protected void end() {
-		Robot.drive.driveTrain.tankDrive(0.0,0.0);
+		if(stop)
+			Robot.drive.driveTrain.tankDrive(0.0,0.0);
 		Robot.drive.distancePID.setEnabled(false);
+		inThreshold = false;
 	}
 
 	@Override

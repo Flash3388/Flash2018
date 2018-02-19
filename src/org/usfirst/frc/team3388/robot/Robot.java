@@ -64,7 +64,7 @@ public class Robot extends IterativeFRCRobot {
 		
 		ActionHandler.setup();
 		systemController.B.whenPressed(ActionHandler.fullHide);
-		systemController.X.whenPressed(ActionHandler.fullScaleLift);
+		systemController.X.whenPressed(ActionHandler.downLift);
 		
 		//systemController.X.whenPressed(ActionHandler.fullScaleLift);
 		//systemController.X.whenPressed(AutoHandlers.centerSwitch(true));
@@ -80,7 +80,11 @@ public class Robot extends IterativeFRCRobot {
 		});	
 	}
 	
-	
+	@Override
+	protected void preInit(RobotInitializer initializer) {
+		super.preInit(initializer);
+		initializer.initFlashboard= false;	
+	}
 	private void systemSetup()
 	{
 		rollerGripperSystem = new RollerGripperSystem();

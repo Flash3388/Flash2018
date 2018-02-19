@@ -19,10 +19,7 @@ public class CaptureAction extends Action{
 	}
 	@Override
 	protected void end() {
-		System.out.println("end");
 		Robot.rollerGripperSystem.stop();
-		if(!side)
-			Robot.rollerGripperSystem.piston.open();
 	}
 
 	@Override

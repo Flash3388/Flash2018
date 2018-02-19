@@ -10,33 +10,7 @@ import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.ActionGroup;
 
 public class AutoHandlers {
-	
-	public static Action switchChoose(boolean switchSide)
-	{
-		Action a = new ActionGroup()
-				.addSequential(new DrivePIDAction(50.0))
-				.addSequential(new RotatePIDAction(switchSide? 90.0 : -90.0))
-				.addSequential(new DrivePIDAction(100.0))
-				.addSequential(new RotatePIDAction(switchSide? -90.0 : 90.0))
-				.addSequential(new DrivePIDAction(100.0));
-		return a;
-		
-	}
-	public static Action scaleChoose(boolean scaleSide)
-	{
-		
-		Action a = new ActionGroup()
-				.addSequential(ActionHandler.close)
-				.addParallel(ActionHandler.scaleLift)
-				.addSequential(ActionHandler.scaleDrive)
-				.addSequential(ActionHandler.open)
-				.addParallel(ActionHandler.downLift)
-				.addSequential(ActionHandler.scaleToSwitchRotate)
-				.addSequential(ActionHandler.scaleToSwitchDrive)
-				.addSequential(ActionHandler.capture)
-				.addSequential(ActionHandler.switchShoot);
-		return a;
-	}
+
 	public static Action centerSwitch(boolean switchSide)
 	{
 		Action a = new ActionGroup()
@@ -55,6 +29,16 @@ public class AutoHandlers {
 				.addParallel(ActionHandler.switchLift)
 				.addSequential(switchSide ? ActionHandler.centerCaptureRotateL : ActionHandler.centerCaptureRotateR)
 				.addSequential(ActionHandler.release);
+		
+		return a;
+	}
+	public static Action sideScale(boolean scaleScale)
+	{
+		Action a = new ActionGroup()
+				.addParallel(ActionHandler.close)
+				.addSequential(ActionHandler.backNScale)
+				.addParallel(ActionHandler.fullDown)
+				.addSequential(ActionHandler.centerCaptureRotateR);
 		
 		return a;
 	}

@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class PoleAction extends Action{
 
 	private double setpoint;
-	static final double ERROR = 2.5;
+	static final double ERROR = 0.2;
 	boolean dir = true;
 	double unsoleAngle;
 	public PoleAction(double setpoint, double unsoleAngle) {
@@ -38,6 +38,7 @@ public class PoleAction extends Action{
 		}
 		else
 		{
+			System.out.println("down");
 			dir = false;
 			Robot.poleSystem.rotate(false);
 			
@@ -53,7 +54,8 @@ public class PoleAction extends Action{
 	@Override
 	protected boolean isFinished() {
 
-		return Mathf.constrained(Robot.poleSystem.angle.get(), setpoint, setpoint + ERROR)|| (Robot.poleSystem.isPressed.get() && !dir);
+		System.out.println(Mathf.constrained(Robot.poleSystem.angle.get(), setpoint, setpoint + ERROR));
+		return (dir && (Robot.poleSystem.angle.get() >=  setpoint)) || (Robot.poleSystem.isPressed.get() && !dir);
 	}
 	@Override
 	protected void interrupted() {
