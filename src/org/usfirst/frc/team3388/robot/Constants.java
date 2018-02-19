@@ -2,7 +2,7 @@ package org.usfirst.frc.team3388.robot;
 
 public class Constants {
 
-	public static final double SCALE=2.326659918;//2.2265622;
+	public static final double POLE_SCALE=2.23388649;//2.2265622;
 	public static final double POLE_SWITCH=0.02;//2.2265622;
 	
 	public static final double STALL_ANGLE=0.471191358;
@@ -10,7 +10,7 @@ public class Constants {
 	public static final double DOWN_ANGLE = 0.0;
 	public static final double SHOOT_ANGLE=-312;
 	
-	public static final double DOWN_USE_ANGLE=-660.0;
+	public static final double DOWN_USE_ANGLE=-690.0;
 	public static final double UP_USE_ANGLE=-989.0;
 	public static final double HIDE_ANGLE=0.0;
 	

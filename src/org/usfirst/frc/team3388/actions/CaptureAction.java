@@ -37,11 +37,6 @@ public class CaptureAction extends Action{
 		else
 			Robot.rollerGripperSystem.rotate(true);
 	}
-	@Override
-	protected boolean isFinished() {
-		boolean isPressed = Robot.rollerGripperSystem.isPressed.get();
-		return ( isPressed && side) || (!isPressed && !side);
-	}
 	
 	@Override
 	protected void interrupted() {

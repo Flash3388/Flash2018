@@ -27,23 +27,21 @@ public class AutoHandlers {
 		
 		Action a = new ActionGroup()
 				.addSequential(ActionHandler.close)
-				.addParallel(ActionHandler.scaleLift);
-				/*
-				.addSequential(ActionHandler.scaleDrive);
+				.addParallel(ActionHandler.scaleLift)
+				.addSequential(ActionHandler.scaleDrive)
 				.addSequential(ActionHandler.open)
 				.addParallel(ActionHandler.downLift)
 				.addSequential(ActionHandler.scaleToSwitchRotate)
 				.addSequential(ActionHandler.scaleToSwitchDrive)
 				.addSequential(ActionHandler.capture)
 				.addSequential(ActionHandler.switchShoot);
-				*/
 		return a;
 	}
 	public static Action centerSwitch(boolean switchSide)
 	{
 		Action a = new ActionGroup()
-				.addSequential(ActionHandler.close)
 				.addParallel(ActionHandler.shoot)
+				.addParallel(ActionHandler.close)
 				.addSequential(ActionHandler.smallStartDrive)
 				.addSequential(switchSide ? ActionHandler.centerRotationR : ActionHandler.centerRotationL)
 				.addSequential(ActionHandler.centerSwitchDrive)
@@ -57,7 +55,6 @@ public class AutoHandlers {
 				.addParallel(ActionHandler.switchLift)
 				.addSequential(switchSide ? ActionHandler.centerCaptureRotateL : ActionHandler.centerCaptureRotateR)
 				.addSequential(ActionHandler.release);
-				
 		
 		return a;
 	}

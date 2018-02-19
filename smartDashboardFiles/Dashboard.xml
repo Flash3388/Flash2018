@@ -1,0 +1,54 @@
+<xml version="1.0">
+<dashboard>
+	<widget field="Cube Pressed" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
+		<location x="344" y="125"/>
+		<width>631</width>
+		<height>22</height>
+	</widget>
+	<widget field="time left" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.FormattedField">
+		<location x="9" y="55"/>
+	</widget>
+	<widget field="potentiometer" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.LinePlot">
+		<location x="907" y="247"/>
+	</widget>
+	<widget field="Enabled" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.BooleanBox">
+		<location x="339" y="585"/>
+		<width>599</width>
+		<height>26</height>
+	</widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.MjpgStreamViewerImpl">
+		<location x="339" y="156"/>
+		<width>566</width>
+		<height>425</height>
+	</static-widget>
+	<widget field="Robot Distance " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="38" y="231"/>
+	</widget>
+	<widget field="Robot Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="909" y="97"/>
+	</widget>
+	<widget field="enc lift" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="38" y="136"/>
+	</widget>
+	<widget field="Controller chooser" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="183" y="14"/>
+	</widget>
+	<widget field="" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="17" y="80"/>
+	</widget>
+	<widget field="up speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="30" y="117"/>
+	</widget>
+	<widget field="roller switch" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="81" y="333"/>
+	</widget>
+	<widget field="down speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="562" y="55"/>
+	</widget>
+	<widget field="Time Left" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="19" y="15"/>
+	</widget>
+</dashboard>
+<live-window>
+</live-window>
+</xml>

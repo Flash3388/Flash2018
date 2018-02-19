@@ -20,6 +20,7 @@ public class PoleAction extends Action{
 	
 	@Override
 	protected void end() {
+		Robot.liftSystem.stall(true);
 		Robot.poleSystem.stop();
 	}
 	@Override
@@ -33,7 +34,6 @@ public class PoleAction extends Action{
 			if(unsoleAngle >= curr)
 			{
 				Robot.liftSystem.stall(false);
-				System.out.println("unstole");
 			}
 				
 		}
@@ -48,8 +48,7 @@ public class PoleAction extends Action{
 		
 		
 		
-		//if(!dir && Robot.poleSystem.angle.get()>180.0)
-			//Robot.poleSystem.rotate(true);
+	
 	}
 
 	@Override

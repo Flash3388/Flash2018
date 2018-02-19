@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3388.robot.subsystems;
 
 import org.usfirst.frc.team3388.robot.ActionHandler;
+import org.usfirst.frc.team3388.robot.Constants;
 import org.usfirst.frc.team3388.robot.Robot;
 import org.usfirst.frc.team3388.robot.RobotMap;
 import org.usfirst.frc.team3388.robot.TalonSpeed;
@@ -64,9 +65,6 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 	}
 	public void setup()
 	{	
-		SmartDashboard.putNumber("up speed", DEFAULT_UP_SPEED);
-		SmartDashboard.putNumber("down speed", DEFAULT_DOWN_SPEED);
-
 		this.setDefaultAction(new SystemAction(new Action() {
 			
 			final double MARGIN = 0.2;
@@ -80,7 +78,18 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 				else if(y < -MARGIN)
 					rotate(false);
 				else if (stall || Robot.poleSystem.isPressed.get())
+				{	
+					/*
+					 * to do, noraml constants
+					 */
+					if(angle.get() > Constants.UP_USE_ANGLE/1.2 && Robot.poleSystem.angle.get() > Constants.POLE_SCALE/2.0)
+					{
+						rotate(-STALL);
+					}
+					else
 						rotate(STALL);
+				}
+					
 				else
 					stop();
 				SmartDashboard.putNumber("enc lift", angle.get());

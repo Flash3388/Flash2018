@@ -64,10 +64,7 @@ public class DrivePIDAction extends Action {
 				thresholdStartTime= FlashUtil.millisInt();
 				inThreshold=true;
 			}
-				
-				
 			Robot.drive.drive(-Robot.drive.distancePID.calculate());	
-			
 		}
 		else
 		{

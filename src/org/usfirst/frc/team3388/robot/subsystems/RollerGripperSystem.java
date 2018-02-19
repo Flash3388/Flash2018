@@ -25,7 +25,7 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 	private VictorSP lController;
 	
 	public PistonController piston;
-	public static final double DEFAULT_SPEED = 0.7;
+	public static final double DEFAULT_SPEED = 1.0;
 	
 	private DigitalInput in;
 	public BooleanSource isPressed;
@@ -54,7 +54,7 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 	}
 	public void rotate(boolean in) {
 		if(in)
-			rotate(DEFAULT_SPEED);
+			rotate(0.7);
 		else
 			rotate(-DEFAULT_SPEED);
 	}
@@ -65,10 +65,8 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 	}
 	
 	public void setup()
-	{		
-		
+	{	
 		Robot.systemController.A.whenPressed(new InstantAction() {
-			
 			@Override
 			protected void execute() {
 				piston.change();

@@ -53,7 +53,7 @@ public class DriveSystem extends Subsystem {
 	public DriveSystem() {
 		final double PPR=360;
 		gyro = new AnalogGyro(RobotMap.GYRO);
-		//navxSetup();
+		
 		encoder= new Encoder(RobotMap.RIGHT_ENCODER_A, RobotMap.RIGHT_ENCODER_B);
 		encoder.setDistancePerPulse((2*Math.PI*WHEEL_RADIUS)/PPR);
 		
@@ -133,8 +133,6 @@ public class DriveSystem extends Subsystem {
 		else if(speed < 0)
 			k = -KP;
 		driveTrain.arcadeDrive(speed, rotationSource.pidGet()*k);
-		
-		//driveTrain.arcadeDrive(speed, SmartDashboard.getNumber(DashNames.driveKp, 0.0)*rotationSource.pidGet());	
 	}
 	public void rotate(double speed)
 	{

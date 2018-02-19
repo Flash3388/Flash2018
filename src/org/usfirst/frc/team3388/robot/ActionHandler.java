@@ -65,8 +65,9 @@ public class ActionHandler{
 	private static void liftSetup()
 	{
 		downUse = new LiftAction(Constants.DOWN_USE_ANGLE,true);
-		upUseFirst = new LiftAction(Constants.UP_USE_ANGLE/2.0,true,RollerLiftingSystem.DEFAULT_UP_SPEED,RollerLiftingSystem.DEFAULT_UP_SPEED);
-		upUseFirst = new LiftAction(Constants.UP_USE_ANGLE,true,RollerLiftingSystem.DEFAULT_DOWN_SPEED,RollerLiftingSystem.DEFAULT_DOWN_SPEED);
+		upUse = new LiftAction(-380.0,true,RollerLiftingSystem.DEFAULT_UP_SPEED, RollerLiftingSystem.DEFAULT_DOWN_SPEED);
+		upUseFirst = new LiftAction(Constants.UP_USE_ANGLE/2.0,true,RollerLiftingSystem.DEFAULT_UP_SPEED*2.0,RollerLiftingSystem.DEFAULT_UP_SPEED);
+		upUseSecond = new LiftAction(Constants.UP_USE_ANGLE,true,RollerLiftingSystem.DEFAULT_DOWN_SPEED,RollerLiftingSystem.DEFAULT_DOWN_SPEED);
 		hide = new LiftAction(Constants.HIDE_ANGLE,true);
 		shoot = new LiftAction(Constants.SHOOT_ANGLE,true);
 	}
@@ -77,7 +78,6 @@ public class ActionHandler{
 		release = new TimedAction(new CaptureAction(false), Constants.CAPTURE_TIME);
 		
 		open = new InstantAction() {
-			
 			@Override
 			protected void execute() {
 				Robot.rollerGripperSystem.piston.open();
@@ -95,7 +95,7 @@ public class ActionHandler{
 	
 	private static void poleSetup()
 	{
-		scaleLift = new PoleAction(Constants.SCALE,Constants.STALL_ANGLE);
+		scaleLift = new PoleAction(Constants.POLE_SCALE,Constants.STALL_ANGLE);
 		downLift = new PoleAction(Constants.DOWN_ANGLE,Constants.STALL_ANGLE);
 		switchLift = new PoleAction(Constants.POLE_SWITCH, Constants.STALL_ANGLE);
 	}
@@ -109,16 +109,7 @@ public class ActionHandler{
 		fullScaleLift = new ActionGroup()
 				.addParallel(hide)
 				.addSequential(scaleLift)
-				.addSequential(upUseFirst)
-				.addSequential(new InstantAction() {
-					
-					@Override
-					protected void execute() {
-						System.out.println("here");
-					}
-				})
-				.addSequential(upUseSecond);
-				
+				.addSequential(upUse);
 		
 		scale = new ActionGroup()
 				.addSequential(scaleLift)

@@ -64,8 +64,10 @@ public class Robot extends IterativeFRCRobot {
 		
 		ActionHandler.setup();
 		systemController.B.whenPressed(ActionHandler.fullHide);
+		systemController.X.whenPressed(ActionHandler.fullScaleLift);
+		
 		//systemController.X.whenPressed(ActionHandler.fullScaleLift);
-		systemController.X.whenPressed(AutoHandlers.centerSwitch(true));
+		//systemController.X.whenPressed(AutoHandlers.centerSwitch(true));
 		systemController.Y.whenPressed(ActionHandler.shoot);
 		systemController.RB.whenPressed(ActionHandler.capture);
 		systemController.LB.whenPressed(ActionHandler.release);
@@ -73,7 +75,7 @@ public class Robot extends IterativeFRCRobot {
 		systemController.Back.whenPressed(new InstantAction() {		
 			@Override
 			protected void execute() {
-				liftSystem.resetEncoder();
+				resetSensors();
 			}
 		});	
 	}
