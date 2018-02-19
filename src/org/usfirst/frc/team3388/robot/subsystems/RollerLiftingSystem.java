@@ -7,10 +7,8 @@ import org.usfirst.frc.team3388.robot.RobotMap;
 import org.usfirst.frc.team3388.robot.TalonSpeed;
 
 import edu.flash3388.flashlib.robot.Action;
-import edu.flash3388.flashlib.robot.InstantAction;
 import edu.flash3388.flashlib.robot.Subsystem;
 import edu.flash3388.flashlib.robot.SystemAction;
-import edu.flash3388.flashlib.robot.devices.IndexEncoder;
 import edu.flash3388.flashlib.robot.systems.Rotatable;
 import edu.flash3388.flashlib.util.beans.DoubleSource;
 import edu.wpi.first.wpilibj.Encoder;
@@ -77,19 +75,15 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 					rotate(true);
 				else if(y < -MARGIN)
 					rotate(false);
-				else if (stall || Robot.poleSystem.isPressed.get())
+				else if (stall)
 				{	
-					/*
-					 * to do, noraml constants
-					 */
-					if(angle.get() > Constants.UP_USE_ANGLE/1.2 && Robot.poleSystem.angle.get() > Constants.POLE_SCALE/2.0)
+					if(angle.get() > Constants.LIFT_FLIPPED_STALL && Robot.poleSystem.angle.get() > Constants.POLE_FLIPPED_STALL)
 					{
 						rotate(-STALL);
 					}
 					else
 						rotate(STALL);
 				}
-					
 				else
 					stop();
 				SmartDashboard.putNumber("enc lift", angle.get());

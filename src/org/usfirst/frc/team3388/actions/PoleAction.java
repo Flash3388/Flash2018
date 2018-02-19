@@ -31,7 +31,7 @@ public class PoleAction extends Action{
 			dir= true;
 			Robot.poleSystem.rotate(true);
 			
-			if(unsoleAngle >= curr)
+			if(unsoleAngle <= curr)
 			{
 				//Robot.liftSystem.stall(false);
 			}

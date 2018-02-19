@@ -67,7 +67,8 @@ public class ActionHandler{
 	private static void liftSetup()
 	{
 		downUse = new LiftAction(Constants.DOWN_USE_ANGLE,true);
-		upUse = new LiftAction(-380.0,true,RollerLiftingSystem.DEFAULT_UP_SPEED, RollerLiftingSystem.DEFAULT_DOWN_SPEED);
+		upUse = new LiftAction(Constants.UP_USE_ANGLE_FLIPPED,true,RollerLiftingSystem.DEFAULT_UP_SPEED, RollerLiftingSystem.DEFAULT_DOWN_SPEED);
+		
 		upUseFirst = new LiftAction(Constants.UP_USE_ANGLE/2.0,true,RollerLiftingSystem.DEFAULT_UP_SPEED*2.0,RollerLiftingSystem.DEFAULT_UP_SPEED);
 		upUseSecond = new LiftAction(Constants.UP_USE_ANGLE,true,RollerLiftingSystem.DEFAULT_DOWN_SPEED,RollerLiftingSystem.DEFAULT_DOWN_SPEED);
 		hide = new LiftAction(Constants.HIDE_ANGLE,true);
