@@ -37,9 +37,15 @@ public class AutoHandlers {
 		Action a = new ActionGroup()
 				.addParallel(ActionHandler.close)
 				.addSequential(ActionHandler.backNScale)
-				.addParallel(ActionHandler.fullDown)
-				.addSequential(ActionHandler.centerCaptureRotateR);
-		
+				.addParallel(ActionHandler.scaleToSwitchRotateR)
+				.addSequential(ActionHandler.fullDown)
+				.addParallel(ActionHandler.fullDownUse)
+				.addSequential(ActionHandler.scaleToSwitchDrive)
+				.addParallel(ActionHandler.backSwitchToScale)
+				.addSequential(ActionHandler.capture)
+				.addSequential(ActionHandler.fullScaleLift)
+				.addSequential(ActionHandler.release)
+				.addSequential(ActionHandler.fullDown);
 		return a;
 	}
 

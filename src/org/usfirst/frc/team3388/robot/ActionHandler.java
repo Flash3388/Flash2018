@@ -33,14 +33,14 @@ public class ActionHandler{
 	public static PoleAction downLift;
 	public static PoleAction switchLift;
 
-	
+	public static DrivePIDAction backSwitchToScale;
 	public static DrivePIDAction centerSwitchDrive;
 	public static SimpleDistanceDrive startScaleDrive;
 	public static DrivePIDAction captureDrive;
 	public static DrivePIDAction returnCaptureDrive;
 	public static DrivePIDAction smallStartDrive;
 	public static DrivePIDAction secondScaleDrive;
-	public static DrivePIDAction toSwitchDrive;
+	public static DrivePIDAction scaleToSwitchDrive;
 	public static DrivePIDAction firstBackScaleDrive;
 	
 	public static RotatePIDAction centerRotationR;
@@ -48,8 +48,8 @@ public class ActionHandler{
 	public static RotatePIDAction centerCaptureRotateR;
 	public static RotatePIDAction centerCaptureRotateL;
 	public static RotatePIDAction centerToSwitchRotate;
-	public static RotatePIDAction scaleRotateR;
-	public static RotatePIDAction scaleRotateL;
+	public static RotatePIDAction scaleToSwitchRotateR;
+	public static RotatePIDAction scaleToSwitchRotateL;
 	
 	public static ActionGroup fullDown;
 	public static ActionGroup fullDownUse;
@@ -109,10 +109,6 @@ public class ActionHandler{
 	
 	private static void combinedSetup()
 	{
-		fullDown = new ActionGroup()
-				.addParallel(fullHide)
-				.addSequential(downLift)
-				.addSequential(fullDownUse);
 		
 		fullDownUse = new ActionGroup()
 				.addSequential(downUse)
@@ -127,34 +123,38 @@ public class ActionHandler{
 				.addSequential(scaleLift)
 				.addSequential(upUse);
 		
+		fullDown = new ActionGroup()
+				.addParallel(fullHide)
+				.addSequential(downLift);
+				
+		
 		switchShoot = new ActionGroup()
 				.addSequential(shoot)
 				.addSequential(release);
 		
 		backNScale = new ActionGroup()
-				.addSequential(new DrivePIDAction(-20,0.2,10,false))
+				.addParallel(fullScaleLift)
 				.addSequential(startScaleDrive)
-				.addParallel(secondScaleDrive)
-				.addSequential(fullScaleLift)
+				.addSequential(secondScaleDrive)
 				.addSequential(release);
 	}
-	
+			//HOMO
 	private static void driveSetup()
 	{
-
-		toSwitchDrive = new DrivePIDAction(Constants.TO_SWITCH_DRIVE);
+		backSwitchToScale = new DrivePIDAction(-Constants.SCALE_TO_SWITCH_DRIVE+35,0.4);
+		scaleToSwitchDrive = new DrivePIDAction(Constants.SCALE_TO_SWITCH_DRIVE,0.5,10,true);
 		smallStartDrive = new DrivePIDAction(Constants.SMALL_START_DRIVE);
 		centerSwitchDrive = new DrivePIDAction(Constants.CENTER_SWITCH_DRIVE,200);
 		captureDrive = new DrivePIDAction(Constants.SMALL_CAPTURE_DRIVE,0.2,10,true);
 		returnCaptureDrive = new DrivePIDAction(-Constants.SMALL_CAPTURE_DRIVE/2, 0.3, 10,true);
-		secondScaleDrive = new DrivePIDAction(-Constants.SCEOND_SCALE_DRIVE, 0.3);
+		secondScaleDrive = new DrivePIDAction(-Constants.SCEOND_SCALE_DRIVE, 0.25);
 		startScaleDrive = new SimpleDistanceDrive(-Constants.FIRST_SCALE_DRIVE,-0.5);
 	}
 	
 	private static void rotateSetup()
 	{
-		scaleRotateR = new RotatePIDAction(Constants.SCALE_ROTATE);
-		scaleRotateL = new RotatePIDAction(-Constants.SCALE_ROTATE);
+		scaleToSwitchRotateR = new RotatePIDAction(Constants.SCALE_TO_SWITCH_ROTATE);
+		scaleToSwitchRotateL = new RotatePIDAction(-Constants.SCALE_TO_SWITCH_ROTATE);
 		centerRotationR = new RotatePIDAction(Constants.CENTER_ROTATE);
 		centerRotationL = new RotatePIDAction(-Constants.CENTER_ROTATE);
 		centerCaptureRotateR = new RotatePIDAction(Constants.CENTER_CAPTURE);

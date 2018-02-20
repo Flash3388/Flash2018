@@ -65,10 +65,22 @@ public class Robot extends IterativeFRCRobot {
 		ActionHandler.setup();
 		systemController.B.whenPressed(ActionHandler.fullHide);
 		systemController.X.whenPressed(ActionHandler.downLift);
+		systemController.LB.whileHeld(new Action() {
+			
+			@Override
+			protected void execute() {
+				rollerGripperSystem.spin();
+			}
+			
+			@Override
+			protected void end() {
+				rollerGripperSystem.stop();
+			}
+		});
 		
 		//systemController.X.whenPressed(ActionHandler.fullScaleLift);
 		//systemController.X.whenPressed(AutoHandlers.centerSwitch(true));
-		systemController.Y.whenPressed(ActionHandler.backNScale);
+		systemController.Y.whenPressed(AutoHandlers.sideScale(true));
 		systemController.RB.whenPressed(ActionHandler.capture);
 		systemController.LB.whenPressed(ActionHandler.release);
 		
@@ -77,7 +89,14 @@ public class Robot extends IterativeFRCRobot {
 			protected void execute() {
 				resetSensors();
 			}
-		});	
+		});
+
+		systemController.Start.whenPressed(new InstantAction() {		
+			@Override
+			protected void execute() {
+				drive.calibGyro();
+			}
+		});
 	}
 	
 	@Override
@@ -129,6 +148,7 @@ public class Robot extends IterativeFRCRobot {
 
 	protected void disabledInit() {
 		DashHandle.disInit();
+		
 	}
 	
 	@Override
@@ -166,7 +186,7 @@ public class Robot extends IterativeFRCRobot {
 	private void resetSensors() {
 		drive.encoder.reset();
 		drive.resetGyro();
-
+		drive.initGyro();
 		poleSystem.resetStartAngle();
 		liftSystem.resetEncoder();
 

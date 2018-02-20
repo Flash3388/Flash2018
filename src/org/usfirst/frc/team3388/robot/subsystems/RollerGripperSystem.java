@@ -47,6 +47,7 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 				return in.get();
 			}
 		};
+
 	}
 	public void rotate(double speed) {
 		rController.set(speed);
@@ -54,7 +55,7 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 	}
 	public void rotate(boolean in) {
 		if(in)
-			rotate(0.7);
+			rotate(1.0);
 		else
 			rotate(-DEFAULT_SPEED);
 	}
@@ -72,6 +73,13 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 				piston.change();
 			}
 		});
+		
+	}
+	
+	public void spin()
+	{
+		rController.set(0.5);
+		lController.set(-0.5);
 	}
 	@Override
 	public void stop() {

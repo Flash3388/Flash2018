@@ -76,7 +76,14 @@ public class DriveSystem extends Subsystem {
 	{
 		inited = true;
 		gyro.initGyro();
+		//gyro.calibrate();
 	}
+	public void calibGyro()
+	{
+		gyro.calibrate();
+	}
+	
+	
 	private void pidsHandler() {
 		distanceSource = new PIDSource() {
 			@Override
@@ -124,12 +131,12 @@ public class DriveSystem extends Subsystem {
 	}
 	public void drive(double speed)
 	{	
-		final double KP = 0.2;
+		final double KP = 0.3;
 		final double MARGIN = 1.0;
 		//driveTrain.tankDrive(speed, speed);
 		double angle = rotationSource.pidGet();
-		if(DrivePIDAction.inThreshold)
-			angle = 0;
+	///	if(DrivePIDAction.inThreshold)
+		//	angle = 0;
 		driveTrain.arcadeDrive(speed, -angle*KP);
 	}
 	public void rotate(double speed)
