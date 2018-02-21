@@ -170,8 +170,8 @@ public class ActionHandler{
 		backNScale = new ActionGroup()
 				.addParallel(fullScaleLift)
 				.addSequential(startScaleDrive)
-				.addSequential(secondScaleDrive)
-				.addSequential(inThresholdRelease);
+				.addParallel(inThresholdRelease)
+				.addSequential(secondScaleDrive);
 		
 		rightSideSwitch = new ActionGroup()
 				.addSequential(capture)
