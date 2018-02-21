@@ -59,7 +59,7 @@ public class AutoHandlers {
 		}
 		else
 		{
-			a.addSequential(ActionHandler.halfSwitchDrive);
+			a.addSequential(ActionHandler.switchDrive);
 		}		
 				
 		return a;
@@ -69,12 +69,14 @@ public class AutoHandlers {
 	{
 		Action a = new ActionGroup()
 				.addParallel(ActionHandler.shoot)
-				.addSequential(ActionHandler.halfSwitchDrive)
-				.addSequential(right? ActionHandler.rotateL90 : ActionHandler.rotateR90)
-				.addSequential(ActionHandler.release);
+				.addSequential(ActionHandler.switchDrive)
+				.addSequential(right ? ActionHandler.rotateR90 : ActionHandler.rotateL90)
+				.addSequential(right ? ActionHandler.shootRotateL1 : ActionHandler.shootRotateR1)
+				.addSequential(ActionHandler.release)
+				.addParallel(ActionHandler.downUse)
+				.addSequential(right ? ActionHandler.shootRotateR1 : ActionHandler.shootRotateL1)
+				.addSequential(right ? ActionHandler.rightSideSwitch : ActionHandler.leftSideSwitch);
 		return a;
-				
-				
+					
 	}
-
 }

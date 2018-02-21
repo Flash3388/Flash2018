@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ActionHandler{
 
+	public static Action inThresholdRelease;
+	
 	public static TimedAction capture;
 	public static TimedAction release;
 	
@@ -33,26 +35,37 @@ public class ActionHandler{
 	public static PoleAction downLift;
 	public static PoleAction switchLift;
 
-	public static DrivePIDAction backSwitchToScale;
+	
 	public static DrivePIDAction centerSwitchDrive;
-	public static SimpleDistanceDrive startScaleDrive;
 	public static DrivePIDAction captureDrive;
-	public static DrivePIDAction returnCaptureDrive;
 	public static DrivePIDAction smallStartDrive;
+	
+	public static DrivePIDAction backSwitchToScale;
+	public static DrivePIDAction returnCaptureDrive;
 	public static DrivePIDAction secondScaleDrive;
 	public static DrivePIDAction scaleToSwitchDrive;
 	public static DrivePIDAction firstBackScaleDrive;
-	public static DrivePIDAction halfSwitchDrive;
+	public static SimpleDistanceDrive startScaleDrive;
+	
+	public static DrivePIDAction switchDrive;
+	public static DrivePIDAction smallCaptureDrive;
+	
 	
 	public static RotatePIDAction centerRotationR;
 	public static RotatePIDAction centerRotationL;
 	public static RotatePIDAction centerCaptureRotateR;
 	public static RotatePIDAction centerCaptureRotateL;
 	public static RotatePIDAction centerToSwitchRotate;
+	
 	public static RotatePIDAction scaleToSwitchRotateR;
 	public static RotatePIDAction scaleToSwitchRotateL;
+	
 	public static RotatePIDAction rotateR90;
 	public static RotatePIDAction rotateL90;
+	public static RotatePIDAction shootRotateR1;
+	public static RotatePIDAction shootRotateR2;
+	public static RotatePIDAction shootRotateL1;
+	public static RotatePIDAction shootRotateL2;
 	
 	public static ActionGroup fullDown;
 	public static ActionGroup fullDownUse;
@@ -60,6 +73,8 @@ public class ActionHandler{
 	public static ActionGroup fullHide;
 	public static ActionGroup fullScaleLift;
 	public static ActionGroup switchShoot;
+	public static ActionGroup rightSideSwitch;
+	public static ActionGroup leftSideSwitch;
 
 	public static void setup()
 	{
@@ -86,6 +101,23 @@ public class ActionHandler{
 	{
 		capture = new TimedAction(new CaptureAction(true) , Constants.CAPTURE_TIME);
 		release = new TimedAction(new CaptureAction(false), Constants.CAPTURE_TIME);
+		
+		inThresholdRelease = new Action() {
+			
+			@Override
+			protected void execute() {
+			}
+			
+			@Override
+			protected void end() {
+				release.start();
+			}
+			
+			@Override
+			protected boolean isFinished() {
+				return secondScaleDrive.inThreshold;
+			}
+		};
 		
 		open = new InstantAction() {
 			@Override
@@ -139,6 +171,32 @@ public class ActionHandler{
 				.addParallel(fullScaleLift)
 				.addSequential(startScaleDrive)
 				.addSequential(secondScaleDrive)
+				.addSequential(inThresholdRelease);
+		
+		rightSideSwitch = new ActionGroup()
+				.addSequential(capture)
+				.addParallel(shoot)
+				.addSequential(shootRotateR1)
+				.addParallel(release)
+				.addParallel(downUse)
+				.addSequential(shootRotateL1)
+				.addSequential(captureDrive)
+				.addSequential(capture)
+				.addParallel(shoot)
+				.addSequential(shootRotateR2)
+				.addSequential(release);
+		
+		leftSideSwitch = new ActionGroup()
+				.addSequential(capture)
+				.addParallel(shoot)
+				.addSequential(shootRotateL1)
+				.addParallel(release)
+				.addParallel(downUse)
+				.addSequential(shootRotateR1)
+				.addSequential(captureDrive)
+				.addSequential(capture)
+				.addParallel(shoot)
+				.addSequential(shootRotateL2)
 				.addSequential(release);
 	}
 			//HOMO
@@ -152,7 +210,9 @@ public class ActionHandler{
 		returnCaptureDrive = new DrivePIDAction(-Constants.SMALL_CAPTURE_DRIVE/2.7, 0.5, 10,true);
 		secondScaleDrive = new DrivePIDAction(-Constants.SCEOND_SCALE_DRIVE, 0.20,65,true);
 		startScaleDrive = new SimpleDistanceDrive(-Constants.FIRST_SCALE_DRIVE,-0.5);
-		halfSwitchDrive = new DrivePIDAction(-Constants.HALF_SWITCH_DRIVE);
+		
+		switchDrive = new DrivePIDAction(Constants.SWITCH_DRIVE,0.6,70,true);
+		smallCaptureDrive = new DrivePIDAction(Constants.SWITCH_CAPTURE_DRIVE,0.2,10, true);
 	}
 	
 	private static void rotateSetup()
@@ -167,5 +227,9 @@ public class ActionHandler{
 		rotateR90 = new RotatePIDAction(90.0);
 		rotateL90 = new RotatePIDAction(-90.0);
 		
+		shootRotateL1 = new RotatePIDAction(Constants.SHOOT_ROTATE1);
+		shootRotateL2 = new RotatePIDAction(Constants.SHOOT_ROTATE2);
+		shootRotateR1 = new RotatePIDAction(-Constants.SHOOT_ROTATE1);
+		shootRotateR2 = new RotatePIDAction(-Constants.SHOOT_ROTATE2);
 	}
 }

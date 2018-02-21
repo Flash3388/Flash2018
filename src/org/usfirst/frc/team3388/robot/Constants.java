@@ -25,12 +25,15 @@ public class Constants {
 	public static final double SMALL_START_DRIVE=20;
 	public static final double SMALL_CAPTURE_DRIVE=30;
 	public static final double HALF_SWITCH_DRIVE=430;
-	
+	public static final double SWITCH_DRIVE= -570;
+	public static final double SWITCH_CAPTURE_DRIVE=10;
 	
 	public static final double SCALE_TO_SWITCH_ROTATE=29;
 	public static final double CENTER_ROTATE=23;
 	public static final double CENTER_CAPTURE=-63;
 	public static final double CENTER_TO_SWITCH_ROTATE=-CENTER_CAPTURE;
+	public static final double SHOOT_ROTATE1=20;
+	public static final double SHOOT_ROTATE2=40;
 	
 	public static final double CAPTURE_TIME=1.0;
 	public static final double RELEASE_TIME=0.15;

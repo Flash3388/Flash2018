@@ -24,6 +24,7 @@ public class RotatePIDAction extends Action {
 	public RotatePIDAction(double setpoint) {
 		this(setpoint,DriveSystem.ROTATE_LIMIT);
 	}
+
 	@Override
 	protected void initialize() {
 		start=FlashUtil.millisInt();

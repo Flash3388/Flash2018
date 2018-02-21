@@ -11,7 +11,7 @@ import edu.flash3388.flashlib.util.FlashUtil;
 
 public class DrivePIDAction extends Action {
 
-	public static boolean inThreshold=false;
+	public boolean inThreshold=false;
 	public final static double MARGIN=1.5;
 	public final static int TIME_IN_THRESHOLD=350;
 	double thresholdStartTime;
