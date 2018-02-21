@@ -79,6 +79,7 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 				{	
 					if(angle.get() > Constants.LIFT_FLIPPED_STALL && Robot.poleSystem.angle.get() > Constants.POLE_FLIPPED_STALL)
 					{
+						System.out.println("flipped");
 						rotate(-STALL);
 					}
 					else

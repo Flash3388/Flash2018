@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3388.actions;
 
 import org.usfirst.frc.team3388.robot.Robot;
+import org.usfirst.frc.team3388.robot.subsystems.DriveSystem;
 
 import edu.flash3388.flashlib.math.Mathf;
 import edu.flash3388.flashlib.robot.Action;
@@ -9,14 +10,19 @@ import edu.flash3388.flashlib.util.FlashUtil;
 public class RotatePIDAction extends Action {
 	
 	public static boolean isFinished=false;
-	public final static double MARGIN=1.5;
-	public final static int TIME_IN_THRESHOLD=200;
+	public final static double MARGIN=2.0;
+	public final static int TIME_IN_THRESHOLD=100;
 	int thresholdStartTime;
 	int start;
 	double setpoint;
-	public RotatePIDAction(double setpoint) {
+	double speedLimit;
+	public RotatePIDAction(double setpoint,double speedLimit) {
 		requires(Robot.drive);
 		this.setpoint=setpoint;
+		this.speedLimit = speedLimit;
+	}
+	public RotatePIDAction(double setpoint) {
+		this(setpoint,DriveSystem.ROTATE_LIMIT);
 	}
 	@Override
 	protected void initialize() {
@@ -25,6 +31,7 @@ public class RotatePIDAction extends Action {
 		thresholdStartTime=0;
 		Robot.drive.rotationSetPoint.set(setpoint + Robot.drive.rotationSource.pidGet());
 		Robot.drive.encoder.reset();
+		Robot.drive.rotatePID.setOutputLimit(-speedLimit,speedLimit);
 		Robot.drive.rotatePID.setEnabled(true);
 		Robot.drive.rotatePID.reset();
 	}

@@ -23,8 +23,8 @@ public class RobotMap {
 	
 	public static final int CAPTURE_R = 8;
 	public static final int CAPTURE_L = 9;
-	public static final int R_CHANNEL = 1;
-	public static final int L_CHANNEL = 0;
+	public static final int R_CHANNEL = 0;
+	public static final int L_CHANNEL = 1;
 	public static final int CAPTURE_SWITCH = 6;
 	
 	public static final int LIFT_CONTROLLER = 4;
@@ -33,8 +33,8 @@ public class RobotMap {
 	
 	public static final int POLE = 6;
 	public static final int POLE_POTENTIOMETER=3;
-	public static final int POLE_SWITCH = 7;
-	public static final int POLE_ENCODER= 5;
+	public static final int POLE_DOWN_SWITCH = 7;
+	public static final int POLE_UP_SWITCH = 5;
 	
 	public final static int CAM_PORT1 = 0;
 	public final static int CAM_PORT2 = 1;

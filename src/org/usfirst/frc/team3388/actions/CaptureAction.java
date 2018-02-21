@@ -11,7 +11,7 @@ public class CaptureAction extends Action{
 	double startTime=0;
 	double timeCaptured=0;
 	boolean side;
-	static final double CAPTURING_TIME = 1.9;
+	static final double CAPTURING_TIME = 0.3;
 	final double CAPTURING_DISTANCE = 10;
 	public CaptureAction(boolean side) {
 		requires(Robot.rollerGripperSystem);

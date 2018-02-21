@@ -20,7 +20,10 @@ import edu.flash3388.flashlib.robot.hid.Joystick;
 import edu.flash3388.flashlib.robot.hid.XboxController;
 import edu.flash3388.flashlib.util.FlashUtil;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -29,11 +32,11 @@ public class Robot extends IterativeFRCRobot {
 
 	DrivePIDAction switchPIDDrive;
 	ActionGroup frontSwitchAuto;
-	
+		
 	CamerasHandler camHandler;
 	public static DriveSystem drive;
 	
-	SendableChooser<Action> autoChooser;
+	SendableChooser<Integer> autoChooser;
 	
 	public static Joystick rightController;
 	public static Joystick leftController;
@@ -43,11 +46,9 @@ public class Robot extends IterativeFRCRobot {
 	public static RollerGripperSystem rollerGripperSystem;
 	public static RollerLiftingSystem liftSystem;
 	
-	static double startTime;
-	
-	public enum Side {LEFT,MIDDLE,RIGHT};
-	
-	Side side;
+	static double startTime;	
+
+	public static boolean closeSwitch;
 	@Override
 	protected void initRobot() {
 		controllersSetup();
@@ -63,8 +64,15 @@ public class Robot extends IterativeFRCRobot {
 		camHandler = new CamerasHandler();
 		
 		ActionHandler.setup();
-		systemController.B.whenPressed(ActionHandler.fullHide);
-		systemController.X.whenPressed(ActionHandler.downLift);
+		buttons();
+		autoChooserSetup();
+		
+	}
+
+	private void buttons() {
+		systemController.B.whenPressed(ActionHandler.fullDown);
+		//systemController.X.whenPressed(ActionHandler.downLift);backNScale
+		systemController.X.whenPressed(ActionHandler.scaleToSwitchRotateR);
 		systemController.LB.whileHeld(new Action() {
 			
 			@Override
@@ -78,9 +86,7 @@ public class Robot extends IterativeFRCRobot {
 			}
 		});
 		
-		//systemController.X.whenPressed(ActionHandler.fullScaleLift);
-		//systemController.X.whenPressed(AutoHandlers.centerSwitch(true));
-		systemController.Y.whenPressed(AutoHandlers.sideScale(true));
+		systemController.Y.whenPressed(AutoHandlers.rightScale(true,true,true));
 		systemController.RB.whenPressed(ActionHandler.capture);
 		systemController.LB.whenPressed(ActionHandler.release);
 		
@@ -115,27 +121,14 @@ public class Robot extends IterativeFRCRobot {
 		liftSystem = new RollerLiftingSystem();
 		liftSystem.setup();
 	}
-	private void getRobotSide()
-	{
-		int getSide = 0;
-		SmartDashboard.getNumber("Robot position", getSide);
-		switch (getSide)
-		{
-		case 0:
-			side=Side.LEFT;
-			break;
-		case 1:
-			side=Side.MIDDLE;
-			break;
-		case 2:
-			side=Side.RIGHT;
-			break;
-		}
-	}
 	
-	private void autoHandlers() {
-		autoChooser = new SendableChooser<Action>();
+	private void autoChooserSetup() {
+		autoChooser = new SendableChooser<Integer>();
 		SmartDashboard.putData(autoChooser);
+		autoChooser.addDefault("Center switch", 0);
+		autoChooser.addDefault("Right Scale", 1);
+		autoChooser.addDefault("Left Scale", 2);
+		
 	}
 	
 	private void controllersSetup() {
@@ -153,9 +146,7 @@ public class Robot extends IterativeFRCRobot {
 	
 	@Override
 	protected void disabledPeriodic() {
-		getRobotSide();
-		DashHandle.disPeriodic();
-		
+		DashHandle.disPeriodic();	
 		drive.initGyro();
 	}
 
@@ -177,10 +168,21 @@ public class Robot extends IterativeFRCRobot {
 	
 		String gameData;
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
-		Action auto = AutoHandlers.centerSwitch(gameData.charAt(0) == 'R');
+		boolean rightSwitch = gameData.charAt(0) == 'R';
+		boolean rightScale = gameData.charAt(1) == 'R';
+		
+		Action auto = AutoHandlers.centerSwitch(rightSwitch);
+		switch(autoChooser.getSelected())
+		{
+		case 1:
+			auto = AutoHandlers.rightScale(rightScale,rightSwitch,true);
+			break;
+		case 2:
+			auto = AutoHandlers.rightScale(rightScale,rightSwitch,false);
+			break;
+		}
 		auto.start();
-		//Action chosenAction = autoChooser.getSelected();
-	}
+		}
 
 
 	private void resetSensors() {

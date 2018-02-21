@@ -8,6 +8,7 @@ import org.usfirst.frc.team3388.robot.subsystems.DriveSystem;
 
 import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.ActionGroup;
+import edu.flash3388.flashlib.robot.InstantAction;
 
 public class AutoHandlers {
 
@@ -32,21 +33,48 @@ public class AutoHandlers {
 		
 		return a;
 	}
-	public static Action sideScale(boolean scaleScale)
+	public static Action rightScale(boolean rightScale, boolean rightSwitch,boolean rightSide)
 	{
-		Action a = new ActionGroup()
-				.addParallel(ActionHandler.close)
-				.addSequential(ActionHandler.backNScale)
-				.addParallel(ActionHandler.scaleToSwitchRotateR)
+		ActionGroup a = new ActionGroup()
+				.addParallel(ActionHandler.close);
+				
+		if(rightScale == rightSide)
+		{
+				a.addSequential(ActionHandler.backNScale)
+				.addParallel(rightSide ? ActionHandler.scaleToSwitchRotateR : ActionHandler.scaleToSwitchRotateL)
 				.addSequential(ActionHandler.fullDown)
 				.addParallel(ActionHandler.fullDownUse)
 				.addSequential(ActionHandler.scaleToSwitchDrive)
-				.addParallel(ActionHandler.backSwitchToScale)
-				.addSequential(ActionHandler.capture)
-				.addSequential(ActionHandler.fullScaleLift)
-				.addSequential(ActionHandler.release)
-				.addSequential(ActionHandler.fullDown);
+				.addParallel(ActionHandler.returnCaptureDrive)
+				.addSequential(ActionHandler.capture);
+				if(rightSwitch == rightSide)
+				{
+					a.addSequential(ActionHandler.shoot)
+					.addSequential(ActionHandler.release);	
+				}
+		}
+		else if(rightSwitch == rightSide)
+		{
+			a.addSequential(sideSwitch(rightSide));
+		}
+		else
+		{
+			a.addSequential(ActionHandler.halfSwitchDrive);
+		}		
+				
 		return a;
+	}
+	
+	public static Action sideSwitch(boolean right)
+	{
+		Action a = new ActionGroup()
+				.addParallel(ActionHandler.shoot)
+				.addSequential(ActionHandler.halfSwitchDrive)
+				.addSequential(right? ActionHandler.rotateL90 : ActionHandler.rotateR90)
+				.addSequential(ActionHandler.release);
+		return a;
+				
+				
 	}
 
 }

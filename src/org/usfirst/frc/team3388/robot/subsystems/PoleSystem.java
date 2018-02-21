@@ -33,23 +33,35 @@ public class PoleSystem extends Subsystem implements Rotatable{
 	public static final double DEFAULT_SPEED=0.5;
 	private VictorSP controller;
 	private final double UP_SPEED=0.9;
-	private final double DOWN_SPEED=-0.8;
+	private final double DOWN_SPEED=-1.0;
 	
 	public AnalogInput in;
 	public DoubleSource angle;
 
-	private DigitalInput s;
-	public BooleanSource isPressed;
+	private DigitalInput d;
+	public BooleanSource isDown;
+	
+	private DigitalInput u;
+	public BooleanSource isUp;
+	
 	double startAngle;
 	public PoleSystem()
 	{
 		
-		s = new  DigitalInput(RobotMap.POLE_SWITCH);
-		isPressed = new BooleanSource() {
+		d = new  DigitalInput(RobotMap.POLE_DOWN_SWITCH);
+		isDown = new BooleanSource() {
 			
 			@Override
 			public boolean get() {
-				return !s.get();
+				return !d.get();
+			}
+		};
+		u = new DigitalInput(RobotMap.POLE_UP_SWITCH);
+		isUp = new BooleanSource() {
+			
+			@Override
+			public boolean get() {
+				return u.get();
 			}
 		};
 		setupAngle();
@@ -96,9 +108,9 @@ public class PoleSystem extends Subsystem implements Rotatable{
 		this.setDefaultAction(new Action() {
 			@Override
 			protected void execute() {
-				if(Robot.systemController.RightStick.getY() > 0.2)
+				if(!isUp.get() && Robot.systemController.RightStick.getY() > 0.2)
 					rotate(true);
-				else if(!isPressed.get() && Robot.systemController.RightStick.getY()  < -0.2)
+				else if(!isDown.get() && Robot.systemController.RightStick.getY()  < -0.2)
 					rotate(false);
 				else
 					stop();

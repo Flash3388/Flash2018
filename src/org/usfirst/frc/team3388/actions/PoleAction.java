@@ -7,16 +7,14 @@ import edu.flash3388.flashlib.robot.Action;
 
 public class PoleAction extends Action{
 
-	private double setpoint;
-	static final double ERROR = 2.5;
 	boolean dir = true;
+	double setpoint;
 	double unsoleAngle;
 	public PoleAction(double setpoint, double unsoleAngle) {
 		requires(Robot.poleSystem);
 		this.setpoint=setpoint;
 		this.unsoleAngle = unsoleAngle;
 	}
-	
 	@Override
 	protected void initialize() {
 		dir = setpoint > Robot.poleSystem.angle.get();
@@ -38,24 +36,19 @@ public class PoleAction extends Action{
 			}
 		}
 		else
-		{
-			
+		{	
 			Robot.poleSystem.rotate(false);
 			
 			if(unsoleAngle == curr)
 				Robot.liftSystem.stall(false);
 		}
-		
-		
-		
-	
 	}
-
 	@Override
 	protected boolean isFinished() {
 
 		//System.out.println(dir && (Robot.poleSystem.angle.get() >=  setpoint));
-		return (dir && Robot.poleSystem.angle.get() >= setpoint) || (!dir && Robot.poleSystem.isPressed.get() );
+		return (dir && Robot.poleSystem.angle.get() >= setpoint) || (!dir && Robot.poleSystem.isDown.get() ) 
+						|| (dir && Robot.poleSystem.isUp.get());
 	}
 	@Override
 	protected void interrupted() {

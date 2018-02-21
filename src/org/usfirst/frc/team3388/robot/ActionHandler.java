@@ -42,6 +42,7 @@ public class ActionHandler{
 	public static DrivePIDAction secondScaleDrive;
 	public static DrivePIDAction scaleToSwitchDrive;
 	public static DrivePIDAction firstBackScaleDrive;
+	public static DrivePIDAction halfSwitchDrive;
 	
 	public static RotatePIDAction centerRotationR;
 	public static RotatePIDAction centerRotationL;
@@ -50,6 +51,8 @@ public class ActionHandler{
 	public static RotatePIDAction centerToSwitchRotate;
 	public static RotatePIDAction scaleToSwitchRotateR;
 	public static RotatePIDAction scaleToSwitchRotateL;
+	public static RotatePIDAction rotateR90;
+	public static RotatePIDAction rotateL90;
 	
 	public static ActionGroup fullDown;
 	public static ActionGroup fullDownUse;
@@ -102,7 +105,7 @@ public class ActionHandler{
 	
 	private static void poleSetup()
 	{
-		scaleLift = new PoleAction(Constants.POLE_SCALE,Constants.STALL_ANGLE);
+		scaleLift = new PoleAction(Constants.POLE_SCALE*2,Constants.STALL_ANGLE);
 		downLift = new PoleAction(Constants.DOWN_ANGLE,Constants.STALL_ANGLE);
 		switchLift = new PoleAction(Constants.POLE_SWITCH, Constants.STALL_ANGLE);
 	}
@@ -111,9 +114,9 @@ public class ActionHandler{
 	{
 		
 		fullDownUse = new ActionGroup()
-				.addSequential(downUse)
-				.addSequential(open);
-		
+				.addParallel(open)
+				.addSequential(downUse);
+				
 		fullHide = new ActionGroup()
 				.addSequential(close)
 				.addSequential(hide);
@@ -142,22 +145,27 @@ public class ActionHandler{
 	private static void driveSetup()
 	{
 		backSwitchToScale = new DrivePIDAction(-Constants.SCALE_TO_SWITCH_DRIVE+35,0.4);
-		scaleToSwitchDrive = new DrivePIDAction(Constants.SCALE_TO_SWITCH_DRIVE,0.5,10,true);
+		scaleToSwitchDrive = new DrivePIDAction(Constants.SCALE_TO_SWITCH_DRIVE,0.3,10,true);
 		smallStartDrive = new DrivePIDAction(Constants.SMALL_START_DRIVE);
 		centerSwitchDrive = new DrivePIDAction(Constants.CENTER_SWITCH_DRIVE,200);
 		captureDrive = new DrivePIDAction(Constants.SMALL_CAPTURE_DRIVE,0.2,10,true);
-		returnCaptureDrive = new DrivePIDAction(-Constants.SMALL_CAPTURE_DRIVE/2, 0.3, 10,true);
-		secondScaleDrive = new DrivePIDAction(-Constants.SCEOND_SCALE_DRIVE, 0.25);
+		returnCaptureDrive = new DrivePIDAction(-Constants.SMALL_CAPTURE_DRIVE/2.7, 0.5, 10,true);
+		secondScaleDrive = new DrivePIDAction(-Constants.SCEOND_SCALE_DRIVE, 0.20,65,true);
 		startScaleDrive = new SimpleDistanceDrive(-Constants.FIRST_SCALE_DRIVE,-0.5);
+		halfSwitchDrive = new DrivePIDAction(-Constants.HALF_SWITCH_DRIVE);
 	}
 	
 	private static void rotateSetup()
 	{
-		scaleToSwitchRotateR = new RotatePIDAction(Constants.SCALE_TO_SWITCH_ROTATE);
+		scaleToSwitchRotateR = new RotatePIDAction(Constants.SCALE_TO_SWITCH_ROTATE,0.35);
 		scaleToSwitchRotateL = new RotatePIDAction(-Constants.SCALE_TO_SWITCH_ROTATE);
 		centerRotationR = new RotatePIDAction(Constants.CENTER_ROTATE);
 		centerRotationL = new RotatePIDAction(-Constants.CENTER_ROTATE);
 		centerCaptureRotateR = new RotatePIDAction(Constants.CENTER_CAPTURE);
 		centerCaptureRotateL = new RotatePIDAction(-Constants.CENTER_CAPTURE);
+		
+		rotateR90 = new RotatePIDAction(90.0);
+		rotateL90 = new RotatePIDAction(-90.0);
+		
 	}
 }
