@@ -91,18 +91,12 @@ public class ActionHandler{
 		downUse = new LiftAction(Constants.DOWN_USE_ANGLE,true);
 		upUse = new LiftAction(Constants.UP_USE_ANGLE_FLIPPED,true,RollerLiftingSystem.DEFAULT_UP_SPEED, RollerLiftingSystem.DEFAULT_DOWN_SPEED);
 		
-		upUseFirst = new LiftAction(Constants.UP_USE_ANGLE/2.0,true,RollerLiftingSystem.DEFAULT_UP_SPEED*2.0,RollerLiftingSystem.DEFAULT_UP_SPEED);
-		upUseSecond = new LiftAction(Constants.UP_USE_ANGLE,true,RollerLiftingSystem.DEFAULT_DOWN_SPEED,RollerLiftingSystem.DEFAULT_DOWN_SPEED);
 		hide = new LiftAction(Constants.HIDE_ANGLE,true);
 		shoot = new LiftAction(Constants.SHOOT_ANGLE,true);
 	}
-	
-	private static void captureSetup()
+	private static Action inThresholdAct(DrivePIDAction drive,Action act)
 	{
-		capture = new TimedAction(new CaptureAction(true) , Constants.CAPTURE_TIME);
-		release = new TimedAction(new CaptureAction(false), Constants.CAPTURE_TIME);
-		
-		inThresholdRelease = new Action() {
+		return new Action() {
 			
 			@Override
 			protected void execute() {
@@ -110,15 +104,21 @@ public class ActionHandler{
 			
 			@Override
 			protected void end() {
-				release.start();
+				act.start();
 			}
 			
 			@Override
 			protected boolean isFinished() {
-				return secondScaleDrive.inThreshold;
+				return drive.inThreshold;
 			}
 		};
+	}
+	private static void captureSetup()
+	{
+		capture = new TimedAction(new CaptureAction(true) , Constants.CAPTURE_TIME);
+		release = new TimedAction(new CaptureAction(false), Constants.CAPTURE_TIME);
 		
+		inThresholdRelease = 
 		open = new InstantAction() {
 			@Override
 			protected void execute() {
@@ -170,9 +170,10 @@ public class ActionHandler{
 		backNScale = new ActionGroup()
 				.addParallel(fullScaleLift)
 				.addSequential(startScaleDrive)
-				.addParallel(inThresholdRelease)
+				.addParallel(inThresholdAct(secondScaleDrive, release))
 				.addSequential(secondScaleDrive);
 		
+		//not good
 		rightSideSwitch = new ActionGroup()
 				.addSequential(capture)
 				.addParallel(shoot)
@@ -199,7 +200,7 @@ public class ActionHandler{
 				.addSequential(shootRotateL2)
 				.addSequential(release);
 	}
-			//HOMO
+			
 	private static void driveSetup()
 	{
 		backSwitchToScale = new DrivePIDAction(-Constants.SCALE_TO_SWITCH_DRIVE+35,0.4);

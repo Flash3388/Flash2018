@@ -19,6 +19,7 @@ import edu.flash3388.flashlib.robot.frc.PDP;
 import edu.flash3388.flashlib.robot.hid.Joystick;
 import edu.flash3388.flashlib.robot.hid.XboxController;
 import edu.flash3388.flashlib.util.FlashUtil;
+import edu.wpi.first.wpilibj.AnalogOutput;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
@@ -72,19 +73,7 @@ public class Robot extends IterativeFRCRobot {
 	private void buttons() {
 		systemController.B.whenPressed(ActionHandler.fullDown);
 		//systemController.X.whenPressed(ActionHandler.downLift);backNScale
-		systemController.X.whenPressed(ActionHandler.scaleToSwitchRotateR);
-		systemController.LB.whileHeld(new Action() {
-			
-			@Override
-			protected void execute() {
-				rollerGripperSystem.spin();
-			}
-			
-			@Override
-			protected void end() {
-				rollerGripperSystem.stop();
-			}
-		});
+		systemController.X.whenPressed(ActionHandler.fullScaleLift);
 		
 		systemController.Y.whenPressed(AutoHandlers.rightScale(true,true,true));
 		systemController.RB.whenPressed(ActionHandler.capture);
@@ -138,16 +127,19 @@ public class Robot extends IterativeFRCRobot {
 		rightController = new Joystick(RobotMap.RIGHT_CONTROLLER,BUTTON_COUNT);
 		leftController = new Joystick(RobotMap.LEFT_CONTROLLER,BUTTON_COUNT);
 	}
-
+	AnalogOutput output;
 	protected void disabledInit() {
 		DashHandle.disInit();
+		output = new AnalogOutput(0);
+		drive.initGyro();
 		
 	}
 	
 	@Override
 	protected void disabledPeriodic() {
 		DashHandle.disPeriodic();	
-		drive.initGyro();
+		//output.setVoltage(5.0);
+		System.out.println(rollerGripperSystem.isPressed.get());
 	}
 
 	@Override
@@ -159,7 +151,8 @@ public class Robot extends IterativeFRCRobot {
 	
 	@Override
 	protected void teleopPeriodic() {
-		DashHandle.telePeriodic();	
+		DashHandle.telePeriodic();
+		System.out.println(rollerGripperSystem.isPressed.get());
 	}
 	
 	@Override
