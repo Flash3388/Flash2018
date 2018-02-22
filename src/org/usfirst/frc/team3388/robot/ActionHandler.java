@@ -116,9 +116,8 @@ public class ActionHandler{
 	private static void captureSetup()
 	{
 		capture = new TimedAction(new CaptureAction(true) , Constants.CAPTURE_TIME);
-		release = new TimedAction(new CaptureAction(false), Constants.CAPTURE_TIME);
-		
-		inThresholdRelease = 
+		release = new TimedAction(new CaptureAction(false), Constants.RELEASE_TIME);
+		 
 		open = new InstantAction() {
 			@Override
 			protected void execute() {
@@ -203,14 +202,14 @@ public class ActionHandler{
 			
 	private static void driveSetup()
 	{
-		backSwitchToScale = new DrivePIDAction(-Constants.SCALE_TO_SWITCH_DRIVE+35,0.4);
+		backSwitchToScale = new DrivePIDAction(-Constants.SCALE_TO_SWITCH_DRIVE,0.2);
 		scaleToSwitchDrive = new DrivePIDAction(Constants.SCALE_TO_SWITCH_DRIVE,0.3,10,true);
 		smallStartDrive = new DrivePIDAction(Constants.SMALL_START_DRIVE);
 		centerSwitchDrive = new DrivePIDAction(Constants.CENTER_SWITCH_DRIVE,200);
 		captureDrive = new DrivePIDAction(Constants.SMALL_CAPTURE_DRIVE,0.2,10,true);
-		returnCaptureDrive = new DrivePIDAction(-Constants.SMALL_CAPTURE_DRIVE/2.7, 0.5, 10,true);
+		returnCaptureDrive = new DrivePIDAction(-3.0, 0.5, 10,true);
 		secondScaleDrive = new DrivePIDAction(-Constants.SCEOND_SCALE_DRIVE, 0.20,65,true);
-		startScaleDrive = new SimpleDistanceDrive(-Constants.FIRST_SCALE_DRIVE,-0.5);
+		startScaleDrive = new SimpleDistanceDrive(-Constants.FIRST_SCALE_DRIVE,-0.65);
 		
 		switchDrive = new DrivePIDAction(Constants.SWITCH_DRIVE,0.6,70,true);
 		smallCaptureDrive = new DrivePIDAction(Constants.SWITCH_CAPTURE_DRIVE,0.2,10, true);
@@ -225,8 +224,8 @@ public class ActionHandler{
 		centerCaptureRotateR = new RotatePIDAction(Constants.CENTER_CAPTURE);
 		centerCaptureRotateL = new RotatePIDAction(-Constants.CENTER_CAPTURE);
 		
-		rotateR90 = new RotatePIDAction(100.0);
-		rotateL90 = new RotatePIDAction(-100.0);
+		rotateR90 = new RotatePIDAction(30.0);
+		rotateL90 = new RotatePIDAction(-30.0);
 		
 		shootRotateL1 = new RotatePIDAction(Constants.SHOOT_ROTATE1);
 		shootRotateL2 = new RotatePIDAction(Constants.SHOOT_ROTATE2);

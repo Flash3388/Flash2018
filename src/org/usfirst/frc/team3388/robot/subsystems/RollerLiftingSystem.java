@@ -16,14 +16,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RollerLiftingSystem extends Subsystem implements Rotatable {
 
-	public static final double DEFAULT_UP_SPEED=0.6;
-	public static final double DEFAULT_DOWN_SPEED=0.3;
+	public static final double DEFAULT_UP_SPEED=0.8;
+	public static final double DEFAULT_DOWN_SPEED=0.5;
 	
 	TalonSpeed controller;
 	
+	
 	private Encoder enc;
 	public DoubleSource angle;
-	final double STALL=0.15;
+	final double STALL=0.11;
 	private boolean stall = true;
 	public RollerLiftingSystem() {
 		controller = new TalonSpeed(RobotMap.LIFT_CONTROLLER);

@@ -16,6 +16,7 @@ public class CaptureAction extends Action{
 	public CaptureAction(boolean side) {
 		requires(Robot.rollerGripperSystem);
 		this.side=side;
+		this.setTimeout(700);
 	}
 	@Override
 	protected void end() {
@@ -30,6 +31,7 @@ public class CaptureAction extends Action{
 	}
 	@Override
 	protected void execute() {
+		System.out.println("cap");
 		if(side)
 			Robot.rollerGripperSystem.rotate(false);
 		else

@@ -10,7 +10,7 @@ public class Constants {
 	public static final double DOWN_ANGLE = 0.0;
 	public static final double SHOOT_ANGLE=-290;
 
-	public static final double DOWN_USE_ANGLE=-690.0;
+	public static final double DOWN_USE_ANGLE=-730.0;
 	public static final double UP_USE_ANGLE=-989.0;
 	public static final double UP_USE_ANGLE_FLIPPED=-385;
 	public static final double HIDE_ANGLE=0.0;
@@ -18,7 +18,7 @@ public class Constants {
 	public static final double LIFT_FLIPPED_STALL = -786.0;
 	public static final double POLE_FLIPPED_STALL = POLE_SCALE/2.0;
 	
-	public static final double SCALE_TO_SWITCH_DRIVE=65;
+	public static final double SCALE_TO_SWITCH_DRIVE=62.7;
 	public static final double SCEOND_SCALE_DRIVE=180;
 	public static final double FIRST_SCALE_DRIVE=503;
 	public static final double CENTER_SWITCH_DRIVE=265;
@@ -35,7 +35,7 @@ public class Constants {
 	public static final double SHOOT_ROTATE1=20;
 	public static final double SHOOT_ROTATE2=40;
 	
-	public static final double CAPTURE_TIME=1.0;
-	public static final double RELEASE_TIME=0.15;
+	public static final double CAPTURE_TIME=0.600;
+	public static final double RELEASE_TIME=0.4;
 	
 }

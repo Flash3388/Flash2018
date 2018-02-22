@@ -9,6 +9,7 @@ import org.usfirst.frc.team3388.robot.subsystems.DriveSystem;
 import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.ActionGroup;
 import edu.flash3388.flashlib.robot.InstantAction;
+import edu.flash3388.flashlib.robot.SystemAction;
 
 public class AutoHandlers {
 
@@ -44,13 +45,36 @@ public class AutoHandlers {
 				.addParallel(rightSide ? ActionHandler.scaleToSwitchRotateR : ActionHandler.scaleToSwitchRotateL)
 				.addSequential(ActionHandler.fullDown)
 				.addParallel(ActionHandler.fullDownUse)
+				.addParallel(new SystemAction(new Action() {
+					
+					@Override
+					protected void execute() {
+						Robot.rollerGripperSystem.rotate(false);
+					}
+					
+					@Override
+					protected void end() {
+						
+					}
+					
+				},Robot.rollerGripperSystem))
 				.addSequential(ActionHandler.scaleToSwitchDrive)
-				.addParallel(ActionHandler.returnCaptureDrive)
 				.addSequential(ActionHandler.capture);
+				
 				if(rightSwitch == rightSide)
 				{
-					a.addSequential(ActionHandler.shoot)
+					a.addParallel(ActionHandler.returnCaptureDrive)
+					.addParallel(ActionHandler.capture)
+					.addSequential(ActionHandler.shoot)
 					.addSequential(ActionHandler.release);	
+				}
+				else
+				{
+					a.addParallel(ActionHandler.backSwitchToScale)
+					.addParallel(ActionHandler.capture)
+					.addSequential(ActionHandler.fullScaleLift)
+					.addSequential(ActionHandler.release);
+					//.addSequential(ActionHandler.scaleToSwitchRotateL)
 				}
 		}
 		else if(rightSwitch == rightSide)
