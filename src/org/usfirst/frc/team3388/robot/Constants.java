@@ -25,7 +25,7 @@ public class Constants {
 	public static final double SMALL_START_DRIVE=20;
 	public static final double SMALL_CAPTURE_DRIVE=30;
 	public static final double HALF_SWITCH_DRIVE=430;
-	public static final double SWITCH_DRIVE= -570;
+	public static final double SWITCH_DRIVE= -600;
 	public static final double SWITCH_CAPTURE_DRIVE=10;
 	
 	public static final double SCALE_TO_SWITCH_ROTATE=29;

@@ -188,9 +188,9 @@ public class ActionHandler{
 				.addSequential(release);
 		
 		leftSideSwitch = new ActionGroup()
+				.addSequential(captureDrive)
 				.addSequential(capture)
 				.addParallel(shoot)
-				.addSequential(shootRotateL1)
 				.addParallel(release)
 				.addParallel(downUse)
 				.addSequential(shootRotateR1)
@@ -225,8 +225,8 @@ public class ActionHandler{
 		centerCaptureRotateR = new RotatePIDAction(Constants.CENTER_CAPTURE);
 		centerCaptureRotateL = new RotatePIDAction(-Constants.CENTER_CAPTURE);
 		
-		rotateR90 = new RotatePIDAction(90.0);
-		rotateL90 = new RotatePIDAction(-90.0);
+		rotateR90 = new RotatePIDAction(100.0);
+		rotateL90 = new RotatePIDAction(-100.0);
 		
 		shootRotateL1 = new RotatePIDAction(Constants.SHOOT_ROTATE1);
 		shootRotateL2 = new RotatePIDAction(Constants.SHOOT_ROTATE2);

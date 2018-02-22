@@ -67,6 +67,19 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 	
 	public void setup()
 	{	
+		Robot.systemController.RB.whileHeld(new Action() {
+			
+			@Override
+			protected void execute() {
+				rotate(false);
+			}
+			
+			@Override
+			protected void end() {
+				stop();
+			}
+		});
+		
 		Robot.systemController.A.whenPressed(new InstantAction() {
 			@Override
 			protected void execute() {
