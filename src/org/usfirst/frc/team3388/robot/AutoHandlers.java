@@ -71,7 +71,6 @@ public class AutoHandlers {
 				.addParallel(ActionHandler.shoot)
 				.addSequential(ActionHandler.switchDrive)
 				.addSequential(right ? ActionHandler.rotateR90 : ActionHandler.rotateL90)
-				.addSequential(right ? ActionHandler.shootRotateL1 : ActionHandler.shootRotateR1)
 				.addSequential(ActionHandler.release)
 				.addParallel(ActionHandler.downUse)
 				.addSequential(right ? ActionHandler.shootRotateR1 : ActionHandler.shootRotateL1)
