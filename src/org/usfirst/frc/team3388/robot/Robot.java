@@ -71,7 +71,8 @@ public class Robot extends IterativeFRCRobot {
 
 	private void buttons() {
 		systemController.B.whenPressed(ActionHandler.fullDown);
-		//systemController.X.whenPressed(ActionHandler.downLift);backNScale
+		//systemController.X.whenPressed(ActionHandler.fullScaleLift);backNScale
+		//systemController.Y.whenPressed(ActionHandler.shoot);
 		systemController.X.whenPressed(ActionHandler.scaleToSwitchRotateR);
 		systemController.LB.whileHeld(new Action() {
 			
@@ -87,7 +88,7 @@ public class Robot extends IterativeFRCRobot {
 		});
 		
 		systemController.Y.whenPressed(AutoHandlers.rightScale(true,true,true));
-		systemController.RB.whenPressed(ActionHandler.capture);
+		systemController.RB.whenReleased(ActionHandler.capture);
 		systemController.LB.whenPressed(ActionHandler.release);
 		
 		systemController.Back.whenPressed(new InstantAction() {		
