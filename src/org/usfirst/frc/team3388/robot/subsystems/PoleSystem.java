@@ -103,7 +103,24 @@ public class PoleSystem extends Subsystem implements Rotatable{
 	
 	public void setup()
 	{
-		Robot.systemController.RightStickButton.whenPressed(ActionHandler.fullDown);
+		//Robot.systemController.Y.whenPressed(new PoleAction(0.0,Constants.STALL_ANGLE));
+		
+		this.setDefaultAction(new Action() {
+			@Override
+			protected void execute() {
+				if(!isUp.get() && Robot.systemController.RightStick.getY() > 0.2)
+					rotate(true);
+				else if(!isDown.get() && Robot.systemController.RightStick.getY()  < -0.2)
+					rotate(false);
+				else
+					stop();
+			}
+			
+			@Override
+			protected void end() {
+				stop();
+			}
+		});
 	}
 
 }

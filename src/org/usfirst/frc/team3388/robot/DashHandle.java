@@ -14,7 +14,7 @@ public class DashHandle {
 	}
 	public static void disPeriodic()
 	{
-		SmartDashboard.putBoolean(DashNames.pressed, Robot.rollerGripperSystem.isPressed.get());
+		//SmartDashboard.putBoolean(DashNames.pressed, Robot.rollerGripperSystem.isPressed.get());
 	}
 	public static void updateAngle()
 	{
@@ -31,7 +31,7 @@ public class DashHandle {
 	public static void telePeriodic()
 	{
 		SmartDashboard.putNumber(DashNames.polePotentiometer, Robot.poleSystem.angle.get());
-		SmartDashboard.putBoolean(DashNames.pressed, Robot.rollerGripperSystem.isPressed.get());
+	//	SmartDashboard.putBoolean(DashNames.pressed, Robot.rollerGripperSystem.isPressed.get());
 		
 		SmartDashboard.putNumber(DashNames.angle, Robot.drive.rotationSource.pidGet());
 		SmartDashboard.putNumber(DashNames.distance, Robot.drive.distanceSource.pidGet());

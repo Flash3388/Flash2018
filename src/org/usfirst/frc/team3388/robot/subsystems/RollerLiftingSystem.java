@@ -23,7 +23,7 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 	
 	private Encoder enc;
 	public DoubleSource angle;
-	final double STALL=0.11;
+	final double STALL=0.15;
 	private boolean stall = true;
 	public RollerLiftingSystem() {
 		controller = new TalonSpeed(RobotMap.LIFT_CONTROLLER);
@@ -71,7 +71,7 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 			@Override
 			protected void execute() {
 				double y = Robot.systemController.LeftStick.getY();
-				if(y > MARGIN)
+				/*if(y > MARGIN)
 					rotate(true);
 				else if(y < -MARGIN)
 					rotate(false);
@@ -86,7 +86,31 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 						rotate(STALL);
 				}
 				else
-					stop();
+					stop();*/
+				if(Robot.poleSystem.angle.get() < Constants.POLE_FLIPPED_STALL)
+				{
+					if(y > MARGIN)
+						rotate(DEFAULT_UP_SPEED);
+					else if(y < -MARGIN)
+						rotate(-DEFAULT_DOWN_SPEED);
+					else if(stall)
+						rotate(STALL);
+					else
+						stop();						
+				}
+				else
+				{
+					if(y > MARGIN)
+						rotate(-DEFAULT_UP_SPEED);
+					else if(y < -MARGIN)
+						rotate(DEFAULT_DOWN_SPEED);
+					else if(stall)
+						rotate(-STALL);
+					else
+						stop();								
+				}
+				
+				 
 				SmartDashboard.putNumber("enc lift", angle.get());
 			}
 			

@@ -25,7 +25,7 @@ public class RobotMap {
 	public static final int CAPTURE_L = 9;
 	public static final int R_CHANNEL = 0;
 	public static final int L_CHANNEL = 1;
-	public static final int CAPTURE_SWITCH = 6;
+	public static final int CAPTURE_SWITCH = 0;
 	
 	public static final int LIFT_CONTROLLER = 4;
 	public static final int LIFT_A= 9;

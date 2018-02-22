@@ -39,15 +39,8 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 		lController = new VictorSP(RobotMap.CAPTURE_L);
 		lController.setInverted(true);
 		
-		in = new DigitalInput(RobotMap.CAPTURE_SWITCH);
-		isPressed = new BooleanSource() {
-			
-			@Override
-			public boolean get() {
-				return in.get();
-			}
-		};
-
+	//	in = new DigitalInput(RobotMap.CAPTURE_SWITCH);
+		
 	}
 	public void rotate(double speed) {
 		rController.set(speed);

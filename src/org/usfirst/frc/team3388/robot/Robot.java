@@ -76,7 +76,6 @@ public class Robot extends IterativeFRCRobot {
 		systemController.X.whenPressed(ActionHandler.fullScaleLift);
 		//systemController.X.whenPressed(ActionHandler.fullScaleLift);backNScale
 		//systemController.Y.whenPressed(ActionHandler.shoot);
-		systemController.X.whenPressed(ActionHandler.scaleToSwitchRotateR);
 		systemController.LB.whileHeld(new Action() {
 			
 			@Override
@@ -118,9 +117,8 @@ public class Robot extends IterativeFRCRobot {
 		rollerGripperSystem = new RollerGripperSystem();
 		rollerGripperSystem.setup();
 		
-		poleSystem = new PoleSystem();
+		poleSystem = new PoleSystem();		
 		poleSystem.setup();
-		
 		liftSystem = new RollerLiftingSystem();
 		liftSystem.setup();
 	}
@@ -141,10 +139,8 @@ public class Robot extends IterativeFRCRobot {
 		rightController = new Joystick(RobotMap.RIGHT_CONTROLLER,BUTTON_COUNT);
 		leftController = new Joystick(RobotMap.LEFT_CONTROLLER,BUTTON_COUNT);
 	}
-	AnalogOutput output;
 	protected void disabledInit() {
 		DashHandle.disInit();
-		output = new AnalogOutput(0);
 		drive.initGyro();
 		
 	}
@@ -152,8 +148,6 @@ public class Robot extends IterativeFRCRobot {
 	@Override
 	protected void disabledPeriodic() {
 		DashHandle.disPeriodic();	
-		//output.setVoltage(5.0);
-		System.out.println(rollerGripperSystem.isPressed.get());
 	}
 
 	@Override
@@ -162,11 +156,10 @@ public class Robot extends IterativeFRCRobot {
 		startTime = FlashUtil.secs();
 		DashHandle.teleInit();
 	}
-	
+
 	@Override
 	protected void teleopPeriodic() {
 		DashHandle.telePeriodic();
-		System.out.println(rollerGripperSystem.isPressed.get());
 	}
 	
 	@Override
