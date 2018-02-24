@@ -131,11 +131,10 @@ public class Robot extends IterativeFRCRobot {
 	
 	private void autoChooserSetup() {
 		autoChooser = new SendableChooser<Integer>();
-		SmartDashboard.putData(autoChooser);
 		autoChooser.addDefault("Center switch", 0);
 		autoChooser.addDefault("Right Scale", 1);
 		autoChooser.addDefault("Left Scale", 2);
-		
+		SmartDashboard.putData("auto chooser",autoChooser);
 	}
 	
 	private void controllersSetup() {
@@ -191,7 +190,7 @@ public class Robot extends IterativeFRCRobot {
 		}
 
 
-	private void resetSensors() {
+	public static void resetSensors() {
 		drive.encoder.reset();
 		drive.resetGyro();
 		drive.initGyro();

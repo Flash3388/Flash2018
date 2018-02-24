@@ -7,6 +7,8 @@ public class DashNames {
 	public final static String timeLeft = "Time Left";
 	public final static String polePotentiometer = "potentiometer";
 	public final static String pressed= "Cube Pressed";
+	public final static String resetGyro= "calibarate gyro";
+	
 	
 
 }

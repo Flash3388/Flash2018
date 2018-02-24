@@ -5,16 +5,28 @@ import edu.flash3388.flashlib.util.FlashUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DashHandle {
+	private static boolean calibarated = false;
 	public static void disInit()
 	{
 		SmartDashboard.putBoolean(DashNames.enabled, false);
 		SmartDashboard.putNumber(DashNames.timeLeft, 0.0);
-	
 		SmartDashboard.putNumber(DashNames.polePotentiometer, Robot.poleSystem.angle.get());
+		SmartDashboard.putBoolean(DashNames.resetGyro,false);
 	}
 	public static void disPeriodic()
 	{
-		//SmartDashboard.putBoolean(DashNames.pressed, Robot.rollerGripperSystem.isPressed.get());
+		if(SmartDashboard.getBoolean(DashNames.resetGyro,false))
+		{
+			if(!calibarated)
+			{
+				calibarated = true;
+				System.out.println("init");
+				Robot.drive.calibGyro();
+				Robot.resetSensors();		
+			}
+		}
+		else
+			calibarated = false;
 	}
 	public static void updateAngle()
 	{

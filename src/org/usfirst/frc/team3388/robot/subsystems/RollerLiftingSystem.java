@@ -72,51 +72,40 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 			@Override
 			protected void execute() {
 				double y = Robot.systemController.LeftStick.getY();
-				/*if(y > MARGIN)
-					rotate(true);
-				else if(y < -MARGIN)
-					rotate(false);
-				else if (stall)
-				{	
-					if(angle.get() > Constants.LIFT_FLIPPED_STALL && Robot.poleSystem.angle.get() > Constants.POLE_FLIPPED_STALL)
-					{
-						System.out.println("flipped");
-						rotate(-STALL);
-					}
-					else
-						rotate(STALL);
-				}
-				else
-					stop();*/
 				
 				double upSpeed = DEFAULT_UP_SPEED;
 				double downSpeed = -DEFAULT_DOWN_SPEED;
 				double stallSpeed = STALL;
-				if(Robot.poleSystem.angle.get() < Constants.POLE_FLIPPED_STALL)
+				if(Robot.poleSystem.angle.get() > Constants.POLE_FLIPPED_STALL)
 				{
-					if(y > MARGIN)
-						rotate(DEFAULT_UP_SPEED);
-					else if(y < -MARGIN)
-						rotate(-DEFAULT_DOWN_SPEED);
-					else if(stall)
-						rotate(STALL);
-					else
-						stop();						
-				}
-				else
-				{
-					if(y > MARGIN)
-						rotate(-DEFAULT_UP_SPEED);
-					else if(y < -MARGIN)
-						rotate(DEFAULT_DOWN_SPEED);
-					else if(stall)
-						rotate(-STALL);
-					else
-						stop();								
+					upSpeed *= -1;
+					downSpeed *= -1;
+					stallSpeed *= -1;
 				}
 				
-				 
+				if(shouldStall())
+					stallSpeed = 0.0;
+					
+				
+				if(y > MARGIN)
+					rotate(upSpeed);
+				else if(y < -MARGIN)
+					rotate(downSpeed);
+				else if(stall)
+					rotate(stallSpeed);
+				else
+					stop();
+				
 				SmartDashboard.putNumber("enc lift", angle.get());
+			}
+
+			private boolean shouldStall() {
+				double rollerAngle = angle.get();
+				if(Robot.poleSystem.isDown.get() && (rollerAngle <= Constants.DOWN_USE_ANGLE))
+					return false;
+				else if((Robot.poleSystem.angle.get() > Constants.STALL_ANGLE)&& rollerAngle > -35)
+					return false;
+				return true;
 			}
 			
 			@Override
