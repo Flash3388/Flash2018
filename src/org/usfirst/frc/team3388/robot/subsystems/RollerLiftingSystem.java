@@ -88,6 +88,10 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 				}
 				else
 					stop();*/
+				
+				double upSpeed = DEFAULT_UP_SPEED;
+				double downSpeed = -DEFAULT_DOWN_SPEED;
+				double stallSpeed = STALL;
 				if(Robot.poleSystem.angle.get() < Constants.POLE_FLIPPED_STALL)
 				{
 					if(y > MARGIN)

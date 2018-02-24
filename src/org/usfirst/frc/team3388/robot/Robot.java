@@ -74,7 +74,13 @@ public class Robot extends IterativeFRCRobot {
 		systemController.B.whenPressed(ActionHandler.fullDown);
 		//systemController.X.whenPressed(ActionHandler.downLift);backNScale
 		systemController.X.whenPressed(ActionHandler.fullScaleLift);
-		//systemController.X.whenPressed(ActionHandler.fullScaleLift);backNScale
+		/*
+		systemController.X.whenMultiPressed(action, 2);
+		systemController.X.whenMultiPressed(action, 3);
+		*/
+		systemController.RB.whenPressed(ActionHandler.capture);
+		systemController.DPad.Up.whenPressed(ActionHandler.hide);
+		systemController.DPad.Down.whenPressed(ActionHandler.downUse);
 		//systemController.Y.whenPressed(ActionHandler.shoot);
 		systemController.LB.whileHeld(new Action() {
 			
@@ -88,7 +94,7 @@ public class Robot extends IterativeFRCRobot {
 				rollerGripperSystem.stop();
 			}
 		});	
-		systemController.Y.whenPressed(AutoHandlers.rightScale(true,true,true));
+		systemController.Y.whenPressed(AutoHandlers.rightScale(true,false,true));
 		systemController.RB.whenReleased(ActionHandler.capture);
 		systemController.LB.whenPressed(ActionHandler.release);
 		

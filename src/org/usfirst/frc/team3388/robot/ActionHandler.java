@@ -197,12 +197,23 @@ public class ActionHandler{
 				.addSequential(capture)
 				.addParallel(shoot)
 				.addSequential(shootRotateL2)
-				.addSequential(release);
+				.addSequential(new Action() {
+					
+					@Override
+					protected void execute() {
+						Robot.rollerGripperSystem.rotate(0.5);
+					}
+					
+					@Override
+					protected void end() {
+						Robot.rollerGripperSystem.stop();
+					}
+				});
 	}
 			
 	private static void driveSetup()
 	{
-		backSwitchToScale = new DrivePIDAction(-Constants.SCALE_TO_SWITCH_DRIVE,0.2);
+		backSwitchToScale = new DrivePIDAction(-Constants.SCALE_TO_SWITCH_DRIVE,0.3);
 		scaleToSwitchDrive = new DrivePIDAction(Constants.SCALE_TO_SWITCH_DRIVE,0.3,10,true);
 		smallStartDrive = new DrivePIDAction(Constants.SMALL_START_DRIVE);
 		centerSwitchDrive = new DrivePIDAction(Constants.CENTER_SWITCH_DRIVE,200);

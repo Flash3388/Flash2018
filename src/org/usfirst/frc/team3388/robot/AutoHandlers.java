@@ -73,7 +73,8 @@ public class AutoHandlers {
 					a.addParallel(ActionHandler.backSwitchToScale)
 					.addParallel(ActionHandler.capture)
 					.addSequential(ActionHandler.fullScaleLift)
-					.addSequential(ActionHandler.release);
+					.addParallel(ActionHandler.release)
+					.addSequential(new RotatePIDAction(-20));
 					//.addSequential(ActionHandler.scaleToSwitchRotateL)
 				}
 		}
