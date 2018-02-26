@@ -1,5 +1,8 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="calibarate gyro" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.CheckBox">
+		<location x="441" y="21"/>
+	</widget>
 	<widget field="potentiometer" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="932" y="251"/>
 	</widget>
@@ -47,6 +50,9 @@
 	</widget>
 	<widget field="Time Left" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="19" y="15"/>
+	</widget>
+	<widget field="auto chooser" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="214" y="34"/>
 	</widget>
 </dashboard>
 <live-window>

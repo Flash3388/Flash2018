@@ -31,7 +31,6 @@ public class CaptureAction extends Action{
 	}
 	@Override
 	protected void execute() {
-		System.out.println("cap");
 		if(side)
 			Robot.rollerGripperSystem.rotate(false);
 		else

@@ -83,14 +83,12 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 					stallSpeed *= -1;
 				}
 				
-				if(shouldStall())
-					stallSpeed = 0.0;
-					
-				
+				if(!shouldStall())
+					stallSpeed = 0.0;				
 				if(y > MARGIN)
-					rotate(upSpeed);
+					rotate(upSpeed/2);
 				else if(y < -MARGIN)
-					rotate(downSpeed);
+					rotate(downSpeed/2);
 				else if(stall)
 					rotate(stallSpeed);
 				else
@@ -101,9 +99,7 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 
 			private boolean shouldStall() {
 				double rollerAngle = angle.get();
-				if(Robot.poleSystem.isDown.get() && (rollerAngle <= Constants.DOWN_USE_ANGLE))
-					return false;
-				else if((Robot.poleSystem.angle.get() > Constants.STALL_ANGLE)&& rollerAngle > -35)
+				if((Robot.poleSystem.angle.get() > Constants.STALL_ANGLE)&& rollerAngle > -35)
 					return false;
 				return true;
 			}
