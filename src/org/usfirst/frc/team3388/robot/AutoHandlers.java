@@ -70,12 +70,13 @@ public class AutoHandlers {
 				}
 				else
 				{
-					a.addParallel(ActionHandler.backSwitchToScale)
+					ActionGroup ac = new ActionGroup()
+							.addSequential(ActionHandler.backSwitchToScale)
+							.addSequential(new RotatePIDAction(15));
+					a.addParallel(ac)
 					.addParallel(ActionHandler.capture)
 					.addSequential(ActionHandler.fullScaleLift)
-					.addParallel(ActionHandler.release)
-					.addSequential(new RotatePIDAction(-20));
-					//.addSequential(ActionHandler.scaleToSwitchRotateL)
+					.addSequential(ActionHandler.release);
 				}
 		}
 		else if(rightSwitch == rightSide)

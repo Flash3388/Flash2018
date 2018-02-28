@@ -12,8 +12,11 @@ import com.sun.java.swing.plaf.windows.WindowsBorders.DashedBorder;
 import edu.flash3388.flashlib.math.Mathf;
 import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.ActionGroup;
+import edu.flash3388.flashlib.robot.FlashRobotUtil;
 import edu.flash3388.flashlib.robot.InstantAction;
+import edu.flash3388.flashlib.robot.SystemAction;
 import edu.flash3388.flashlib.robot.TimedAction;
+import edu.flash3388.flashlib.robot.frc.FlashFRCUtil;
 import edu.flash3388.flashlib.robot.frc.IterativeFRCRobot;
 import edu.flash3388.flashlib.robot.frc.PDP;
 import edu.flash3388.flashlib.robot.hid.Joystick;
@@ -57,7 +60,6 @@ public class Robot extends IterativeFRCRobot {
 		Compressor c = new Compressor();
 		c.stop();
 		*/
-		
 		systemSetup();
 		drive = new DriveSystem();
 		drive.setup();
@@ -71,6 +73,7 @@ public class Robot extends IterativeFRCRobot {
 	}
 
 	private void buttons() {
+		FlashRobotUtil.updateHID();
 		systemController.B.whenPressed(ActionHandler.fullDown);
 		//systemController.X.whenPressed(ActionHandler.downLift);backNScale
 		systemController.X.whenPressed(ActionHandler.fullScaleLift);
@@ -78,23 +81,24 @@ public class Robot extends IterativeFRCRobot {
 		systemController.X.whenMultiPressed(action, 2);
 		systemController.X.whenMultiPressed(action, 3);
 		*/
-		systemController.RB.whenPressed(ActionHandler.capture);
+		
 		systemController.DPad.Up.whenPressed(ActionHandler.hide);
 		systemController.DPad.Down.whenPressed(ActionHandler.downUse);
 		//systemController.Y.whenPressed(ActionHandler.shoot);
-		systemController.LB.whileHeld(new Action() {
+		
+		systemController.Y.whenPressed(AutoHandlers.rightScale(false,true,false));
+
+		Robot.systemController.RB.whileHeld(new SystemAction(new Action() {
 			
 			@Override
 			protected void execute() {
-				rollerGripperSystem.spin();
+				rollerGripperSystem.rotate(false);
 			}
 			
 			@Override
 			protected void end() {
-				rollerGripperSystem.stop();
 			}
-		});	
-		systemController.Y.whenPressed(AutoHandlers.rightScale(true,false,true));
+		},rollerGripperSystem));
 		systemController.RB.whenReleased(ActionHandler.capture);
 		systemController.LB.whenPressed(ActionHandler.release);
 		
@@ -116,13 +120,13 @@ public class Robot extends IterativeFRCRobot {
 	@Override
 	protected void preInit(RobotInitializer initializer) {
 		super.preInit(initializer);
-		initializer.initFlashboard= false;	
+		initializer.initFlashboard= false;
+		initializer.autoUpdateHid = true;
 	}
 	private void systemSetup()
 	{
 		rollerGripperSystem = new RollerGripperSystem();
 		rollerGripperSystem.setup();
-		
 		poleSystem = new PoleSystem();		
 		poleSystem.setup();
 		liftSystem = new RollerLiftingSystem();
@@ -160,10 +164,12 @@ public class Robot extends IterativeFRCRobot {
 		resetSensors();
 		startTime = FlashUtil.secs();
 		DashHandle.teleInit();
+		
 	}
 
 	@Override
 	protected void teleopPeriodic() {
+		FlashRobotUtil.updateHID();
 		DashHandle.telePeriodic();
 	}
 	

@@ -18,8 +18,8 @@ public class ActionHandler{
 
 	public static Action inThresholdRelease;
 	
-	public static TimedAction capture;
-	public static TimedAction release;
+	public static CaptureAction capture;
+	public static CaptureAction release;
 	
 	public static InstantAction close;
 	public static InstantAction open;
@@ -115,8 +115,8 @@ public class ActionHandler{
 	}
 	private static void captureSetup()
 	{
-		capture = new TimedAction(new CaptureAction(true) , Constants.CAPTURE_TIME);
-		release = new TimedAction(new CaptureAction(false), Constants.RELEASE_TIME);
+		capture = new CaptureAction(true, Constants.CAPTURE_TIME);
+		release = new CaptureAction(false, Constants.RELEASE_TIME);
 		 
 		open = new InstantAction() {
 			@Override
@@ -153,7 +153,7 @@ public class ActionHandler{
 				.addSequential(hide);
 		
 		fullScaleLift = new ActionGroup()
-				.addParallel(hide)
+				.addSequential(hide)
 				.addSequential(scaleLift)
 				.addSequential(upUse);
 		
@@ -169,7 +169,7 @@ public class ActionHandler{
 		backNScale = new ActionGroup()
 				.addParallel(fullScaleLift)
 				.addSequential(startScaleDrive)
-				.addParallel(inThresholdAct(secondScaleDrive, release))
+				.addParallel(inThresholdAct(secondScaleDrive, open))
 				.addSequential(secondScaleDrive);
 		
 		//not good
@@ -213,14 +213,14 @@ public class ActionHandler{
 			
 	private static void driveSetup()
 	{
-		backSwitchToScale = new DrivePIDAction(-Constants.SCALE_TO_SWITCH_DRIVE,0.3);
+		backSwitchToScale = new DrivePIDAction(-Constants.SCALE_TO_SWITCH_DRIVE-50,0.3);
 		scaleToSwitchDrive = new DrivePIDAction(Constants.SCALE_TO_SWITCH_DRIVE,0.3,10,true);
 		smallStartDrive = new DrivePIDAction(Constants.SMALL_START_DRIVE);
 		centerSwitchDrive = new DrivePIDAction(Constants.CENTER_SWITCH_DRIVE,200);
 		captureDrive = new DrivePIDAction(Constants.SMALL_CAPTURE_DRIVE,0.2,10,true);
 		returnCaptureDrive = new DrivePIDAction(-3.0, 0.5, 10,true);
 		secondScaleDrive = new DrivePIDAction(-Constants.SCEOND_SCALE_DRIVE, 0.20,65,true);
-		startScaleDrive = new SimpleDistanceDrive(-Constants.FIRST_SCALE_DRIVE,-0.65);
+		startScaleDrive = new SimpleDistanceDrive(-Constants.FIRST_SCALE_DRIVE,-0.6);
 		
 		switchDrive = new DrivePIDAction(Constants.SWITCH_DRIVE,0.6,70,true);
 		smallCaptureDrive = new DrivePIDAction(Constants.SWITCH_CAPTURE_DRIVE,0.2,10, true);
@@ -229,7 +229,7 @@ public class ActionHandler{
 	private static void rotateSetup()
 	{
 		scaleToSwitchRotateR = new RotatePIDAction(Constants.SCALE_TO_SWITCH_ROTATE,0.35);
-		scaleToSwitchRotateL = new RotatePIDAction(-Constants.SCALE_TO_SWITCH_ROTATE);
+		scaleToSwitchRotateL = new RotatePIDAction(-Constants.SCALE_TO_SWITCH_ROTATE,0.35);
 		centerRotationR = new RotatePIDAction(Constants.CENTER_ROTATE);
 		centerRotationL = new RotatePIDAction(-Constants.CENTER_ROTATE);
 		centerCaptureRotateR = new RotatePIDAction(Constants.CENTER_CAPTURE);

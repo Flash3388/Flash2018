@@ -50,7 +50,7 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 		if(in)
 			rotate(1.0);
 		else
-			rotate(-DEFAULT_SPEED);
+			rotate(-0.6);
 	}
 	
 	public boolean isClosed()
@@ -60,18 +60,6 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 	
 	public void setup()
 	{	
-		Robot.systemController.RB.whileHeld(new Action() {
-			
-			@Override
-			protected void execute() {
-				rotate(false);
-			}
-			
-			@Override
-			protected void end() {
-				stop();
-			}
-		});
 		
 		Robot.systemController.A.whenPressed(new InstantAction() {
 			@Override
@@ -80,6 +68,26 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 			}
 		});
 		
+		this.setDefaultAction(new SystemAction(new Action() {
+			
+			@Override
+			protected void execute() {
+				double r =Robot.systemController.RT.get();
+				double l = Robot.systemController.LT.get();
+				
+				if(r>=0.1)
+					rotate(-r);
+				else if(l>=0.1)
+					rotate(l);
+				else
+					stop();
+			}
+			
+			@Override
+			protected void end() {
+				stop();
+			}
+		}, this));
 	}
 	
 	public void spin()

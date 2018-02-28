@@ -7,7 +7,7 @@ public class RobotMap {
 	 * 	find all ports
 	 */
 	public static final int DRIVE_FRONTRIGHT = 7;
-	public static final int DRIVE_FRONTLEFT = 2;
+	public static final int DRIVE_FRONTLEFT = 3;
 	public static final int DRIVE_BACKLEFT = 1;
 	public static final int DRIVE_BACKRIGHT = 6;
 	

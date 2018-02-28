@@ -24,7 +24,7 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 	
 	private Encoder enc;
 	public DoubleSource angle;
-	final double STALL=0.11;
+	final double STALL=0.12;
 	private boolean stall = true;
 	public RollerLiftingSystem() {
 		controller = new TalonSpeed(RobotMap.LIFT_CONTROLLER);
@@ -67,8 +67,6 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 		this.setDefaultAction(new SystemAction(new Action() {
 			
 			final double MARGIN = 0.2;
-			final double HIDE=2.0;
-			final double USE=3.0;
 			@Override
 			protected void execute() {
 				double y = Robot.systemController.LeftStick.getY();
@@ -76,7 +74,7 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 				double upSpeed = DEFAULT_UP_SPEED;
 				double downSpeed = -DEFAULT_DOWN_SPEED;
 				double stallSpeed = STALL;
-				if(Robot.poleSystem.angle.get() > Constants.POLE_FLIPPED_STALL)
+				if(Robot.poleSystem.angle.get() > Constants.POLE_FLIPPED_STALL || Robot.poleSystem.isUp.get())
 				{
 					upSpeed *= -1;
 					downSpeed *= -1;
@@ -85,16 +83,26 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 				
 				if(!shouldStall())
 					stallSpeed = 0.0;				
-				if(y > MARGIN)
-					rotate(upSpeed/2);
+				if(y > MARGIN && !isOutOfFrame())
+					rotate(upSpeed);
 				else if(y < -MARGIN)
-					rotate(downSpeed/2);
+					rotate(downSpeed);
+				else if(Robot.poleSystem.isUp.get() && Robot.liftSystem.angle.get()<=-520)
+					rotate(0.65);
 				else if(stall)
 					rotate(stallSpeed);
 				else
 					stop();
 				
 				SmartDashboard.putNumber("enc lift", angle.get());
+			}
+			
+			private boolean isOutOfFrame()
+			{
+				if(Robot.liftSystem.angle.get()<=-450 && Robot.poleSystem.isUp.get())
+					return true;
+				else
+					return false;
 			}
 
 			private boolean shouldStall() {
