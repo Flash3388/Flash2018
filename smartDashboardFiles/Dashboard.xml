@@ -1,7 +1,18 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="Time Left" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="19" y="0"/>
+		<width>393</width>
+		<height>34</height>
+	</widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
+		<location x="339" y="164"/>
+		<width>544</width>
+		<height>412</height>
+		<property name="Camera Choice" value=""/>
+	</static-widget>
 	<widget field="calibarate gyro" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.CheckBox">
-		<location x="441" y="21"/>
+		<location x="231" y="341"/>
 	</widget>
 	<widget field="potentiometer" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="932" y="251"/>
@@ -19,11 +30,6 @@
 		<width>599</width>
 		<height>26</height>
 	</widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.MjpgStreamViewerImpl">
-		<location x="339" y="156"/>
-		<width>566</width>
-		<height>425</height>
-	</static-widget>
 	<widget field="Robot Distance " type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="38" y="231"/>
 	</widget>
@@ -47,9 +53,6 @@
 	</widget>
 	<widget field="down speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="562" y="55"/>
-	</widget>
-	<widget field="Time Left" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="19" y="15"/>
 	</widget>
 	<widget field="auto chooser" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
 		<location x="214" y="34"/>

@@ -15,6 +15,7 @@ public class DashHandle {
 	}
 	public static void disPeriodic()
 	{
+		telePeriodic();
 		if(SmartDashboard.getBoolean(DashNames.resetGyro,false))
 		{
 			if(!calibarated)

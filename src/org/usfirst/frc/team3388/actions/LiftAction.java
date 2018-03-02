@@ -30,6 +30,7 @@ public class LiftAction extends Action{
 	
 	@Override
 	protected void end() {
+		Robot.liftSystem.rotate(upSpeed,true);
 		Robot.liftSystem.stall(stall);
 	}
 
@@ -43,7 +44,7 @@ public class LiftAction extends Action{
 	}
 	@Override
 	protected boolean isFinished() {
-		return Mathf.constrained(Robot.liftSystem.angle.get(), setpoint-ERROR, setpoint + ERROR);
+		return Mathf.constrained(Robot.liftSystem.angle.get(), setpoint, setpoint + ERROR);
 	}
 	@Override
 	protected void interrupted() {

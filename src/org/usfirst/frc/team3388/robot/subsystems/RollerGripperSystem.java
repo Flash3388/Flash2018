@@ -25,7 +25,9 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 	private VictorSP lController;
 	
 	public PistonController piston;
-	public static final double DEFAULT_SPEED = 1.0;
+	public static final double CAPTURE_SPEED = -1.0;
+	public static final double RELEASE_SPEED = 1.0;
+	public static final double SLOW_RELEASE_SPEED = RELEASE_SPEED/2;
 	
 	private DigitalInput in;
 	public BooleanSource isPressed;
@@ -48,9 +50,9 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 	}
 	public void rotate(boolean in) {
 		if(in)
-			rotate(1.0);
+			rotate(CAPTURE_SPEED);
 		else
-			rotate(-0.6);
+			rotate(-CAPTURE_SPEED);
 	}
 	
 	public boolean isClosed()
@@ -78,7 +80,7 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 				if(r>=0.1)
 					rotate(-r);
 				else if(l>=0.1)
-					rotate(l);
+					rotate(SLOW_RELEASE_SPEED);
 				else
 					stop();
 			}
@@ -92,8 +94,8 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 	
 	public void spin()
 	{
-		rController.set(0.5);
-		lController.set(-0.5);
+		rController.set(SLOW_RELEASE_SPEED);
+		lController.set(-SLOW_RELEASE_SPEED);
 	}
 	@Override
 	public void stop() {
