@@ -10,6 +10,7 @@ import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.ActionGroup;
 import edu.flash3388.flashlib.robot.InstantAction;
 import edu.flash3388.flashlib.robot.SystemAction;
+import edu.flash3388.flashlib.robot.TimedAction;
 
 public class AutoHandlers {
 
@@ -70,12 +71,24 @@ public class AutoHandlers {
 				}
 				else
 				{
-					a.addParallel(ActionHandler.backSwitchToScale)
+					ActionGroup ac = new ActionGroup()
+							.addSequential(ActionHandler.backSwitchToScale)
+							.addSequential(new RotatePIDAction(15));
+					a.addParallel(ac)
 					.addParallel(ActionHandler.capture)
 					.addSequential(ActionHandler.fullScaleLift)
-					.addParallel(ActionHandler.release)
-					.addSequential(new RotatePIDAction(-20));
-					//.addSequential(ActionHandler.scaleToSwitchRotateL)
+					.addSequential(new TimedAction(new Action() {
+						
+						@Override
+						protected void execute() {
+							Robot.rollerGripperSystem.rotate(Robot.rollerGripperSystem.SLOW_RELEASE_SPEED);
+						}
+						
+						@Override
+						protected void end() {
+							Robot.rollerGripperSystem.stop();
+						}
+					}, Constants.RELEASE_TIME));
 				}
 		}
 		else if(rightSwitch == rightSide)

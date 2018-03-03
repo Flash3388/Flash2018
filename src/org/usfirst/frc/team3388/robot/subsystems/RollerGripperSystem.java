@@ -25,7 +25,9 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 	private VictorSP lController;
 	
 	public PistonController piston;
-	public static final double DEFAULT_SPEED = 1.0;
+	public static final double CAPTURE_SPEED = -1.0;
+	public static final double RELEASE_SPEED = 1.0;
+	public static final double SLOW_RELEASE_SPEED = RELEASE_SPEED/2;
 	
 	private DigitalInput in;
 	public BooleanSource isPressed;
@@ -48,9 +50,9 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 	}
 	public void rotate(boolean in) {
 		if(in)
-			rotate(1.0);
+			rotate(CAPTURE_SPEED);
 		else
-			rotate(-DEFAULT_SPEED);
+			rotate(-CAPTURE_SPEED);
 	}
 	
 	public boolean isClosed()
@@ -60,18 +62,6 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 	
 	public void setup()
 	{	
-		Robot.systemController.RB.whileHeld(new Action() {
-			
-			@Override
-			protected void execute() {
-				rotate(false);
-			}
-			
-			@Override
-			protected void end() {
-				stop();
-			}
-		});
 		
 		Robot.systemController.A.whenPressed(new InstantAction() {
 			@Override
@@ -80,12 +70,32 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 			}
 		});
 		
+		this.setDefaultAction(new SystemAction(new Action() {
+			
+			@Override
+			protected void execute() {
+				double r =Robot.systemController.RT.get();
+				double l = Robot.systemController.LT.get();
+				
+				if(r>=0.1)
+					rotate(-r);
+				else if(l>=0.1)
+					rotate(SLOW_RELEASE_SPEED);
+				else
+					stop();
+			}
+			
+			@Override
+			protected void end() {
+				stop();
+			}
+		}, this));
 	}
 	
 	public void spin()
 	{
-		rController.set(0.5);
-		lController.set(-0.5);
+		rController.set(SLOW_RELEASE_SPEED);
+		lController.set(-SLOW_RELEASE_SPEED);
 	}
 	@Override
 	public void stop() {
