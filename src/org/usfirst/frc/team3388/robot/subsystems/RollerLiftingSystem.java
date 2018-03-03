@@ -86,7 +86,7 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 				if(!shouldStall())
 					stallSpeed = 0.0;				
 				if(y > MARGIN)
-					rotate(upSpeed/2);
+					rotate(upSpeed);
 				else if(y < -MARGIN)
 					rotate(downSpeed/2);
 				else if(stall)
