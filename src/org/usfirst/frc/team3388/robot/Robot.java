@@ -51,7 +51,7 @@ public class Robot extends IterativeFRCRobot {
 	public static RollerLiftingSystem liftSystem;
 	
 	static double startTime;	
-
+	private DashHandle dashHandle;
 	public static boolean closeSwitch;
 	@Override
 	protected void initRobot() {
@@ -70,22 +70,20 @@ public class Robot extends IterativeFRCRobot {
 		buttons();
 		autoChooserSetup();
 		
+		
+		dashHandle = new DashHandle();
 	}
 
 	private void buttons() {
 		FlashRobotUtil.updateHID();
 		systemController.B.whenPressed(ActionHandler.fullDown);
-		//systemController.X.whenPressed(ActionHandler.downLift);backNScale
 		systemController.X.whenPressed(ActionHandler.fullScaleLift);
-		/*
-		systemController.X.whenMultiPressed(action, 2);
-		systemController.X.whenMultiPressed(action, 3);
-		*/
+		
 		systemController.DPad.Up.whenPressed(ActionHandler.hide);
 		systemController.DPad.Down.whenPressed(ActionHandler.downUse);
 		//systemController.Y.whenPressed(ActionHandler.shoot);
 		
-		systemController.Y.whenPressed(AutoHandlers.rightScale(false,true,false));
+		systemController.Y.whenPressed(AutoHandlers.rightScale(false,true,false,true));
 
 		Robot.systemController.RB.whileHeld(new SystemAction(new Action() {
 			
@@ -106,8 +104,7 @@ public class Robot extends IterativeFRCRobot {
 				rollerGripperSystem.piston.open();
 			}
 		});
-		//systemController.Y.whenPressed(AutoHandlers.rightScale(true,false,true));
-
+		
 		systemController.RB.whenReleased(ActionHandler.capture);
 		systemController.LB.whenPressed(ActionHandler.release);
 		
@@ -158,28 +155,28 @@ public class Robot extends IterativeFRCRobot {
 		leftController = new Joystick(RobotMap.LEFT_CONTROLLER,BUTTON_COUNT);
 	}
 	protected void disabledInit() {
-		DashHandle.disInit();
+		dashHandle.disInit();
 		drive.initGyro();
 		
 	}
 	
 	@Override
 	protected void disabledPeriodic() {
-		DashHandle.disPeriodic();	
+		dashHandle.disPeriodic();	
 	}
 
 	@Override
 	protected void teleopInit() {
 		resetSensors();
 		startTime = FlashUtil.secs();
-		DashHandle.teleInit();
+		dashHandle.teleInit();
 		
 	}
 
 	@Override
 	protected void teleopPeriodic() {
 		FlashRobotUtil.updateHID();
-		DashHandle.telePeriodic();
+		dashHandle.telePeriodic();
 	}
 	
 	@Override
@@ -192,17 +189,18 @@ public class Robot extends IterativeFRCRobot {
 		boolean rightScale = gameData.charAt(1) == 'R';
 		
 		Action auto = AutoHandlers.centerSwitch(rightSwitch);
+		boolean scalePri = dashHandle.getScalePriority();
 		switch(autoChooser.getSelected())
 		{
 		case 1:
-			auto = AutoHandlers.rightScale(rightScale,rightSwitch,true);
+			auto = AutoHandlers.rightScale(rightScale,rightSwitch,true,scalePri);
 			break;
 		case 2:
-			auto = AutoHandlers.rightScale(rightScale,rightSwitch,false);
+			auto = AutoHandlers.rightScale(rightScale,rightSwitch,false,scalePri);
 			break;
 		}
 		auto.start();
-		}
+	}
 
 
 	public static void resetSensors() {

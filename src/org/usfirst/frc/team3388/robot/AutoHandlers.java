@@ -35,7 +35,7 @@ public class AutoHandlers {
 		
 		return a;
 	}
-	public static Action rightScale(boolean rightScale, boolean rightSwitch,boolean rightSide)
+	public static Action rightScale(boolean rightScale, boolean rightSwitch,boolean rightSide,boolean scalePriority)
 	{
 		ActionGroup a = new ActionGroup()
 				.addParallel(ActionHandler.close);
@@ -62,7 +62,7 @@ public class AutoHandlers {
 				.addSequential(ActionHandler.scaleToSwitchDrive)
 				.addSequential(ActionHandler.capture);
 				
-				if(rightSwitch == rightSide)
+				if(rightSwitch == rightSide && !scalePriority)
 				{
 					a.addParallel(ActionHandler.returnCaptureDrive)
 					.addParallel(ActionHandler.capture)
@@ -110,9 +110,7 @@ public class AutoHandlers {
 				.addSequential(ActionHandler.switchDrive)
 				.addSequential(right ? ActionHandler.rotateR90 : ActionHandler.rotateL90)
 				.addSequential(ActionHandler.release)
-				.addParallel(ActionHandler.downUse)
-				.addSequential(right ? ActionHandler.shootRotateR1 : ActionHandler.shootRotateL1)
-				.addSequential(right ? ActionHandler.rightSideSwitch : ActionHandler.leftSideSwitch);
+				.addSequential(ActionHandler.downUse);
 		return a;
 					
 	}

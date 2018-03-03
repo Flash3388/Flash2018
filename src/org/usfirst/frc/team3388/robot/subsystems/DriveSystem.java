@@ -153,8 +153,6 @@ public class DriveSystem extends Subsystem {
 			protected void execute() {
 				double leftVal = Robot.leftController.getY();
 				double rightVal = Robot.rightController.getY();
-			//	System.out.println(leftVal + "left");
-				//System.out.println(rightVal + "rigjht");
 				if(inRange(rightVal, bound))
 					rightVal = 0.0;
 				if(inRange(leftVal, bound))

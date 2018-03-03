@@ -6,14 +6,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DashHandle {
 	private static boolean calibarated = false;
-	public static void disInit()
+	public void disInit()
 	{
 		SmartDashboard.putBoolean(DashNames.enabled, false);
 		SmartDashboard.putNumber(DashNames.timeLeft, 0.0);
 		SmartDashboard.putNumber(DashNames.polePotentiometer, Robot.poleSystem.angle.get());
 		SmartDashboard.putBoolean(DashNames.resetGyro,false);
+		SmartDashboard.putBoolean(DashNames.ScalePriority,false);
 	}
-	public static void disPeriodic()
+	public void disPeriodic()
 	{
 		telePeriodic();
 		if(SmartDashboard.getBoolean(DashNames.resetGyro,false))
@@ -29,11 +30,11 @@ public class DashHandle {
 		else
 			calibarated = false;
 	}
-	public static void updateAngle()
+	public void updateAngle()
 	{
 		SmartDashboard.putNumber(DashNames.angle, Robot.drive.rotationSource.pidGet());
 	}
-	public static void teleInit()
+	public void teleInit()
 	{
 		
 		SmartDashboard.putBoolean(DashNames.enabled, true);
@@ -41,7 +42,7 @@ public class DashHandle {
 		SmartDashboard.putNumber(DashNames.polePotentiometer, Robot.poleSystem.angle.get());		
 	}
 	
-	public static void telePeriodic()
+	public void telePeriodic()
 	{
 		SmartDashboard.putNumber(DashNames.polePotentiometer, Robot.poleSystem.angle.get());
 	//	SmartDashboard.putBoolean(DashNames.pressed, Robot.rollerGripperSystem.isPressed.get());
@@ -52,9 +53,14 @@ public class DashHandle {
 		
 		updateTime();
 	}
-	public static void updateTime()
+	public void updateTime()
 	{
 		double time = (FlashUtil.secs() - Robot.startTime);
 		SmartDashboard.putNumber(DashNames.timeLeft, 135.0-time);
+	}
+	
+	public boolean getScalePriority()
+	{
+		return SmartDashboard.getBoolean(DashNames.ScalePriority,false);
 	}
 }
