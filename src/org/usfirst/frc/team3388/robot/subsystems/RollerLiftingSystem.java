@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RollerLiftingSystem extends Subsystem implements Rotatable {
 
-	public static final double DEFAULT_UP_SPEED=1.0;
-	public static final double DEFAULT_DOWN_SPEED=0.5;
+	public static final double DEFAULT_UP_SPEED=0.95;
+	public static final double DEFAULT_DOWN_SPEED=0.8;
 	
 	TalonSpeed controller;
 	
@@ -46,9 +46,9 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 	public void rotate(boolean dir)
 	{
 		if(dir)
-			rotate(0.8);
+			rotate(DEFAULT_UP_SPEED);
 		else
-			rotate(-0.5);
+			rotate(-DEFAULT_DOWN_SPEED);
 	}
 	@Override
 	public void stop() {
@@ -81,21 +81,28 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 					stallSpeed *= -1;
 				}
 				
+				double totalSpeed;
 				if(!shouldStall())
 					stallSpeed = 0.0;				
 
 				if(y > MARGIN && !isOutOfFrame())
-					rotate(upSpeed);
+					totalSpeed = upSpeed;
 				else if(y < -MARGIN)
-					rotate(downSpeed);
-				else if(Robot.poleSystem.isUp.get() && Robot.liftSystem.angle.get()<=-520)
-					rotate(0.65);
+				{
+					if((Robot.poleSystem.isDown.get() || Robot.poleSystem.angle.get() <= 0.1) && angle.get()<=Constants.DOWN_USE_ANGLE)
+						totalSpeed = stallSpeed-0.03;
+					else
+						totalSpeed = downSpeed;
+				}
+				else if(Robot.poleSystem.isUp.get() && angle.get() <= Constants.ABOUT_TO_FALL)
+					totalSpeed = 0.65;
 				else if(stall)
-					rotate(stallSpeed);
+					totalSpeed = stallSpeed;
 				else
-					stop();
+					totalSpeed = 0.0;
 				
-				SmartDashboard.putNumber("enc lift", angle.get());
+				rotate(totalSpeed);
+				
 			}
 			
 			private boolean isOutOfFrame()

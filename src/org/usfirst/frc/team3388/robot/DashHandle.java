@@ -29,6 +29,7 @@ public class DashHandle {
 		}
 		else
 			calibarated = false;
+		
 	}
 	public void updateAngle()
 	{
@@ -44,6 +45,7 @@ public class DashHandle {
 	
 	public void telePeriodic()
 	{
+		SmartDashboard.putNumber("enc lift", Robot.liftSystem.angle.get());
 		SmartDashboard.putNumber(DashNames.polePotentiometer, Robot.poleSystem.angle.get());
 	//	SmartDashboard.putBoolean(DashNames.pressed, Robot.rollerGripperSystem.isPressed.get());
 		

@@ -81,9 +81,15 @@ public class Robot extends IterativeFRCRobot {
 		
 		systemController.DPad.Up.whenPressed(ActionHandler.hide);
 		systemController.DPad.Down.whenPressed(ActionHandler.downUse);
-		//systemController.Y.whenPressed(ActionHandler.shoot);
-		
-		systemController.Y.whenPressed(AutoHandlers.rightScale(false,true,false,true));
+		systemController.Y.whenPressed(ActionHandler.shoot);
+		systemController.Start.whenPressed(new InstantAction() {
+			
+			@Override
+			protected void execute() {
+				cancelActions();
+			}
+		});
+		//systemController.Y.whenPressed(AutoHandlers.rightScale(false,true,false,true));
 
 		Robot.systemController.RB.whileHeld(new SystemAction(new Action() {
 			
@@ -97,14 +103,6 @@ public class Robot extends IterativeFRCRobot {
 			}
 		}));
 		
-		systemController.Y.whenPressed(new InstantAction() {
-			
-			@Override
-			protected void execute() {
-				rollerGripperSystem.piston.open();
-			}
-		});
-		
 		systemController.RB.whenReleased(ActionHandler.capture);
 		systemController.LB.whenPressed(ActionHandler.release);
 		
@@ -115,12 +113,14 @@ public class Robot extends IterativeFRCRobot {
 			}
 		});
 
-		systemController.Start.whenPressed(new InstantAction() {		
-			@Override
-			protected void execute() {
-				drive.calibGyro();
-			}
-		});
+		
+	}
+
+	private void cancelActions() {
+		rollerGripperSystem.cancelCurrentAction();
+		liftSystem.cancelCurrentAction();
+		poleSystem.cancelCurrentAction();
+		drive.cancelCurrentAction();
 	}
 	
 	@Override
@@ -163,13 +163,17 @@ public class Robot extends IterativeFRCRobot {
 	@Override
 	protected void disabledPeriodic() {
 		dashHandle.disPeriodic();	
+		//System.out.println("up "+ poleSystem.isUp.get());
+		//System.out.println("down "+poleSystem.isDown.get());
+		
 	}
 
 	@Override
 	protected void teleopInit() {
-		resetSensors();
+		//resetSensors();
 		startTime = FlashUtil.secs();
-		dashHandle.teleInit();
+		dashHandle.teleInit(); 
+		cancelActions();
 		
 	}
 
@@ -180,6 +184,7 @@ public class Robot extends IterativeFRCRobot {
 	}
 	
 	@Override
+	
 	protected void autonomousInit() {
 		resetSensors();
 	
@@ -199,14 +204,17 @@ public class Robot extends IterativeFRCRobot {
 			auto = AutoHandlers.rightScale(rightScale,rightSwitch,false,scalePri);
 			break;
 		}
+		
+		//Action auto = AutoHandlers.rightScale(false, false, false, true);
+		
 		auto.start();
 	}
 
 
 	public static void resetSensors() {
 		drive.encoder.reset();
-		drive.resetGyro();
 		drive.initGyro();
+		drive.resetGyro();
 		poleSystem.resetStartAngle();
 		liftSystem.resetEncoder();
 
@@ -214,6 +222,7 @@ public class Robot extends IterativeFRCRobot {
 
 	@Override
 	protected void autonomousPeriodic() {
+		dashHandle.telePeriodic();
 		
 	}
 }

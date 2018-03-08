@@ -50,9 +50,9 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 	}
 	public void rotate(boolean in) {
 		if(in)
-			rotate(CAPTURE_SPEED);
-		else
 			rotate(-CAPTURE_SPEED);
+		else
+			rotate(CAPTURE_SPEED);
 	}
 	
 	public boolean isClosed()

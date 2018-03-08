@@ -18,6 +18,7 @@ public class RotatePIDAction extends Action {
 	double speedLimit;
 	public RotatePIDAction(double setpoint,double speedLimit) {
 		requires(Robot.drive);
+		this.setTimeout(2.0);
 		this.setpoint=setpoint;
 		this.speedLimit = speedLimit;
 	}

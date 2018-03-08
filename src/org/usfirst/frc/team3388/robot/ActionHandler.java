@@ -59,6 +59,8 @@ public class ActionHandler{
 	
 	public static RotatePIDAction scaleToSwitchRotateR;
 	public static RotatePIDAction scaleToSwitchRotateL;
+	public static RotatePIDAction lastScaleRotateR;
+	public static RotatePIDAction lastScaleRotateL;
 	
 	public static RotatePIDAction rotateR90;
 	public static RotatePIDAction rotateL90;
@@ -67,9 +69,13 @@ public class ActionHandler{
 	public static RotatePIDAction shootRotateL1;
 	public static RotatePIDAction shootRotateL2;
 	
+	public static RotatePIDAction scaleRotateR;
+	public static RotatePIDAction scaleRotateL;
+	
 	public static ActionGroup fullDown;
 	public static ActionGroup fullDownUse;
-	public static ActionGroup backNScale;
+	public static ActionGroup backNScaleL;
+	public static ActionGroup backNScaleR;
 	public static ActionGroup fullHide;
 	public static ActionGroup fullScaleLift;
 	public static ActionGroup switchShoot;
@@ -152,9 +158,23 @@ public class ActionHandler{
 				.addSequential(close)
 				.addSequential(hide);
 		
+		
 		fullScaleLift = new ActionGroup()
-				.addSequential(hide)
+				.addParallel(hide)
+				.addWaitAction(0.6)
 				.addSequential(scaleLift)
+				.addParallel(new Action() {
+					
+					@Override
+					protected void execute() {
+						Robot.rollerGripperSystem.rotate(0.2,false);
+					}
+					
+					@Override
+					protected void end() {
+						Robot.rollerGripperSystem.stop();
+					}
+				})
 				.addSequential(upUse);
 		
 		fullDown = new ActionGroup()
@@ -166,11 +186,43 @@ public class ActionHandler{
 				.addSequential(shoot)
 				.addSequential(release);
 		
-		backNScale = new ActionGroup()
+		backNScaleL = new ActionGroup()
 				.addParallel(fullScaleLift)
 				.addSequential(startScaleDrive)
-				.addParallel(inThresholdAct(secondScaleDrive, open))
-				.addSequential(secondScaleDrive);
+				.addSequential(secondScaleDrive)
+				.addSequential(scaleRotateR)
+				.addSequential(new DrivePIDAction(-32.0,0.2,10,true))
+				.addSequential(new TimedAction(new Action() {
+					
+					@Override
+					protected void execute() {
+						Robot.rollerGripperSystem.rotate(0.5);
+					}
+					
+					@Override
+					protected void end() {
+						Robot.rollerGripperSystem.stop();
+					}
+				}, 0.3));
+		
+		backNScaleR = new ActionGroup()
+				.addParallel(fullScaleLift)
+				.addSequential(startScaleDrive)
+				.addSequential(secondScaleDrive)
+				.addSequential(scaleRotateL)
+				.addSequential(new DrivePIDAction(-32.0,0.2,10,true))
+				.addSequential(new TimedAction(new Action() {
+					
+					@Override
+					protected void execute() {
+						Robot.rollerGripperSystem.rotate(0.5);
+					}
+					
+					@Override
+					protected void end() {
+						Robot.rollerGripperSystem.stop();
+					}
+				}, 0.3));
 		
 		//not good
 		rightSideSwitch = new ActionGroup()
@@ -220,27 +272,33 @@ public class ActionHandler{
 		captureDrive = new DrivePIDAction(Constants.SMALL_CAPTURE_DRIVE,0.2,10,true);
 		returnCaptureDrive = new DrivePIDAction(-3.0, 0.5, 10,true);
 		secondScaleDrive = new DrivePIDAction(-Constants.SCEOND_SCALE_DRIVE, 0.20,65,true);
-		startScaleDrive = new SimpleDistanceDrive(-Constants.FIRST_SCALE_DRIVE,-0.6);
+		startScaleDrive = new SimpleDistanceDrive(-Constants.FIRST_SCALE_DRIVE,-0.5);
 		
-		switchDrive = new DrivePIDAction(Constants.SWITCH_DRIVE,0.6,70,true);
+		switchDrive = new DrivePIDAction(Constants.SWITCH_DRIVE,0.36,70,true);
 		smallCaptureDrive = new DrivePIDAction(Constants.SWITCH_CAPTURE_DRIVE,0.2,10, true);
 	}
 	
 	private static void rotateSetup()
 	{
-		scaleToSwitchRotateR = new RotatePIDAction(Constants.SCALE_TO_SWITCH_ROTATE,0.35);
-		scaleToSwitchRotateL = new RotatePIDAction(-Constants.SCALE_TO_SWITCH_ROTATE,0.35);
-		centerRotationR = new RotatePIDAction(Constants.CENTER_ROTATE);
+		scaleToSwitchRotateR = new RotatePIDAction(Constants.SCALE_TO_SWITCH_ROTATE+Constants.SCALE_ROTATE,0.6);
+		scaleToSwitchRotateL = new RotatePIDAction(-Constants.SCALE_TO_SWITCH_ROTATE-Constants.SCALE_ROTATE,0.6);
+		lastScaleRotateL = new RotatePIDAction(Constants.LAST_SCALE_ROTATE);
+		lastScaleRotateR = new RotatePIDAction(-Constants.LAST_SCALE_ROTATE);
+		
+		centerRotationR = new RotatePIDAction(Constants.CENTER_ROTATE-9.0);
 		centerRotationL = new RotatePIDAction(-Constants.CENTER_ROTATE);
 		centerCaptureRotateR = new RotatePIDAction(Constants.CENTER_CAPTURE);
 		centerCaptureRotateL = new RotatePIDAction(-Constants.CENTER_CAPTURE);
 		
-		rotateR90 = new RotatePIDAction(30.0);
-		rotateL90 = new RotatePIDAction(-30.0);
+		rotateR90 = new RotatePIDAction(90.0,0.6);
+		rotateL90 = new RotatePIDAction(-90.0,0.6);
 		
 		shootRotateL1 = new RotatePIDAction(Constants.SHOOT_ROTATE1);
 		shootRotateL2 = new RotatePIDAction(Constants.SHOOT_ROTATE2);
 		shootRotateR1 = new RotatePIDAction(-Constants.SHOOT_ROTATE1);
 		shootRotateR2 = new RotatePIDAction(-Constants.SHOOT_ROTATE2);
+		
+		scaleRotateR = new RotatePIDAction(Constants.SCALE_ROTATE, 0.5);
+		scaleRotateL = new RotatePIDAction(-Constants.SCALE_ROTATE, 0.5);
 	}
 }

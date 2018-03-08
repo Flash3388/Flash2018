@@ -157,7 +157,7 @@ public class DriveSystem extends Subsystem {
 					rightVal = 0.0;
 				if(inRange(leftVal, bound))
 					leftVal = 0.0;
-				driveTrain.tankDrive(leftVal, leftVal);
+				driveTrain.tankDrive(rightVal,leftVal);
 			}
 				
 			@Override
