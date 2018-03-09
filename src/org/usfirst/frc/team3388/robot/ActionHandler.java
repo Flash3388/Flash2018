@@ -8,6 +8,8 @@ import org.usfirst.frc.team3388.actions.RotatePIDAction;
 import org.usfirst.frc.team3388.actions.SimpleDistanceDrive;
 import org.usfirst.frc.team3388.robot.subsystems.RollerLiftingSystem;
 
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
+
 import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.ActionGroup;
 import edu.flash3388.flashlib.robot.InstantAction;
@@ -49,6 +51,8 @@ public class ActionHandler{
 	
 	public static DrivePIDAction switchDrive;
 	public static DrivePIDAction smallCaptureDrive;
+	public static DrivePIDAction afterSwitchDrive;	
+	public static DrivePIDAction otherSwitchDrive;
 	
 	
 	public static RotatePIDAction centerRotationR;
@@ -81,6 +85,8 @@ public class ActionHandler{
 	public static ActionGroup switchShoot;
 	public static ActionGroup rightSideSwitch;
 	public static ActionGroup leftSideSwitch;
+	public static ActionGroup rightOtherSwitch;
+	public static ActionGroup leftOtherSwitch;
 
 	public static void setup()
 	{
@@ -261,6 +267,40 @@ public class ActionHandler{
 						Robot.rollerGripperSystem.stop();
 					}
 				});
+		leftOtherSwitch = new ActionGroup()
+				.addSequential(afterSwitchDrive)
+				.addSequential(rotateR90)
+				.addParallel(shoot)
+				.addSequential(new DrivePIDAction(15.0, 10, false))
+				.addSequential(new TimedAction(new Action() {
+					
+					@Override
+					protected void execute() {
+						Robot.rollerGripperSystem.rotate(0.5);
+					}
+					
+					@Override
+					protected void end() {
+						Robot.rollerGripperSystem.stop();
+					}
+				}, 0.3));
+		rightOtherSwitch = new ActionGroup()
+				.addSequential(afterSwitchDrive)
+				.addSequential(rotateL90)
+				.addParallel(shoot)
+				.addSequential(new DrivePIDAction(15.0, 10, false))
+				.addSequential(new TimedAction(new Action() {
+					
+					@Override
+					protected void execute() {
+						Robot.rollerGripperSystem.rotate(0.5);
+					}
+					
+					@Override
+					protected void end() {
+						Robot.rollerGripperSystem.stop();
+					}
+				}, 0.3));
 	}
 			
 	private static void driveSetup()
@@ -276,6 +316,8 @@ public class ActionHandler{
 		
 		switchDrive = new DrivePIDAction(Constants.SWITCH_DRIVE,0.36,70,true);
 		smallCaptureDrive = new DrivePIDAction(Constants.SWITCH_CAPTURE_DRIVE,0.2,10, true);
+		afterSwitchDrive = new DrivePIDAction(Constants.AFTER_SWITCH_DRIVE);
+		otherSwitchDrive = new DrivePIDAction(Constants.OTHER_SWITCH_DRIVE);
 	}
 	
 	private static void rotateSetup()

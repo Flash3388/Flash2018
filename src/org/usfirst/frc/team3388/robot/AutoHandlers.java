@@ -71,10 +71,17 @@ public class AutoHandlers {
 					a.addSequential(sideSwitch(rightSide));
 					
 			}
-			else
+			else if(scalePriority)
 			{
 				scaleSwitchPart(rightSide, a);
 				a.addSequential(ActionHandler.release);	
+			}
+			else
+			{
+				//a.addSequential(ActionHandler.switchDrive);
+				a.addSequential(ActionHandler.afterSwitchDrive)
+				.addSequential(rightSide ? ActionHandler.rotateL90 : ActionHandler.rotateR90)
+				.addSequential(rightSide ? ActionHandler.rightOtherSwitch : ActionHandler.leftOtherSwitch);
 			}
 			
 			/*
@@ -105,10 +112,7 @@ public class AutoHandlers {
 		{
 			a.addSequential(sideSwitch(rightSide));
 		}
-		else
-		{
-			a.addSequential(ActionHandler.switchDrive);
-		}		
+		
 				
 		return a;
 	}

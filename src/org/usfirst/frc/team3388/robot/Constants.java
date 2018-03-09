@@ -22,11 +22,13 @@ public class Constants {
 	public static final double SCALE_TO_SWITCH_DRIVE=58;
 	public static final double SCEOND_SCALE_DRIVE=180;
 	public static final double FIRST_SCALE_DRIVE=513;
+	public static final double AFTER_SWITCH_DRIVE=-590;//find
 	public static final double CENTER_SWITCH_DRIVE=255;
 	public static final double SMALL_START_DRIVE=20;
 	public static final double SMALL_CAPTURE_DRIVE=30;
 	public static final double HALF_SWITCH_DRIVE=430;
 	public static final double SWITCH_DRIVE= -385;
+	public static final double OTHER_SWITCH_DRIVE=262;
 	public static final double SWITCH_CAPTURE_DRIVE=10;
 	
 	public static final double SCALE_ROTATE = 40.0;
