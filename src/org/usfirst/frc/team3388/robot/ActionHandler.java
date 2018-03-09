@@ -22,6 +22,8 @@ public class ActionHandler{
 	
 	public static CaptureAction capture;
 	public static CaptureAction release;
+	public static CaptureAction slowRelease;
+	public static Action correct;
 	
 	public static InstantAction close;
 	public static InstantAction open;
@@ -144,6 +146,19 @@ public class ActionHandler{
 				Robot.rollerGripperSystem.piston.close();
 			}
 		};
+		slowRelease = new CaptureAction(false, Constants.RELEASE_TIME);
+		correct = new Action() {
+			
+			@Override
+			protected void execute() {
+				Robot.rollerGripperSystem.rotate(0.2,false);
+			}
+			
+			@Override
+			protected void end() {
+				Robot.rollerGripperSystem.stop();
+			}
+		};
 	}
 	
 	private static void poleSetup()
@@ -169,18 +184,7 @@ public class ActionHandler{
 				.addParallel(hide)
 				.addWaitAction(0.6)
 				.addSequential(scaleLift)
-				.addParallel(new Action() {
-					
-					@Override
-					protected void execute() {
-						Robot.rollerGripperSystem.rotate(0.2,false);
-					}
-					
-					@Override
-					protected void end() {
-						Robot.rollerGripperSystem.stop();
-					}
-				})
+				.addParallel(correct)
 				.addSequential(upUse);
 		
 		fullDown = new ActionGroup()
@@ -198,18 +202,7 @@ public class ActionHandler{
 				.addSequential(secondScaleDrive)
 				.addSequential(scaleRotateR)
 				.addSequential(new DrivePIDAction(-32.0,0.2,10,true))
-				.addSequential(new TimedAction(new Action() {
-					
-					@Override
-					protected void execute() {
-						Robot.rollerGripperSystem.rotate(0.5);
-					}
-					
-					@Override
-					protected void end() {
-						Robot.rollerGripperSystem.stop();
-					}
-				}, 0.3));
+				.addSequential(slowRelease);
 		
 		backNScaleR = new ActionGroup()
 				.addParallel(fullScaleLift)
@@ -217,18 +210,7 @@ public class ActionHandler{
 				.addSequential(secondScaleDrive)
 				.addSequential(scaleRotateL)
 				.addSequential(new DrivePIDAction(-32.0,0.2,10,true))
-				.addSequential(new TimedAction(new Action() {
-					
-					@Override
-					protected void execute() {
-						Robot.rollerGripperSystem.rotate(0.5);
-					}
-					
-					@Override
-					protected void end() {
-						Robot.rollerGripperSystem.stop();
-					}
-				}, 0.3));
+				.addSequential(slowRelease);
 		
 		//not good
 		rightSideSwitch = new ActionGroup()
@@ -255,52 +237,19 @@ public class ActionHandler{
 				.addSequential(capture)
 				.addParallel(shoot)
 				.addSequential(shootRotateL2)
-				.addSequential(new Action() {
-					
-					@Override
-					protected void execute() {
-						Robot.rollerGripperSystem.rotate(0.5);
-					}
-					
-					@Override
-					protected void end() {
-						Robot.rollerGripperSystem.stop();
-					}
-				});
+				.addSequential(slowRelease);
 		leftOtherSwitch = new ActionGroup()
 				.addSequential(afterSwitchDrive)
 				.addSequential(rotateR90)
 				.addParallel(shoot)
 				.addSequential(new DrivePIDAction(15.0, 10, false))
-				.addSequential(new TimedAction(new Action() {
-					
-					@Override
-					protected void execute() {
-						Robot.rollerGripperSystem.rotate(0.5);
-					}
-					
-					@Override
-					protected void end() {
-						Robot.rollerGripperSystem.stop();
-					}
-				}, 0.3));
+				.addSequential(slowRelease);
 		rightOtherSwitch = new ActionGroup()
 				.addSequential(afterSwitchDrive)
 				.addSequential(rotateL90)
 				.addParallel(shoot)
 				.addSequential(new DrivePIDAction(15.0, 10, false))
-				.addSequential(new TimedAction(new Action() {
-					
-					@Override
-					protected void execute() {
-						Robot.rollerGripperSystem.rotate(0.5);
-					}
-					
-					@Override
-					protected void end() {
-						Robot.rollerGripperSystem.stop();
-					}
-				}, 0.3));
+				.addSequential(slowRelease);
 	}
 			
 	private static void driveSetup()

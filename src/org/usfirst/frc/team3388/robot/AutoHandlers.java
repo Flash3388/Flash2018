@@ -26,7 +26,6 @@ public class AutoHandlers {
 					
 					@Override
 					protected void execute() {
-						
 					}
 					
 					@Override
@@ -78,49 +77,22 @@ public class AutoHandlers {
 			}
 			else
 			{
-				//a.addSequential(ActionHandler.switchDrive);
 				a.addSequential(ActionHandler.afterSwitchDrive)
 				.addSequential(rightSide ? ActionHandler.rotateL90 : ActionHandler.rotateR90)
 				.addSequential(rightSide ? ActionHandler.rightOtherSwitch : ActionHandler.leftOtherSwitch);
 			}
-			
-			/*
-				else
-				{
-					ActionGroup ac = new ActionGroup()
-							.addSequential(ActionHandler.backSwitchToScale)
-							.addSequential(rightScale ? ActionHandler.lastScaleRotateR : ActionHandler.lastScaleRotateL);
-					a.addParallel(ac)
-					.addParallel(ActionHandler.capture)
-					.addSequential(ActionHandler.fullScaleLift)
-					.addSequential(new TimedAction(new Action() {
-						
-						@Override
-						protected void execute() {
-							Robot.rollerGripperSystem.rotate(Robot.rollerGripperSystem.SLOW_RELEASE_SPEED);
-						}
-						
-						@Override
-						protected void end() {
-							Robot.rollerGripperSystem.stop();
-						}
-					}, Constants.RELEASE_TIME));
-				}
-				*/
 		}
 		else if(rightSwitch == rightSide)
-		{
 			a.addSequential(sideSwitch(rightSide));
-		}
-		
+		else
+			a.addSequential(ActionHandler.switchDrive);
 				
 		return a;
 	}
 	private static void scaleSwitchPart(boolean rightSide, ActionGroup a) {
 		a.addSequential(rightSide ?ActionHandler.backNScaleR :ActionHandler.backNScaleL)
 		.addParallel(new DrivePIDAction(30.0, 0.2, 0, false))
-		.addSequential(ActionHandler.fullDown);
-		/*.addSequential(new DrivePIDAction(20.0,0.2,0,true))
+		.addSequential(ActionHandler.fullDown)
 		.addSequential(rightSide ? ActionHandler.scaleToSwitchRotateR : ActionHandler.scaleToSwitchRotateL)
 		.addSequential(ActionHandler.fullDownUse)
 		.addParallel(new SystemAction(new Action() {
@@ -139,19 +111,18 @@ public class AutoHandlers {
 		.addParallel(ActionHandler.returnCaptureDrive)
 		.addParallel(ActionHandler.capture)
 		.addSequential(ActionHandler.shoot);
-	*/}
+	}
 	
 	public static Action sideSwitch(boolean right)
 	{
 		Action a = new ActionGroup()
 				.addSequential(ActionHandler.switchDrive)
 				.addSequential(right ? ActionHandler.rotateR90 : ActionHandler.rotateL90)
-				.addSequential(new DrivePIDAction(-5,0.3))
+				.addSequential(new DrivePIDAction(-5.0,0.3))
 				.addSequential(ActionHandler.shoot)
 				.addSequential(new DrivePIDAction(7.0,0.2,10,false))
 				.addSequential(ActionHandler.release)
 				.addSequential(ActionHandler.open);
-				//.addSequential(ActionHandler.downUse);
 		return a;
 					
 	}
