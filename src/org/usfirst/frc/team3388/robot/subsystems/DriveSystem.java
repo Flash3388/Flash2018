@@ -1,9 +1,12 @@
 package org.usfirst.frc.team3388.robot.subsystems;
 
+import java.io.IOException;
+
 import org.usfirst.frc.team3388.actions.DrivePIDAction;
 import org.usfirst.frc.team3388.actions.RotatePIDAction;
 import org.usfirst.frc.team3388.robot.AutoHandlers;
 import org.usfirst.frc.team3388.robot.DashNames;
+import org.usfirst.frc.team3388.robot.Recorder;
 import org.usfirst.frc.team3388.robot.Robot;
 import org.usfirst.frc.team3388.robot.RobotMap;
 import org.usfirst.frc.team3388.robot.TalonSpeed;
@@ -158,6 +161,11 @@ public class DriveSystem extends Subsystem {
 				if(inRange(leftVal, bound))
 					leftVal = 0.0;
 				driveTrain.tankDrive(rightVal,leftVal);
+				try {
+					Recorder.saveVal(leftVal, rightVal);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 				
 			@Override
@@ -167,7 +175,7 @@ public class DriveSystem extends Subsystem {
 		}, this));
 	}
 	
-	private static boolean inRange(double val,double bound)
+	public static boolean inRange(double val,double bound)
 	{
 		return(val >= -bound && val <= bound);
 	}
