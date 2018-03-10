@@ -102,4 +102,10 @@ public class RollerGripperSystem extends Subsystem implements Rotatable{
 		rController.set(0.0);
 		lController.set(0.0);
 	}
+	public double getCurrent()
+	{
+		return rController.get();
+	}
+
+
 }

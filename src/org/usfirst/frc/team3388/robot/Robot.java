@@ -135,6 +135,9 @@ public class Robot extends IterativeFRCRobot {
 					Frame f = rec.frames.get(curr);
 					drive.driveTrain.tankDrive(f.rightVal, f.leftVal);
 					poleSystem.rotate(f.poleVal);
+					liftSystem.rotate(f.liftVal);
+					rollerGripperSystem.rotate(f.rotateVal);
+					rollerGripperSystem.piston.use(f.pistonVal);
 					
 					curr++;
 					try {
@@ -182,8 +185,11 @@ public class Robot extends IterativeFRCRobot {
 					double left = drive.driveTrain.getController(MotorSide.Left).get();
 					double right = drive.driveTrain.getController(MotorSide.Right).get();
 					double pole = poleSystem.getCurrent();
+					double lift = liftSystem.getCurrent();
+					double rotate = rollerGripperSystem.getCurrent();
+					boolean piston = rollerGripperSystem.piston.isClosed();
 					System.out.println("aaa");
-					rec.addFrame(new Frame(right,left,pole));
+					rec.addFrame(new Frame(right,left,pole,lift,rotate,piston));
 					try {
 						Thread.sleep(Recorder.PERIOD);
 					} catch (InterruptedException e) {

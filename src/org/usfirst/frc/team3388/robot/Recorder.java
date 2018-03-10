@@ -72,7 +72,8 @@ public class Recorder {
 			writer = new PrintWriter(path);
 			for(Frame f : frames)
 			{
-				writer.print(((f.leftVal) + "," + f.rightVal +","+f.poleVal+"\n"));
+				writer.print(((f.leftVal) + "," + f.rightVal +","+f.poleVal+","+f.liftVal+","
+						+f.rotateVal+","+f.pistonVal+"\n"));
 			}
 			writer.close();
 		} catch (FileNotFoundException e) {

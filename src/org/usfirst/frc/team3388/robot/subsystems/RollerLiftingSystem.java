@@ -126,4 +126,8 @@ public class RollerLiftingSystem extends Subsystem implements Rotatable {
 			}
 		}, this));
 	}
+	public double getCurrent()
+	{
+		return controller.get();
+	}
 }
