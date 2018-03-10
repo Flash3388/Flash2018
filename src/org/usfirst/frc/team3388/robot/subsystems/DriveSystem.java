@@ -168,18 +168,7 @@ public class DriveSystem extends Subsystem {
 				if(inRange(leftVal, bound))
 					leftVal = 0.0;
 				driveTrain.tankDrive(rightVal,leftVal);
-				if(Robot.shouldRec)
-				{
-					int currTime = FlashUtil.millisInt();
-					
-					if(currTime - time >= Recorder.PERIOD)
-					{	
-						System.out.println(currTime - time);
-						Robot.rec.addFrame(new Frame(rightVal, leftVal));
-						time = currTime;
-					}
-					
-				}
+				
 			}
 				
 			@Override

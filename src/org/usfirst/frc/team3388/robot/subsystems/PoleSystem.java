@@ -44,6 +44,7 @@ public class PoleSystem extends Subsystem implements Rotatable{
 	private DigitalInput u;
 	public BooleanSource isUp;
 	
+	 
 	double startAngle;
 	public PoleSystem()
 	{
@@ -90,10 +91,12 @@ public class PoleSystem extends Subsystem implements Rotatable{
 	}
 	public void rotate(boolean dir)
 	{
-		if(dir)
+		if(dir && !isUp.get())
 			rotate(UP_SPEED);
-		else
+		else if(!isDown.get())
 			rotate(DOWN_SPEED);
+		else
+			stop();
 	}
 	
 	@Override
@@ -121,6 +124,10 @@ public class PoleSystem extends Subsystem implements Rotatable{
 				stop();
 			}
 		});
+	}
+	public double getCurrent()
+	{
+		return controller.get();
 	}
 
 }

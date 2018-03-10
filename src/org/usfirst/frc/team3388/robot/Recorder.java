@@ -68,17 +68,16 @@ public class Recorder {
 		try {
 			PrintWriter writer = new PrintWriter(path);
 			writer.print("");
-			
+			writer.close();
+			writer = new PrintWriter(path);
 			for(Frame f : frames)
 			{
-				writer.print((f.leftVal + "," + f.rightVal + "\n").getBytes());
+				writer.print(((f.leftVal) + "," + f.rightVal +","+f.poleVal+"\n"));
 			}
 			writer.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		clear();

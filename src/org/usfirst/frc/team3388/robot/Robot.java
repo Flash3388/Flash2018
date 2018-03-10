@@ -119,48 +119,93 @@ public class Robot extends IterativeFRCRobot {
 			}
 		});
 		
+		record();
+		writer();
+		
+		
+	}
+
+	private void writer() {
+		Runnable writer = new Runnable() {	
+			@Override
+			public void run() {
+				int curr =0;
+				while(curr < rec.frames.size())
+				{
+					Frame f = rec.frames.get(curr);
+					drive.driveTrain.tankDrive(f.rightVal, f.leftVal);
+					poleSystem.rotate(f.poleVal);
+					
+					curr++;
+					try {
+						Thread.sleep(Recorder.PERIOD);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}	
+			}
+		
+		};
+		leftController.getButton(1).whenPressed(new SystemAction(new Action() {
+		
+				Thread t;
+				@Override
+				protected void initialize() {
+					rec.loadFile();
+					t = new Thread(writer);
+					t.start();
+				}
+				@Override
+				protected void execute() {
+					
+				}
+				@Override
+				protected void end() {
+					drive.driveTrain.stop();
+					poleSystem.stop();
+				}
+				@Override
+				protected boolean isFinished() {
+					return !t.isAlive();
+				}
+			},drive,poleSystem));
+	}
+
+	private void record() {
+		Runnable recoredThread = new Runnable() {
+			
+			@Override
+			public void run() {
+				while(shouldRec && !Thread.interrupted())
+				{
+					double left = drive.driveTrain.getController(MotorSide.Left).get();
+					double right = drive.driveTrain.getController(MotorSide.Right).get();
+					double pole = poleSystem.getCurrent();
+					System.out.println("aaa");
+					rec.addFrame(new Frame(right,left,pole));
+					try {
+						Thread.sleep(Recorder.PERIOD);
+					} catch (InterruptedException e) {
+						System.out.println("interraped");
+					}
+				}
+				rec.toFile();
+					
+			}
+		};
 		rightController.getButton(1).whenPressed(new InstantAction() {
 			
 			@Override
 			protected void execute(){
-				if(shouldRec)
-					rec.toFile();
 				shouldRec = !shouldRec;
+				if(shouldRec)
+				{
+					new Thread(recoredThread).start();
+					
+				}
 			}
 		});
-		leftController.getButton(1).whenPressed(new SystemAction(new Action() {
-			
-			int curr;
-			int time;
-			@Override
-			protected void initialize() {
-				rec.loadFile();
-				curr = 0;
-				time = FlashUtil.millisInt();
-			}
-			@Override
-			protected void execute(){
-				//System.out.println(curr);
-			int currTime = FlashUtil.millisInt();
-			if(currTime - time >= Recorder.PERIOD)
-			{
-				System.out.println(currTime - time);
-				Frame f = rec.frames.get(curr);
-				drive.driveTrain.tankDrive(f.rightVal, f.leftVal);
-				curr++;
-				time = currTime;
-			}
-		}
-			@Override
-			protected boolean isFinished() {
-				return curr >= rec.frames.size();
-			}
-			@Override
-			protected void end() {
-				drive.driveTrain.stop();
-			}
-		}, drive));
-		
 	}
 
 	private void cancelActions() {
