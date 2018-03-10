@@ -176,6 +176,7 @@ public class ActionHandler{
 				.addSequential(downUse);
 				
 		fullHide = new ActionGroup()
+				.addParallel(correct)
 				.addSequential(close)
 				.addSequential(hide);
 		
