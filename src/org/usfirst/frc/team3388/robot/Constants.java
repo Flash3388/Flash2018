@@ -28,7 +28,7 @@ public class Constants {
 	public static final double SMALL_CAPTURE_DRIVE=30;
 	public static final double HALF_SWITCH_DRIVE=430;
 	public static final double SWITCH_DRIVE= -385;
-	public static final double OTHER_SWITCH_DRIVE=262;
+	public static final double OTHER_SWITCH_DRIVE=262;//find
 	public static final double SWITCH_CAPTURE_DRIVE=10;
 	
 	public static final double SCALE_ROTATE = 40.0;
