@@ -1,82 +1,87 @@
 package org.usfirst.frc.team3388.robot;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.LinkedList;
-
-import org.usfirst.frc.team3388.robot.subsystems.DriveSystem;
+import java.util.Vector;
 
 public class Recorder {
 	
+	public Vector<Frame> frames;
 	File file;
-	static FileWriter writer;
-	static FileReader reader;
+	public static final String FILE_PATH = "/home/lvuser/recorder/recored.csv";
+	public static final int PERIOD = 20;
 	
-	public Recorder() throws IOException
-	{
-	      file = new File("motorInfo.txt");
-	      
-	      // creates the file
-	      file.createNewFile();
-	      
-	      // creates a FileWriter Object
-	      writer = new FileWriter(file); 
-	      reader = new FileReader(file);
+	public Recorder()
+	{	
+		frames = new Vector<Frame>();
 	}
 	
-	public static void saveVal(double leftVal,double rightVal) throws IOException
+	public void addFrame(Frame f)
 	{
-		do
-		{
-			while(DriveSystem.inRange(leftVal, 0.0) || DriveSystem.inRange(leftVal, 0.0)) {}
-			String left = new Double(leftVal).toString();
-			String right = new Double(rightVal).toString();
-			// Writes the content to the file
-
-			writer.write(left+"\n"+right+"\n");
-
-		} while(DriveSystem.inRange(leftVal, 0.0) || DriveSystem.inRange(leftVal, 0.0));
-		writer.write("0.0");
-		writer.flush();
-		writer.close();
+		frames.addElement(f);
+	}
+	public void clear()
+	{
+		frames.clear();
+	}
+	public void loadFile()
+	{
+		loadFile(FILE_PATH);	
+		System.out.println("file loaded");
 	}
 	
-	public static Object getVal()
+	public void loadFile(String path)
 	{
-		Object vals = new Object();
-		char[] temp = new char[50];
-		String left = null;
-		String right = null;
-		class vals{
-			public LinkedList<Double> leftVals;
-			public LinkedList<Double> rightVlas;
-			
-			public vals()
-			{
-				leftVals = new LinkedList<Double>();
-				rightVlas = new LinkedList<Double>();
-			}
-		}
+		clear();
+		BufferedReader file;
 		try {
-			while(vals.)
-			//save left
-			while(reader.read()!='\n')
-				reader.read(temp);
-			for(int i=0 ; i<50 ; i++)
-				left=(left+temp[i]);
-			//clear
-			for(int i=0 ; i<50 ; i++)
-				temp[i]=0;
-			//save right
-			while(reader.read()!='\n')
-				reader.read(temp);
-			for(int i=0 ; i<50 ; i++)
-				right=(right+temp[i]);
+			file = new BufferedReader(new FileReader(path));
+			for(String line = file.readLine(); line != null; line = file.readLine())
+			{
+				String[] data = line.split(",");
+				frames.add(new Frame(data));
+			}
+			file.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+	}
+	
+	public void toFile()
+	{
+		toFile(FILE_PATH);
+		System.out.println("file saved");
+	}
+	public void toFile(String path)
+	{
+		try {
+			PrintWriter writer = new PrintWriter(path);
+			writer.print("");
+			
+			for(Frame f : frames)
+			{
+				writer.print((f.leftVal + "," + f.rightVal + "\n").getBytes());
+			}
+			writer.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return vals;
+		clear();
 	}
+	
 }

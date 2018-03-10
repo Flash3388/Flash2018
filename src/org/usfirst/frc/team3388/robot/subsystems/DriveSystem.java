@@ -6,6 +6,7 @@ import org.usfirst.frc.team3388.actions.DrivePIDAction;
 import org.usfirst.frc.team3388.actions.RotatePIDAction;
 import org.usfirst.frc.team3388.robot.AutoHandlers;
 import org.usfirst.frc.team3388.robot.DashNames;
+import org.usfirst.frc.team3388.robot.Frame;
 import org.usfirst.frc.team3388.robot.Recorder;
 import org.usfirst.frc.team3388.robot.Robot;
 import org.usfirst.frc.team3388.robot.RobotMap;
@@ -21,6 +22,7 @@ import edu.flash3388.flashlib.robot.SystemAction;
 import edu.flash3388.flashlib.robot.devices.MultiSpeedController;
 import edu.flash3388.flashlib.robot.systems.FlashDrive;
 import edu.flash3388.flashlib.robot.systems.FlashDrive.MotorSide;
+import edu.flash3388.flashlib.util.FlashUtil;
 import edu.flash3388.flashlib.util.beans.DoubleProperty;
 import edu.flash3388.flashlib.util.beans.PropertyHandler;
 import edu.wpi.first.wpilibj.AnalogGyro;
@@ -151,7 +153,12 @@ public class DriveSystem extends Subsystem {
 	{
 		this.setDefaultAction(new SystemAction(new Action() {
 			final double bound = 0.11;
-			
+			int time = 0;
+			@Override
+			protected void initialize() {
+				time =FlashUtil.millisInt();
+				
+			}
 			@Override
 			protected void execute() {
 				double leftVal = Robot.leftController.getY();
@@ -161,10 +168,17 @@ public class DriveSystem extends Subsystem {
 				if(inRange(leftVal, bound))
 					leftVal = 0.0;
 				driveTrain.tankDrive(rightVal,leftVal);
-				try {
-					Recorder.saveVal(leftVal, rightVal);
-				} catch (IOException e) {
-					e.printStackTrace();
+				if(Robot.shouldRec)
+				{
+					int currTime = FlashUtil.millisInt();
+					
+					if(currTime - time >= Recorder.PERIOD)
+					{	
+						System.out.println(currTime - time);
+						Robot.rec.addFrame(new Frame(rightVal, leftVal));
+						time = currTime;
+					}
+					
 				}
 			}
 				

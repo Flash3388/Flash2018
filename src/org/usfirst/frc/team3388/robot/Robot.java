@@ -21,6 +21,7 @@ import edu.flash3388.flashlib.robot.frc.IterativeFRCRobot;
 import edu.flash3388.flashlib.robot.frc.PDP;
 import edu.flash3388.flashlib.robot.hid.Joystick;
 import edu.flash3388.flashlib.robot.hid.XboxController;
+import edu.flash3388.flashlib.robot.systems.FlashDrive.MotorSide;
 import edu.flash3388.flashlib.util.FlashUtil;
 import edu.wpi.first.wpilibj.AnalogOutput;
 import edu.wpi.first.wpilibj.Compressor;
@@ -53,9 +54,14 @@ public class Robot extends IterativeFRCRobot {
 	static double startTime;	
 	private DashHandle dashHandle;
 	public static boolean closeSwitch;
+	
+	public static Recorder rec;
+	public static boolean shouldRec = false;
 	@Override
 	protected void initRobot() {
 		controllersSetup();
+		
+		rec = new  Recorder();
 		/*
 		Compressor c = new Compressor();
 		c.stop();
@@ -112,7 +118,48 @@ public class Robot extends IterativeFRCRobot {
 				resetSensors();
 			}
 		});
-
+		
+		rightController.getButton(1).whenPressed(new InstantAction() {
+			
+			@Override
+			protected void execute(){
+				if(shouldRec)
+					rec.toFile();
+				shouldRec = !shouldRec;
+			}
+		});
+		leftController.getButton(1).whenPressed(new SystemAction(new Action() {
+			
+			int curr;
+			int time;
+			@Override
+			protected void initialize() {
+				rec.loadFile();
+				curr = 0;
+				time = FlashUtil.millisInt();
+			}
+			@Override
+			protected void execute(){
+				//System.out.println(curr);
+			int currTime = FlashUtil.millisInt();
+			if(currTime - time >= Recorder.PERIOD)
+			{
+				System.out.println(currTime - time);
+				Frame f = rec.frames.get(curr);
+				drive.driveTrain.tankDrive(f.rightVal, f.leftVal);
+				curr++;
+				time = currTime;
+			}
+		}
+			@Override
+			protected boolean isFinished() {
+				return curr >= rec.frames.size();
+			}
+			@Override
+			protected void end() {
+				drive.driveTrain.stop();
+			}
+		}, drive));
 		
 	}
 
