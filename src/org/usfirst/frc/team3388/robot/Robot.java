@@ -2,6 +2,7 @@
 package org.usfirst.frc.team3388.robot;
 
 import org.usfirst.frc.team3388.actions.DrivePIDAction;
+import org.usfirst.frc.team3388.actions.DriverRecord;
 import org.usfirst.frc.team3388.robot.subsystems.DriveSystem;
 import org.usfirst.frc.team3388.robot.subsystems.PoleSystem;
 import org.usfirst.frc.team3388.robot.subsystems.RollerGripperSystem;
@@ -95,6 +96,9 @@ public class Robot extends IterativeFRCRobot {
 				cancelActions();
 			}
 		});
+		leftController.getButton(2).whenPressed(new ActionGroup()
+				.addSequential(ActionHandler.simpleBack)
+				.addSequential(new DriverRecord("aa")));
 		//systemController.Y.whenPressed(AutoHandlers.rightScale(false,true,false,true));
 
 		Robot.systemController.RB.whileHeld(new SystemAction(new Action() {
@@ -121,65 +125,18 @@ public class Robot extends IterativeFRCRobot {
 		
 		record();
 		writer();
-		
-		
 	}
 
 	private void writer() {
-		Runnable writer = new Runnable() {	
-			@Override
-			public void run() {
-				int curr =0;
-				while(curr < rec.frames.size())
-				{
-					Frame f = rec.frames.get(curr);
-					drive.driveTrain.tankDrive(f.rightVal, f.leftVal);
-					poleSystem.rotate(f.poleVal);
-					liftSystem.rotate(f.liftVal);
-					rollerGripperSystem.rotate(f.rotateVal);
-					rollerGripperSystem.piston.use(f.pistonVal);
-					
-					curr++;
-					try {
-						Thread.sleep(Recorder.PERIOD);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}	
-			}
-		
-		};
-		leftController.getButton(1).whenPressed(new SystemAction(new Action() {
-		
-				Thread t;
-				@Override
-				protected void initialize() {
-					rec.loadFile();
-					t = new Thread(writer);
-					t.start();
-				}
-				@Override
-				protected void execute() {
-					
-				}
-				@Override
-				protected void end() {
-					drive.driveTrain.stop();
-					poleSystem.stop();
-				}
-				@Override
-				protected boolean isFinished() {
-					return !t.isAlive();
-				}
-			},drive,poleSystem));
+		leftController.getButton(1).whenPressed(new DriverRecord("aa"));
 	}
 
 	private void record() {
 		Runnable recoredThread = new Runnable() {
-			
 			@Override
 			public void run() {
+				int startTime = FlashUtil.millisInt();
+				
 				while(shouldRec && !Thread.interrupted())
 				{
 					double left = drive.driveTrain.getController(MotorSide.Left).get();
@@ -188,10 +145,11 @@ public class Robot extends IterativeFRCRobot {
 					double lift = liftSystem.getCurrent();
 					double rotate = rollerGripperSystem.getCurrent();
 					boolean piston = rollerGripperSystem.piston.isClosed();
-					System.out.println("aaa");
 					rec.addFrame(new Frame(right,left,pole,lift,rotate,piston));
 					try {
-						Thread.sleep(Recorder.PERIOD);
+						Thread.sleep(Recorder.PERIOD - (startTime - FlashUtil.millisInt()));
+						startTime = FlashUtil.millisInt();
+						
 					} catch (InterruptedException e) {
 						System.out.println("interraped");
 					}

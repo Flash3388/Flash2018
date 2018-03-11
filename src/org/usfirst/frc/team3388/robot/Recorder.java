@@ -15,7 +15,7 @@ public class Recorder {
 	
 	public Vector<Frame> frames;
 	File file;
-	public static final String FILE_PATH = "/home/lvuser/recorder/recored.csv";
+	public static final String FILE_PATH = "/home/lvuser/recorder/";
 	public static final int PERIOD = 20;
 	
 	public Recorder()
@@ -30,12 +30,14 @@ public class Recorder {
 	public void clear()
 	{
 		frames.clear();
+		System.out.println("cleared");
 	}
 	public void loadFile()
 	{
 		loadFile(FILE_PATH);	
 		System.out.println("file loaded");
 	}
+	static int x = 0;
 	
 	public void loadFile(String path)
 	{
@@ -57,10 +59,10 @@ public class Recorder {
 			e.printStackTrace();
 		}	
 	}
-	
 	public void toFile()
 	{
-		toFile(FILE_PATH);
+		x++;
+		toFile(FILE_PATH +"aa.csv");
 		System.out.println("file saved");
 	}
 	public void toFile(String path)
@@ -72,7 +74,7 @@ public class Recorder {
 			writer = new PrintWriter(path);
 			for(Frame f : frames)
 			{
-				writer.print(((f.leftVal) + "," + f.rightVal +","+f.poleVal+","+f.liftVal+","
+				writer.print((f.leftVal + "," + f.rightVal +","+f.poleVal+","+f.liftVal+","
 						+f.rotateVal+","+f.pistonVal+"\n"));
 			}
 			writer.close();

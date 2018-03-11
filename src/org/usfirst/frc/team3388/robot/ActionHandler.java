@@ -48,8 +48,8 @@ public class ActionHandler{
 	public static DrivePIDAction returnCaptureDrive;
 	public static DrivePIDAction secondScaleDrive;
 	public static DrivePIDAction scaleToSwitchDrive;
-	public static DrivePIDAction firstBackScaleDrive;
 	public static SimpleDistanceDrive startScaleDrive;
+	public static SimpleDistanceDrive simpleBack;
 	
 	public static DrivePIDAction switchDrive;
 	public static DrivePIDAction smallCaptureDrive;
@@ -108,25 +108,7 @@ public class ActionHandler{
 		hide = new LiftAction(Constants.HIDE_ANGLE,true);
 		shoot = new LiftAction(Constants.SHOOT_ANGLE,true);
 	}
-	private static Action inThresholdAct(DrivePIDAction drive,Action act)
-	{
-		return new Action() {
-			
-			@Override
-			protected void execute() {
-			}
-			
-			@Override
-			protected void end() {
-				act.start();
-			}
-			
-			@Override
-			protected boolean isFinished() {
-				return drive.inThreshold;
-			}
-		};
-	}
+	
 	private static void captureSetup()
 	{
 		capture = new CaptureAction(true, Constants.CAPTURE_TIME);
@@ -268,6 +250,8 @@ public class ActionHandler{
 		smallCaptureDrive = new DrivePIDAction(Constants.SWITCH_CAPTURE_DRIVE,0.2,10, true);
 		afterSwitchDrive = new DrivePIDAction(Constants.AFTER_SWITCH_DRIVE);
 		otherSwitchDrive = new DrivePIDAction(Constants.OTHER_SWITCH_DRIVE);
+		
+		simpleBack = new SimpleDistanceDrive(-300.0, -0.5);
 	}
 	
 	private static void rotateSetup()

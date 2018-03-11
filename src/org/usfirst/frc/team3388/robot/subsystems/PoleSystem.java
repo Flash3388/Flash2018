@@ -14,6 +14,7 @@ import edu.flash3388.flashlib.robot.Action;
 import edu.flash3388.flashlib.robot.PIDController;
 import edu.flash3388.flashlib.robot.PIDSource;
 import edu.flash3388.flashlib.robot.Subsystem;
+import edu.flash3388.flashlib.robot.SystemAction;
 import edu.flash3388.flashlib.robot.devices.FlashSpeedController;
 import edu.flash3388.flashlib.robot.systems.Rotatable;
 import edu.flash3388.flashlib.util.beans.BooleanSource;
@@ -87,16 +88,18 @@ public class PoleSystem extends Subsystem implements Rotatable{
 	}
 	@Override
 	public void rotate(double speed) {
-		controller.set(speed);
+		if((speed > 0 && !isUp.get()) || (speed < 0 && !isDown.get()))
+			controller.set(speed);
+		else 
+			stop();			
 	}
 	public void rotate(boolean dir)
 	{
-		if(dir && !isUp.get())
+	
+		if(dir)
 			rotate(UP_SPEED);
-		else if(!isDown.get())
-			rotate(DOWN_SPEED);
 		else
-			stop();
+			rotate(DOWN_SPEED);
 	}
 	
 	@Override
@@ -108,12 +111,12 @@ public class PoleSystem extends Subsystem implements Rotatable{
 	{
 		//Robot.systemController.Y.whenPressed(new PoleAction(0.0,Constants.STALL_ANGLE));
 		
-		this.setDefaultAction(new Action() {
+		this.setDefaultAction(new SystemAction(new Action() {
 			@Override
 			protected void execute() {
-				if(!isUp.get() && Robot.systemController.RightStick.getY() > 0.2)
+				if(Robot.systemController.RightStick.getY() > 0.2)
 					rotate(true);
-				else if(!isDown.get() && Robot.systemController.RightStick.getY()  < -0.2)
+				else if(Robot.systemController.RightStick.getY() < -0.2)
 					rotate(false);
 				else
 					stop();
@@ -123,7 +126,7 @@ public class PoleSystem extends Subsystem implements Rotatable{
 			protected void end() {
 				stop();
 			}
-		});
+		},this));
 	}
 	public double getCurrent()
 	{

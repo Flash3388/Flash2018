@@ -21,10 +21,12 @@ public class SimpleDistanceDrive extends Action{
 	@Override
 	protected void initialize() {
 		Robot.drive.resetEncoder();
+		Robot.resetSensors();
 	}
 	
 	@Override
 	protected void execute() {
+		System.out.println(setpoint + " " + Robot.drive.distanceSource.pidGet() );
 		Robot.drive.drive(-speed);
 	}
 	@Override
@@ -33,6 +35,5 @@ public class SimpleDistanceDrive extends Action{
 			return Robot.drive.distanceSource.pidGet() <= setpoint;
 		else
 			return Robot.drive.distanceSource.pidGet() >= setpoint;
-
 	}
 }

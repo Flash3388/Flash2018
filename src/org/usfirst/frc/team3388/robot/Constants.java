@@ -13,7 +13,7 @@ public class Constants {
 	public static final double ABOUT_TO_FALL = -520.0;
 	public static final double DOWN_USE_ANGLE=-625.0;
 	public static final double UP_USE_ANGLE=-265;
-	public static final double UP_USE_ANGLE_FLIPPED=-270;
+	public static final double UP_USE_ANGLE_FLIPPED=-350;
 	public static final double HIDE_ANGLE=0.0;
 	
 	public static final double LIFT_FLIPPED_STALL = -786.0;
